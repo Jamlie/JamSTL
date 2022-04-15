@@ -1,3 +1,10 @@
+// Omar Estietie
+#include <iostream>
+using std::cout;
+using std::cin;
+using std::ostream;
+using std::istream;
+
 class real {
 private:
     double *number;
