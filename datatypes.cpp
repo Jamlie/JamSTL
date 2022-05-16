@@ -6,9 +6,11 @@
 #include <cstring>
 #include <string>
 #include <functional>
+#include <iterator>
 
 #ifndef _INTEGER_HPP_
 #define _INTEGER_HPP_
+
 
 /**
  * @brief An integer wrapper class
@@ -21,77 +23,19 @@ private:
     friend class Float;
     friend class Double;
     friend class Short;
+    friend class Boolean;
 public:
     Integer() : value(0) {}
 
-    Integer(const short& value) : value(value) {}
-    
-    Integer(const int& value) : value(value) {}
-
-    Integer(const float& value) : value(value) {}
-
-    Integer(const double& value) : value(value) {}
-
-    Integer(const long& value) : value(value) {}
-
-    Integer(const long long& value) : value(value) {}
-
-    Integer(const unsigned int& value) : value(value) {}
-
-    Integer(const unsigned long& value) : value(value) {}
-
-    Integer(const unsigned long long& value) : value(value) {}
-
+    template<typename Type>
+    Integer(const Type& value) : value(value) {}
+   
     Integer(const char* value) : value(atoi(value)) {}
 
-    Integer(const long double& value) : value(value) {}
-
-    Integer(const unsigned short& value) : value(value) {}
-    
 
 
     Integer& operator=(const Integer& other) {
         this->value = other.value;
-        return *this;
-    }
-
-    Integer& operator=(const int& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Integer& operator=(const float& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Integer& operator=(const double& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Integer& operator=(const long& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Integer& operator=(const long long& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Integer& operator=(const unsigned int& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Integer& operator=(const unsigned long& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Integer& operator=(const unsigned long long& other) {
-        this->value = other;
         return *this;
     }
 
@@ -100,20 +44,12 @@ public:
         return *this;
     }
 
-    Integer& operator=(const long double& other) {
+    template<typename Type>
+    Integer& operator=(const Type& other) {
         this->value = other;
         return *this;
     }
-
-    Integer& operator=(const short& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Integer& operator=(const unsigned short& other) {
-        this->value = other;
-        return *this;
-    }
+    
 
 
     /**
@@ -153,6 +89,7 @@ public:
         value = atoi(string);
         return *this;
     }
+
 
     /**
      * @brief A method that returns the number of digits of a given Integer
@@ -202,10 +139,10 @@ public:
      * @return Integer 
      */
     Integer signum() {
-        if (this->value > 0) {
+        if(this->value > 0) {
             return 1;
         }
-        else if (value < 0) {
+        else if(value < 0) {
             return -1;
         }
         else {
@@ -219,7 +156,7 @@ public:
      * @return Integer& 
      */
     Integer& abs() {
-        if (this->value < 0) {
+        if(this->value < 0) {
             this->value = -this->value;
         }
         return *this;
@@ -309,65 +246,16 @@ public:
         return *this;
     }
 
-    Integer& operator+=(const int& other) {
+    template<typename Type>
+    Integer& operator+=(const Type& other) {
         this->value += other;
         return *this;
-    }
-
-    Integer& operator+=(const float& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Integer& operator+=(const double& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Integer& operator+=(const long& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Integer& operator+=(const long long& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Integer& operator+=(const unsigned int& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Integer& operator+=(const unsigned long& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Integer& operator+=(const unsigned long long& other) {
-        this->value += other;
-        return *this;
-    }
+    }   
 
     Integer& operator+=(const char* other) {
         this->value += atoi(other);
         return *this;
     }
-
-    Integer& operator+=(const long double& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Integer& operator+=(const short& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Integer& operator+=(const unsigned short& other) {
-        this->value += other;
-        return *this;
-    }    
 
 
 
@@ -376,63 +264,14 @@ public:
         return *this;
     }
 
-    Integer& operator-=(const int& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Integer& operator-=(const float& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Integer& operator-=(const double& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Integer& operator-=(const long& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Integer& operator-=(const long long& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Integer& operator-=(const unsigned int& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Integer& operator-=(const unsigned long& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Integer& operator-=(const unsigned long long& other) {
+    template<typename Type>
+    Integer& operator-=(const Type& other) {
         this->value -= other;
         return *this;
     }
 
     Integer& operator-=(const char* other) {
         this->value -= atoi(other);
-        return *this;
-    }
-
-    Integer& operator-=(const long double& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Integer& operator-=(const short& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Integer& operator-=(const unsigned short& other) {
-        this->value -= other;
         return *this;
     }
 
@@ -443,63 +282,14 @@ public:
         return *this;
     }
 
-    Integer& operator*=(const int& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Integer& operator*=(const float& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Integer& operator*=(const double& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Integer& operator*=(const long& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Integer& operator*=(const long long& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Integer& operator*=(const unsigned int& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Integer& operator*=(const unsigned long& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Integer& operator*=(const unsigned long long& other) {
+    template<typename Type>
+    Integer& operator*=(const Type& other) {
         this->value *= other;
         return *this;
     }
 
     Integer& operator*=(const char* other) {
         this->value *= atoi(other);
-        return *this;
-    }
-
-    Integer& operator*=(const long double& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Integer& operator*=(const short& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Integer& operator*=(const unsigned short& other) {
-        this->value *= other;
         return *this;
     }
 
@@ -510,63 +300,14 @@ public:
         return *this;
     }
 
-    Integer& operator/=(const int& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Integer& operator/=(const float& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Integer& operator/=(const double& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Integer& operator/=(const long& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Integer& operator/=(const long long& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Integer& operator/=(const unsigned int& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Integer& operator/=(const unsigned long& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Integer& operator/=(const unsigned long long& other) {
+    template<typename Type>
+    Integer& operator/=(const Type& other) {
         this->value /= other;
         return *this;
     }
 
     Integer& operator/=(const char* other) {
         this->value /= atoi(other);
-        return *this;
-    }
-
-    Integer& operator/=(const long double& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Integer& operator/=(const short& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Integer& operator/=(const unsigned short& other) {
-        this->value /= other;
         return *this;
     }
 
@@ -577,48 +318,14 @@ public:
         return *this;
     }
 
-    Integer& operator%=(const int& other) {
-        this->value %= other;
-        return *this;
-    }
-
-    Integer& operator%=(const long& other) {
-        this->value %= other;
-        return *this;
-    }
-
-    Integer& operator%=(const long long& other) {
-        this->value %= other;
-        return *this;
-    }
-
-    Integer& operator%=(const unsigned int& other) {
-        this->value %= other;
-        return *this;
-    }
-
-    Integer& operator%=(const unsigned long& other) {
-        this->value %= other;
-        return *this;
-    }
-
-    Integer& operator%=(const unsigned long long& other) {
+    template<typename Type>
+    Integer& operator%=(const Type& other) {
         this->value %= other;
         return *this;
     }
 
     Integer& operator%=(const char* other) {
         this->value %= atoi(other);
-        return *this;
-    }
-
-    Integer& operator%=(const short& other) {
-        this->value %= other;
-        return *this;
-    }
-
-    Integer& operator%=(const unsigned short& other) {
-        this->value %= other;
         return *this;
     }
 
@@ -652,52 +359,13 @@ public:
         return Integer(this->value + other.value);
     }
 
-    Integer operator+(const int& other) const {
-        return Integer(this->value + other);
-    }
-
-    Integer operator+(const float& other) const {
-        return Integer(this->value + other);
-    }
-
-    Integer operator+(const double& other) const {
-        return Integer(this->value + other);
-    }
-
-    Integer operator+(const long& other) const {
-        return Integer(this->value + other);
-    }
-
-    Integer operator+(const long long& other) const {
-        return Integer(this->value + other);
-    }
-
-    Integer operator+(const unsigned int& other) const {
-        return Integer(this->value + other);
-    }
-
-    Integer operator+(const unsigned long& other) const {
-        return Integer(this->value + other);
-    }
-
-    Integer operator+(const unsigned long long& other) const {
+    template<typename Type>
+    Integer operator+(const Type& other) const {
         return Integer(this->value + other);
     }
 
     Integer operator+(const char* other) const {
         return Integer(this->value + atoi(other));
-    }
-
-    Integer operator+(const long double& other) const {
-        return Integer(this->value + other);
-    }
-
-    Integer operator+(const short& other) const {
-        return Integer(this->value + other);
-    }
-
-    Integer operator+(const unsigned short& other) const {
-        return Integer(this->value + other);
     }
 
 
@@ -706,52 +374,13 @@ public:
         return Integer(this->value - other.value);
     }
 
-    Integer operator-(const int& other) const {
-        return Integer(this->value - other);
-    }
-
-    Integer operator-(const float& other) const {
-        return Integer(this->value - other);
-    }
-
-    Integer operator-(const double& other) const {
-        return Integer(this->value - other);
-    }
-
-    Integer operator-(const long& other) const {
-        return Integer(this->value - other);
-    }
-
-    Integer operator-(const long long& other) const {
-        return Integer(this->value - other);
-    }
-
-    Integer operator-(const unsigned int& other) const {
-        return Integer(this->value - other);
-    }
-
-    Integer operator-(const unsigned long& other) const {
-        return Integer(this->value - other);
-    }
-
-    Integer operator-(const unsigned long long& other) const {
+    template<typename Type>
+    Integer operator-(const Type& other) const {
         return Integer(this->value - other);
     }
 
     Integer operator-(const char* other) const {
         return Integer(this->value - atoi(other));
-    }
-
-    Integer operator-(const long double& other) const {
-        return Integer(this->value - other);
-    }
-
-    Integer operator-(const short& other) const {
-        return Integer(this->value - other);
-    }
-
-    Integer operator-(const unsigned short& other) const {
-        return Integer(this->value - other);
     }
 
 
@@ -760,52 +389,13 @@ public:
         return Integer(this->value * other.value);
     }
 
-    Integer operator*(const int& other) const {
-        return Integer(this->value * other);
-    }
-
-    Integer operator*(const float& other) const {
-        return Integer(this->value * other);
-    }
-
-    Integer operator*(const double& other) const {
-        return Integer(this->value * other);
-    }
-
-    Integer operator*(const long& other) const {
-        return Integer(this->value * other);
-    }
-
-    Integer operator*(const long long& other) const {
-        return Integer(this->value * other);
-    }
-
-    Integer operator*(const unsigned int& other) const {
-        return Integer(this->value * other);
-    }
-
-    Integer operator*(const unsigned long& other) const {
-        return Integer(this->value * other);
-    }
-
-    Integer operator*(const unsigned long long& other) const {
+    template<typename Type>
+    Integer operator*(const Type& other) const {
         return Integer(this->value * other);
     }
 
     Integer operator*(const char* other) const {
         return Integer(this->value * atoi(other));
-    }
-
-    Integer operator*(const long double& other) const {
-        return Integer(this->value * other);
-    }
-
-    Integer operator*(const short& other) const {
-        return Integer(this->value * other);
-    }
-
-    Integer operator*(const unsigned short& other) const {
-        return Integer(this->value * other);
     }
 
 
@@ -814,52 +404,13 @@ public:
         return Integer(this->value / other.value);
     }
 
-    Integer operator/(const int& other) const {
-        return Integer(this->value / other);
-    }
-
-    Integer operator/(const float& other) const {
-        return Integer(this->value / other);
-    }
-
-    Integer operator/(const double& other) const {
-        return Integer(this->value / other);
-    }
-
-    Integer operator/(const long& other) const {
-        return Integer(this->value / other);
-    }
-
-    Integer operator/(const long long& other) const {
-        return Integer(this->value / other);
-    }
-
-    Integer operator/(const unsigned int& other) const {
-        return Integer(this->value / other);
-    }
-
-    Integer operator/(const unsigned long& other) const {
-        return Integer(this->value / other);
-    }
-
-    Integer operator/(const unsigned long long& other) const {
+    template<typename Type>
+    Integer operator/(const Type& other) const {
         return Integer(this->value / other);
     }
 
     Integer operator/(const char* other) const {
         return Integer(this->value / atoi(other));
-    }
-
-    Integer operator/(const long double& other) const {
-        return Integer(this->value / other);
-    }
-
-    Integer operator/(const short& other) const {
-        return Integer(this->value / other);
-    }
-
-    Integer operator/(const unsigned short& other) const {
-        return Integer(this->value / other);
     }
 
 
@@ -868,36 +419,13 @@ public:
         return Integer(this->value % other.value);
     }
 
-    Integer operator%(const int& other) const {
-        return Integer(this->value % other);
-    }
-
-    Integer operator%(const long& other) const {
-        return Integer(this->value % other);
-    }
-
-    Integer operator%(const long long& other) const {
-        return Integer(this->value % other);
-    }
-
-    Integer operator%(const unsigned int& other) const {
-        return Integer(this->value % other);
-    }
-
-    Integer operator%(const unsigned long& other) const {
-        return Integer(this->value % other);
-    }
-
-    Integer operator%(const unsigned long long& other) const {
+    template<typename Type>
+    Integer operator%(const Type& other) const {
         return Integer(this->value % other);
     }
 
     Integer operator%(const char* other) const {
         return Integer(this->value % atoi(other));
-    }
-
-    Integer operator%(const short& other) const {
-        return Integer(this->value % other);
     }
 
 
@@ -906,52 +434,13 @@ public:
         return this->value == other.value;
     }
 
-    bool operator==(const int& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const float& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const double& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const long& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const long long& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const unsigned int& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const unsigned long& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const unsigned long long& other) const {
+    template<typename Type>
+    bool operator==(const Type& other) const {
         return this->value == other;
     }
 
     bool operator==(const char* other) const {
         return this->value == atoi(other);
-    }
-
-    bool operator==(const long double& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const short& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const unsigned short& other) const {
-        return this->value == other;
     }
 
 
@@ -960,52 +449,13 @@ public:
         return this->value != other.value;
     }
 
-    bool operator!=(const int& other) const {
+    template<typename Type>
+    bool operator!=(const Type& other) const {
         return this->value != other;
     }
-
-    bool operator!=(const float& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const double& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const long& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const long long& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const unsigned int& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const unsigned long& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const unsigned long long& other) const {
-        return this->value != other;
-    }
-
+    
     bool operator!=(const char* other) const {
         return this->value != atoi(other);
-    }
-
-    bool operator!=(const long double& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const short& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const unsigned short& other) const {
-        return this->value != other;
     }
 
 
@@ -1014,52 +464,13 @@ public:
         return this->value < other.value;
     }
 
-    bool operator<(const int& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const float& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const double& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const long& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const long long& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const unsigned int& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const unsigned long& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const unsigned long long& other) const {
+    template<typename Type>
+    bool operator<(const Type& other) const {
         return this->value < other;
     }
 
     bool operator<(const char* other) const {
         return this->value < atoi(other);
-    }
-
-    bool operator<(const long double& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const short& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const unsigned short& other) const {
-        return this->value < other;
     }
 
 
@@ -1068,52 +479,13 @@ public:
         return this->value > other.value;
     }
 
-    bool operator>(const int& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const float& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const double& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const long& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const long long& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const unsigned int& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const unsigned long& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const unsigned long long& other) const {
+    template<typename Type>
+    bool operator>(const Type& other) const {
         return this->value > other;
     }
 
     bool operator>(const char* other) const {
         return this->value > atoi(other);
-    }
-
-    bool operator>(const long double& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const short& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const unsigned short& other) const {
-        return this->value > other;
     }
 
 
@@ -1122,52 +494,13 @@ public:
         return this->value <= other.value;
     }
 
-    bool operator<=(const int& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const float& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const double& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const long& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const long long& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const unsigned int& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const unsigned long& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const unsigned long long& other) const {
+    template<typename Type>
+    bool operator<=(const Type& other) const {
         return this->value <= other;
     }
 
     bool operator<=(const char* other) const {
         return this->value <= atoi(other);
-    }
-
-    bool operator<=(const long double& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const short& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const unsigned short& other) const {
-        return this->value <= other;
     }
 
 
@@ -1176,52 +509,13 @@ public:
         return this->value >= other.value;
     }
 
-    bool operator>=(const int& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const float& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const double& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const long& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const long long& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const unsigned int& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const unsigned long& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const unsigned long long& other) const {
+    template<typename Type>
+    bool operator>=(const Type& other) const {
         return this->value >= other;
     }
 
     bool operator>=(const char* other) const {
         return this->value >= atoi(other);
-    }
-
-    bool operator>=(const long double& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const short& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const unsigned short& other) const {
-        return this->value >= other;
     }
 
 
@@ -1246,52 +540,13 @@ public:
         return this->value && other.value;
     }
 
-    bool operator&&(const int& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const long double& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const float& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const double& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const long& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const long long& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const unsigned int& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const unsigned long& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const unsigned long long& other) const {
+    template<typename Type>
+    bool operator&&(const Type& other) const {
         return this->value && other;
     }
 
     bool operator&&(const char* other) const {
         return this->value && atoi(other);
-    }
-
-    bool operator&&(const short& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const unsigned short& other) const {
-        return this->value && other;
     }
 
 
@@ -1300,51 +555,8 @@ public:
         return this->value || other.value;
     }
 
-    bool operator||(const int& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const long double& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const float& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const double& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const long& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const long long& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const unsigned int& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const unsigned long& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const unsigned long long& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const char* other) const {
-        return this->value || atoi(other);
-    }
-
-    bool operator||(const short& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const unsigned short& other) const {
+    template<typename Type>
+    bool operator||(const Type& other) const {
         return this->value || other;
     }
 
@@ -1354,40 +566,13 @@ public:
         return Integer(this->value & other.value);
     }
 
-    Integer operator&(const int& other) const {
-        return Integer(this->value & other);
-    }
-
-    Integer operator&(const long& other) const {
-        return Integer(this->value & other);
-    }
-
-    Integer operator&(const long long& other) const {
-        return Integer(this->value & other);
-    }
-
-    Integer operator&(const unsigned int& other) const {
-        return Integer(this->value & other);
-    }
-
-    Integer operator&(const unsigned long& other) const {
-        return Integer(this->value & other);
-    }
-
-    Integer operator&(const unsigned long long& other) const {
+    template<typename Type>
+    Integer operator&(const Type& other) const {
         return Integer(this->value & other);
     }
 
     Integer operator&(const char* other) const {
         return Integer(this->value & atoi(other));
-    }
-
-    Integer operator&(const short& other) const {
-        return Integer(this->value & other);
-    }
-
-    Integer operator&(const unsigned short& other) const {
-        return Integer(this->value & other);
     }
 
 
@@ -1396,40 +581,13 @@ public:
         return Integer(this->value | other.value);
     }
 
-    Integer operator|(const int& other) const {
-        return Integer(this->value | other);
-    }
-
-    Integer operator|(const long& other) const {
-        return Integer(this->value | other);
-    }
-
-    Integer operator|(const long long& other) const {
-        return Integer(this->value | other);
-    }
-
-    Integer operator|(const unsigned int& other) const {
-        return Integer(this->value | other);
-    }
-
-    Integer operator|(const unsigned long& other) const {
-        return Integer(this->value | other);
-    }
-
-    Integer operator|(const unsigned long long& other) const {
+    template<typename Type>
+    Integer operator|(const Type& other) const {
         return Integer(this->value | other);
     }
 
     Integer operator|(const char* other) const {
         return Integer(this->value | atoi(other));
-    }
-
-    Integer operator|(const short& other) const {
-        return Integer(this->value | other);
-    }
-
-    Integer operator|(const unsigned short& other) const {
-        return Integer(this->value | other);
     }
 
 
@@ -1438,40 +596,13 @@ public:
         return Integer(this->value ^ other.value);
     }
 
-    Integer operator^(const int& other) const {
-        return Integer(this->value ^ other);
-    }
-
-    Integer operator^(const long& other) const {
-        return Integer(this->value ^ other);
-    }
-
-    Integer operator^(const long long& other) const {
-        return Integer(this->value ^ other);
-    }
-
-    Integer operator^(const unsigned int& other) const {
-        return Integer(this->value ^ other);
-    }
-
-    Integer operator^(const unsigned long& other) const {
-        return Integer(this->value ^ other);
-    }
-
-    Integer operator^(const unsigned long long& other) const {
+    template<typename Type>
+    Integer operator^(const Type& other) const {
         return Integer(this->value ^ other);
     }
 
     Integer operator^(const char* other) const {
         return Integer(this->value ^ atoi(other));
-    }
-
-    Integer operator^(const short& other) const {
-        return Integer(this->value ^ other);
-    }
-
-    Integer operator^(const unsigned short& other) const {
-        return Integer(this->value ^ other);
     }
 
 
@@ -1480,40 +611,13 @@ public:
         return Integer(this->value << other.value);
     }
 
-    Integer operator<<(const int& other) const {
-        return Integer(this->value << other);
-    }
-
-    Integer operator<<(const long& other) const {
-        return Integer(this->value << other);
-    }
-
-    Integer operator<<(const long long& other) const {
-        return Integer(this->value << other);
-    }
-
-    Integer operator<<(const unsigned int& other) const {
-        return Integer(this->value << other);
-    }
-
-    Integer operator<<(const unsigned long& other) const {
-        return Integer(this->value << other);
-    }
-
-    Integer operator<<(const unsigned long long& other) const {
+    template<typename Type>
+    Integer operator<<(const Type& other) const {
         return Integer(this->value << other);
     }
 
     Integer operator<<(const char* other) const {
         return Integer(this->value << atoi(other));
-    }
-
-    Integer operator<<(const short& other) const {
-        return Integer(this->value << other);
-    }
-
-    Integer operator<<(const unsigned short& other) const {
-        return Integer(this->value << other);
     }
 
 
@@ -1522,40 +626,13 @@ public:
         return Integer(this->value >> other.value);
     }
 
+    template<typename Type>
     Integer operator>>(const int& other) const {
-        return Integer(this->value >> other);
-    }
-
-    Integer operator>>(const long& other) const {
-        return Integer(this->value >> other);
-    }
-
-    Integer operator>>(const long long& other) const {
-        return Integer(this->value >> other);
-    }
-
-    Integer operator>>(const unsigned int& other) const {
-        return Integer(this->value >> other);
-    }
-
-    Integer operator>>(const unsigned long& other) const {
-        return Integer(this->value >> other);
-    }
-
-    Integer operator>>(const unsigned long long& other) const {
         return Integer(this->value >> other);
     }
 
     Integer operator>>(const char* other) const {
         return Integer(this->value >> atoi(other));
-    }
-
-    Integer operator>>(const short& other) const {
-        return Integer(this->value >> other);
-    }
-
-    Integer operator>>(const unsigned short& other) const {
-        return Integer(this->value >> other);
     }
 
 
@@ -1582,38 +659,18 @@ private:
     friend class Float;
     friend class Double;
     friend class Long;
+    friend class Boolean;
 public:
     Short() : value(0) {}
 
-    Short(const short& value) : value(value) {}
+    template<typename Type>
+    Short(const Type& value) : value(value) {}
 
     Short(const Short& other) : value(other.value) {}
 
     Short(const Integer& other) : value(other.value) {}
 
-    Short(const int& other) : value(other) {}
-
-    Short(const long& other) : value(other) {}
-
-    Short(const long long& other) : value(other) {}
-
-    Short(const unsigned int& other) : value(other) {}
-
-    Short(const unsigned long& other) : value(other) {}
-
-    Short(const unsigned long long& other) : value(other) {}
-
     Short(const char* other) : value(atoi(other)) {}
-
-    Short(const float& other) : value(other) {}
-
-    Short(const double& other) : value(other) {}
-
-    Short(const char& other) : value(other) {}
-
-    Short(const bool& other) : value(other) {}
-
-    Short(const unsigned short& other) : value(other) {}
 
 
 
@@ -1703,10 +760,10 @@ public:
      * @return Short 
      */
     Short signum() {
-        if (this->value > 0) {
+        if(this->value > 0) {
             return 1;
         }
-        else if (value < 0) {
+        else if(value < 0) {
             return -1;
         }
         else {
@@ -1720,7 +777,7 @@ public:
      * @return Short& 
      */
     Short& abs() {
-        if (this->value < 0) {
+        if(this->value < 0) {
             this->value = -this->value;
         }
         return *this;
@@ -1805,10 +862,6 @@ public:
     
 
 
-    Short operator+(const short& other) const {
-        return Short(this->value + other);
-    }
-
     Short& operator=(const Short& other) {
         this->value = other.value;
         return *this;
@@ -1819,105 +872,26 @@ public:
         return *this;
     }
 
-    Short& operator=(const int& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Short& operator=(const long& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Short& operator=(const long long& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Short& operator=(const unsigned int& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Short& operator=(const unsigned long& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Short& operator=(const unsigned long long& other) {
-        this->value = other;
-        return *this;
-    }
-
     Short& operator=(const char* other) {
         this->value = atoi(other);
         return *this;
     }
 
-    Short& operator=(const float& other) {
+    template<typename Type>
+    Short& operator=(const Type& other) {
         this->value = other;
         return *this;
     }
 
-    Short& operator=(const double& other) {
-        this->value = other;
-        return *this;
-    }
 
-    Short& operator=(const char& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Short& operator=(const bool& other) {
-        this->value = other;
-        return *this;
-    }
     
-    Short& operator=(const unsigned short& other) {
-        this->value = other;
-        return *this;
-    }
-
-
-
     Short& operator+=(const Short& other) {
         this->value += other.value;
         return *this;
     }
-
+    
     Short& operator+=(const Integer& other) {
         this->value += other.value;
-        return *this;
-    }
-
-    Short& operator+=(const int& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Short& operator+=(const long& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Short& operator+=(const long long& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Short& operator+=(const unsigned int& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Short& operator+=(const unsigned long& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Short& operator+=(const unsigned long long& other) {
-        this->value += other;
         return *this;
     }
 
@@ -1926,37 +900,13 @@ public:
         return *this;
     }
 
-    Short& operator+=(const float& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Short& operator+=(const double& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Short& operator+=(const char& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Short& operator+=(const bool& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Short& operator+=(const unsigned short& other) {
+    template<typename Type>
+    Short& operator+=(const Type& other) {
         this->value += other;
         return *this;
     }
 
 
-
-    Short& operator-=(const short& other) {
-        this->value -= other;
-        return *this;
-    }
 
     Short& operator-=(const Short& other) {
         this->value -= other.value;
@@ -1968,72 +918,18 @@ public:
         return *this;
     }
 
-    Short& operator-=(const int& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Short& operator-=(const long& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Short& operator-=(const long long& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Short& operator-=(const unsigned int& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Short& operator-=(const unsigned long& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Short& operator-=(const unsigned long long& other) {
-        this->value -= other;
-        return *this;
-    }
-
     Short& operator-=(const char* other) {
         this->value -= atoi(other);
         return *this;
     }
 
-    Short& operator-=(const float& other) {
+    template<typename Type>
+    Short& operator-=(const Type& other) {
         this->value -= other;
         return *this;
     }
 
-    Short& operator-=(const double& other) {
-        this->value -= other;
-        return *this;
-    }
 
-    Short& operator-=(const char& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Short& operator-=(const bool& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Short& operator-=(const unsigned short& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    
-
-    Short& operator*=(const short& other) {
-        this->value *= other;
-        return *this;
-    }
 
     Short& operator*=(const Short& other) {
         this->value *= other.value;
@@ -2045,72 +941,18 @@ public:
         return *this;
     }
 
-    Short& operator*=(const int& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Short& operator*=(const long& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Short& operator*=(const long long& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Short& operator*=(const unsigned int& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Short& operator*=(const unsigned long& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Short& operator*=(const unsigned long long& other) {
-        this->value *= other;
-        return *this;
-    }
-
     Short& operator*=(const char* other) {
         this->value *= atoi(other);
         return *this;
     }
 
-    Short& operator*=(const float& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Short& operator*=(const double& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Short& operator*=(const char& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Short& operator*=(const bool& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Short& operator*=(const unsigned short& other) {
+    template<typename Type>
+    Short& operator*=(const Type& other) {
         this->value *= other;
         return *this;
     }
 
 
-
-    Short& operator/=(const short& other) {
-        this->value /= other;
-        return *this;
-    }
 
     Short& operator/=(const Short& other) {
         this->value /= other.value;
@@ -2122,72 +964,110 @@ public:
         return *this;
     }
 
-    Short& operator/=(const int& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Short& operator/=(const long& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Short& operator/=(const long long& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Short& operator/=(const unsigned int& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Short& operator/=(const unsigned long& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Short& operator/=(const unsigned long long& other) {
-        this->value /= other;
-        return *this;
-    }
-
     Short& operator/=(const char* other) {
         this->value /= atoi(other);
         return *this;
     }
 
-    Short& operator/=(const float& other) {
+    template<typename Type>
+    Short& operator/=(const Type& other) {
         this->value /= other;
         return *this;
     }
 
-    Short& operator/=(const double& other) {
-        this->value /= other;
+
+
+    Short& operator%=(const Short& other) {
+        this->value %= other.value;
         return *this;
     }
 
-    Short& operator/=(const char& other) {
-        this->value /= other;
+    Short& operator%=(const Integer& other) {
+        this->value %= other.value;
         return *this;
     }
 
-    Short& operator/=(const bool& other) {
-        this->value /= other;
+    Short& operator%=(const char* other) {
+        this->value %= atoi(other);
         return *this;
     }
 
-    Short& operator/=(const unsigned short& other) {
-        this->value /= other;
-        return *this;
-    }    
-
-
-
-    Short& operator%=(const short& other) {
+    template<typename Type>
+    Short& operator%=(const Type& other) {
         this->value %= other;
         return *this;
     }
+
+
+
+    Short& operator&=(const Short& other) {
+        this->value &= other.value;
+        return *this;
+    }
+
+    Short& operator&=(const Integer& other) {
+        this->value &= other.value;
+        return *this;
+    }
+
+    Short& operator&=(const char* other) {
+        this->value &= atoi(other);
+        return *this;
+    }
+
+    template<typename Type>
+    Short& operator&=(const Type& other) {
+        this->value &= other;
+        return *this;
+    }
+
+
+
+    Short& operator|=(const Short& other) {
+        this->value |= other.value;
+        return *this;
+    }
+
+    Short& operator|=(const Integer& other) {
+        this->value |= other.value;
+        return *this;
+    }
+
+    Short& operator|=(const char* other) {
+        this->value |= atoi(other);
+        return *this;
+    }
+
+    template<typename Type>
+    Short& operator|=(const Type& other) {
+        this->value |= other;
+        return *this;
+    }
+
+
+
+    Short& operator^=(const Short& other) {
+        this->value ^= other.value;
+        return *this;
+    }
+
+    Short& operator^=(const Integer& other) {
+        this->value ^= other.value;
+        return *this;
+    }
+
+    Short& operator^=(const char* other) {
+        this->value ^= atoi(other);
+        return *this;
+    }
+
+    template<typename Type>
+    Short& operator^=(const Type& other) {
+        this->value ^= other;
+        return *this;
+    }
+
+
 
     Short operator+(const Short& other) const {
         return Short(this->value + other.value);
@@ -2197,59 +1077,16 @@ public:
         return Short(this->value + other.value);
     }
 
-    Short operator+(const int& other) const {
-        return Short(this->value + other);
-    }
-
-    Short operator+(const long& other) const {
-        return Short(this->value + other);
-    }
-
-    Short operator+(const long long& other) const {
-        return Short(this->value + other);
-    }
-
-    Short operator+(const unsigned int& other) const {
-        return Short(this->value + other);
-    }
-
-    Short operator+(const unsigned long& other) const {
-        return Short(this->value + other);
-    }
-
-    Short operator+(const unsigned long long& other) const {
-        return Short(this->value + other);
-    }
-
     Short operator+(const char* other) const {
         return Short(this->value + atoi(other));
     }
 
-    Short operator+(const float& other) const {
-        return Short(this->value + other);
-    }
-
-    Short operator+(const double& other) const {
-        return Short(this->value + other);
-    }
-
-    Short operator+(const char& other) const {
-        return Short(this->value + other);
-    }
-
-    Short operator+(const bool& other) const {
-        return Short(this->value + other);
-    }
-
-    Short operator+(const unsigned short& other) const {
+    template<typename Type>
+    Short operator+(const Type& other) const {
         return Short(this->value + other);
     }
 
 
-
-    Short operator-(const short& other) const {
-        return Short(this->value - other);
-    }
 
     Short operator-(const Short& other) const {
         return Short(this->value - other.value);
@@ -2259,59 +1096,16 @@ public:
         return Short(this->value - other.value);
     }
 
-    Short operator-(const int& other) const {
-        return Short(this->value - other);
-    }
-
-    Short operator-(const long& other) const {
-        return Short(this->value - other);
-    }
-
-    Short operator-(const long long& other) const {
-        return Short(this->value - other);
-    }
-
-    Short operator-(const unsigned int& other) const {
-        return Short(this->value - other);
-    }
-
-    Short operator-(const unsigned long& other) const {
-        return Short(this->value - other);
-    }
-
-    Short operator-(const unsigned long long& other) const {
-        return Short(this->value - other);
-    }
-
     Short operator-(const char* other) const {
         return Short(this->value - atoi(other));
     }
 
-    Short operator-(const float& other) const {
-        return Short(this->value - other);
-    }
-
-    Short operator-(const double& other) const {
-        return Short(this->value - other);
-    }
-
-    Short operator-(const char& other) const {
-        return Short(this->value - other);
-    }
-
-    Short operator-(const bool& other) const {
-        return Short(this->value - other);
-    }
-
-    Short operator-(const unsigned short& other) const {
+    template<typename Type>
+    Short operator-(const Type& other) const {
         return Short(this->value - other);
     }
 
 
-
-    Short operator*(const short& other) const {
-        return Short(this->value * other);
-    }
 
     Short operator*(const Short& other) const {
         return Short(this->value * other.value);
@@ -2321,59 +1115,16 @@ public:
         return Short(this->value * other.value);
     }
 
-    Short operator*(const int& other) const {
-        return Short(this->value * other);
-    }
-
-    Short operator*(const long& other) const {
-        return Short(this->value * other);
-    }
-
-    Short operator*(const long long& other) const {
-        return Short(this->value * other);
-    }
-
-    Short operator*(const unsigned int& other) const {
-        return Short(this->value * other);
-    }
-
-    Short operator*(const unsigned long& other) const {
-        return Short(this->value * other);
-    }
-
-    Short operator*(const unsigned long long& other) const {
-        return Short(this->value * other);
-    }
-
     Short operator*(const char* other) const {
         return Short(this->value * atoi(other));
     }
 
-    Short operator*(const float& other) const {
-        return Short(this->value * other);
-    }
-
-    Short operator*(const double& other) const {
-        return Short(this->value * other);
-    }
-
-    Short operator*(const char& other) const {
-        return Short(this->value * other);
-    }
-
-    Short operator*(const bool& other) const {
-        return Short(this->value * other);
-    }
-
-    Short operator*(const unsigned short& other) const {
+    template<typename Type>
+    Short operator*(const Type& other) const {
         return Short(this->value * other);
     }
 
 
-
-    Short operator/(const short& other) const {
-        return Short(this->value);
-    }
 
     Short operator/(const Short& other) const {
         return Short(this->value / other.value);
@@ -2383,59 +1134,16 @@ public:
         return Short(this->value / other.value);
     }
 
-    Short operator/(const int& other) const {
-        return Short(this->value / other);
-    }
-
-    Short operator/(const long& other) const {
-        return Short(this->value / other);
-    }
-
-    Short operator/(const long long& other) const {
-        return Short(this->value / other);
-    }
-
-    Short operator/(const unsigned int& other) const {
-        return Short(this->value / other);
-    }
-
-    Short operator/(const unsigned long& other) const {
-        return Short(this->value / other);
-    }
-
-    Short operator/(const unsigned long long& other) const {
-        return Short(this->value / other);
-    }
-
     Short operator/(const char* other) const {
         return Short(this->value / atoi(other));
     }
 
-    Short operator/(const float& other) const {
-        return Short(this->value / other);
-    }
-
-    Short operator/(const double& other) const {
-        return Short(this->value / other);
-    }
-
-    Short operator/(const char& other) const {
-        return Short(this->value / other);
-    }
-
-    Short operator/(const bool& other) const {
-        return Short(this->value / other);
-    }
-
-    Short operator/(const unsigned short& other) const {
+    template<typename Type>
+    Short operator/(const Type& other) const {
         return Short(this->value / other);
     }
 
 
-
-    Short operator%(const short& other) const {
-        return Short(this->value % other);
-    }
 
     Short operator%(const Short& other) const {
         return Short(this->value % other.value);
@@ -2445,52 +1153,16 @@ public:
         return Short(this->value % other.value);
     }
 
-    Short operator%(const int& other) const {
-        return Short(this->value % other);
-    }
-
-    Short operator%(const long& other) const {
-        return Short(this->value % other);
-    }
-
-    Short operator%(const long long& other) const {
-        return Short(this->value % other);
-    }
-
-    Short operator%(const unsigned int& other) const {
-        return Short(this->value % other);
-    }
-
-    Short operator%(const unsigned long& other) const {
-        return Short(this->value % other);
-    }
-
-    Short operator%(const unsigned long long& other) const {
-        return Short(this->value % other);
-    }
-
     Short operator%(const char* other) const {
         return Short(this->value % atoi(other));
     }
 
-    Short operator%(const char& other) const {
-        return Short(this->value % other);
-    }
-
-    Short operator%(const bool& other) const {
-        return Short(this->value % other);
-    }
-
-    Short operator%(const unsigned short& other) const {
+    template<typename Type>
+    Short operator%(const Type& other) const {
         return Short(this->value % other);
     }
 
 
-
-
-    Short operator&(const short& other) const {
-        return Short(this->value & other);
-    }
 
     Short operator&(const Short& other) const {
         return Short(this->value & other.value);
@@ -2500,51 +1172,16 @@ public:
         return Short(this->value & other.value);
     }
 
-    Short operator&(const int& other) const {
-        return Short(this->value & other);
-    }
-
-    Short operator&(const long& other) const {
-        return Short(this->value & other);
-    }
-
-    Short operator&(const long long& other) const {
-        return Short(this->value & other);
-    }
-
-    Short operator&(const unsigned int& other) const {
-        return Short(this->value & other);
-    }
-
-    Short operator&(const unsigned long& other) const {
-        return Short(this->value & other);
-    }
-
-    Short operator&(const unsigned long long& other) const {
-        return Short(this->value & other);
-    }
-
     Short operator&(const char* other) const {
         return Short(this->value & atoi(other));
     }
 
-    Short operator&(const char& other) const {
-        return Short(this->value & other);
-    }
-
-    Short operator&(const bool& other) const {
-        return Short(this->value & other);
-    }
-
-    Short operator&(const unsigned short& other) const {
+    template<typename Type>
+    Short operator&(const Type& other) const {
         return Short(this->value & other);
     }
 
 
-
-    Short operator|(const short& other) const {
-        return Short(this->value | other);
-    }
 
     Short operator|(const Short& other) const {
         return Short(this->value | other.value);
@@ -2554,51 +1191,16 @@ public:
         return Short(this->value | other.value);
     }
 
-    Short operator|(const int& other) const {
-        return Short(this->value | other);
-    }
-
-    Short operator|(const long& other) const {
-        return Short(this->value | other);
-    }
-
-    Short operator|(const long long& other) const {
-        return Short(this->value | other);
-    }
-
-    Short operator|(const unsigned int& other) const {
-        return Short(this->value | other);
-    }
-
-    Short operator|(const unsigned long& other) const {
-        return Short(this->value | other);
-    }
-
-    Short operator|(const unsigned long long& other) const {
-        return Short(this->value | other);
-    }
-
     Short operator|(const char* other) const {
         return Short(this->value | atoi(other));
     }
 
-    Short operator|(const char& other) const {
-        return Short(this->value | other);
-    }
-
-    Short operator|(const bool& other) const {
-        return Short(this->value | other);
-    }
-
-    Short operator|(const unsigned short& other) const {
+    template<typename Type>
+    Short operator|(const Type& other) const {
         return Short(this->value | other);
     }
 
 
-
-    Short operator^(const short& other) const {
-        return Short(this->value ^ other);
-    }
 
     Short operator^(const Short& other) const {
         return Short(this->value ^ other.value);
@@ -2608,184 +1210,13 @@ public:
         return Short(this->value ^ other.value);
     }
 
-    Short operator^(const int& other) const {
-        return Short(this->value ^ other);
-    }
-
-    Short operator^(const long& other) const {
-        return Short(this->value ^ other);
-    }
-
-    Short operator^(const long long& other) const {
-        return Short(this->value ^ other);
-    }
-
-    Short operator^(const unsigned int& other) const {
-        return Short(this->value ^ other);
-    }
-
-    Short operator^(const unsigned long& other) const {
-        return Short(this->value ^ other);
-    }
-    
-    Short operator^(const unsigned long long& other) const {
-        return Short(this->value ^ other);
-    }
-
     Short operator^(const char* other) const {
         return Short(this->value ^ atoi(other));
     }
 
-    Short operator^(const char& other) const {
+    template<typename Type>
+    Short operator^(const Type& other) const {
         return Short(this->value ^ other);
-    }
-
-    Short operator^(const bool& other) const {
-        return Short(this->value ^ other);
-    }
-
-    Short operator^(const unsigned short& other) const {
-        return Short(this->value ^ other);
-    }
-
-
-
-    Short operator<<(const short& other) const {
-        return Short(this->value << other);
-    }
-
-    Short operator<<(const Short& other) const {
-        return Short(this->value << other.value);
-    }
-
-    Short operator<<(const Integer& other) const {
-        return Short(this->value << other.value);
-    }
-
-    Short operator<<(const int& other) const {
-        return Short(this->value << other);
-    }
-
-    Short operator<<(const long& other) const {
-        return Short(this->value << other);
-    }
-
-    Short operator<<(const long long& other) const {
-        return Short(this->value << other);
-    }
-
-    Short operator<<(const unsigned int& other) const {
-        return Short(this->value << other);
-    }
-
-    Short operator<<(const unsigned long& other) const {
-        return Short(this->value << other);
-    }
-
-    Short operator<<(const unsigned long long& other) const {
-        return Short(this->value << other);
-    }
-
-    Short operator<<(const char* other) const {
-        return Short(this->value << atoi(other));
-    }
-
-    Short operator<<(const char& other) const {
-        return Short(this->value << other);
-    }
-
-    Short operator<<(const bool& other) const {
-        return Short(this->value << other);
-    }
-    
-    Short operator<<(const unsigned short& other) const {
-        return Short(this->value << other);
-    }
-
-
-
-    Short operator>>(const short& other) const {
-        return Short(this->value >> other);
-    }
-
-    Short operator>>(const Short& other) const {
-        return Short(this->value >> other.value);
-    }
-
-    Short operator>>(const Integer& other) const {
-        return Short(this->value >> other.value);
-    }
-
-    Short operator>>(const int& other) const {
-        return Short(this->value >> other);
-    }
-
-    Short operator>>(const long& other) const {
-        return Short(this->value >> other);
-    }
-
-    Short operator>>(const long long& other) const {
-        return Short(this->value >> other);
-    }
-
-    Short operator>>(const unsigned int& other) const {
-        return Short(this->value >> other);
-    }
-
-    Short operator>>(const unsigned long& other) const {
-        return Short(this->value >> other);
-    }
-
-    Short operator>>(const unsigned long long& other) const {
-        return Short(this->value >> other);
-    }
-
-    Short operator>>(const char* other) const {
-        return Short(this->value >> atoi(other));
-    }
-
-    Short operator>>(const char& other) const {
-        return Short(this->value >> other);
-    }
-
-    Short operator>>(const bool& other) const {
-        return Short(this->value >> other);
-    }
-
-    Short operator>>(const unsigned short& other) const {
-        return Short(this->value >> other);
-    }
-
-
-
-    Short operator~() const {
-        return Short(~this->value);
-    }
-
-    Short operator!() const {
-        return Short(!this->value);
-    }
-
-    Short operator++() {
-        this->value++;
-        return *this;
-    }
-
-    Short operator++(int) {
-        Short temp = *this;
-        this->value++;
-        return temp;
-    }
-
-    Short operator--() {
-        this->value--;
-        return *this;
-    }
-
-    Short operator--(int) {
-        Short temp = *this;
-        this->value--;
-        return temp;
     }
 
 
@@ -2794,43 +1225,16 @@ public:
         return this->value == other.value;
     }
 
-    bool operator==(const int& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const long& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const long long& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const unsigned int& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const unsigned long& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const unsigned long long& other) const {
-        return this->value == other;
+    bool operator==(const Integer& other) const {
+        return this->value == other.value;
     }
 
     bool operator==(const char* other) const {
         return this->value == atoi(other);
     }
 
-    bool operator==(const char& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const bool& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const unsigned short& other) const {
+    template<typename Type>
+    bool operator==(const Type& other) const {
         return this->value == other;
     }
 
@@ -2840,43 +1244,16 @@ public:
         return this->value != other.value;
     }
 
-    bool operator!=(const int& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const long& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const long long& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const unsigned int& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const unsigned long& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const unsigned long long& other) const {
-        return this->value != other;
+    bool operator!=(const Integer& other) const {
+        return this->value != other.value;
     }
 
     bool operator!=(const char* other) const {
         return this->value != atoi(other);
     }
 
-    bool operator!=(const char& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const bool& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const unsigned short& other) const {
+    template<typename Type>
+    bool operator!=(const Type& other) const {
         return this->value != other;
     }
 
@@ -2886,90 +1263,17 @@ public:
         return this->value < other.value;
     }
 
-    bool operator<(const int& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const long& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const long long& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const unsigned int& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const unsigned long& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const unsigned long long& other) const {
-        return this->value < other;
+    bool operator<(const Integer& other) const {
+        return this->value < other.value;
     }
 
     bool operator<(const char* other) const {
         return this->value < atoi(other);
     }
 
-    bool operator<(const char& other) const {
+    template<typename Type>
+    bool operator<(const Type& other) const {
         return this->value < other;
-    }
-
-    bool operator<(const bool& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const unsigned short& other) const {
-        return this->value < other;
-    }
-
-
-
-    bool operator>(const Short& other) const {
-        return this->value > other.value;
-    }
-
-    bool operator>(const int& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const long& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const long long& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const unsigned int& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const unsigned long& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const unsigned long long& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const char* other) const {
-        return this->value > atoi(other);
-    }
-
-    bool operator>(const char& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const bool& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const unsigned short& other) const {
-        return this->value > other;
     }
 
 
@@ -2978,44 +1282,36 @@ public:
         return this->value <= other.value;
     }
 
-    bool operator<=(const int& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const long& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const long long& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const unsigned int& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const unsigned long& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const unsigned long long& other) const {
-        return this->value <= other;
+    bool operator<=(const Integer& other) const {
+        return this->value <= other.value;
     }
 
     bool operator<=(const char* other) const {
         return this->value <= atoi(other);
     }
 
-    bool operator<=(const char& other) const {
+    template<typename Type>
+    bool operator<=(const Type& other) const {
         return this->value <= other;
     }
 
-    bool operator<=(const bool& other) const {
-        return this->value <= other;
+
+
+    bool operator>(const Short& other) const {
+        return this->value > other.value;
     }
 
-    bool operator<=(const unsigned short& other) const {
-        return this->value <= other;
+    bool operator>(const Integer& other) const {
+        return this->value > other.value;
+    }
+
+    bool operator>(const char* other) const {
+        return this->value > atoi(other);
+    }
+
+    template<typename Type>
+    bool operator>(const Type& other) const {
+        return this->value > other;
     }
 
 
@@ -3024,44 +1320,93 @@ public:
         return this->value >= other.value;
     }
 
-    bool operator>=(const int& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const long& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const long long& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const unsigned int& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const unsigned long& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const unsigned long long& other) const {
-        return this->value >= other;
+    bool operator>=(const Integer& other) const {
+        return this->value >= other.value;
     }
 
     bool operator>=(const char* other) const {
         return this->value >= atoi(other);
     }
 
-    bool operator>=(const char& other) const {
+    template<typename Type>
+    bool operator>=(const Type& other) const {
         return this->value >= other;
     }
 
-    bool operator>=(const bool& other) const {
-        return this->value >= other;
+
+
+    Short operator<<(const Short& other) const {
+        return Short(this->value << other.value);
     }
 
-    bool operator>=(const unsigned short& other) const {
-        return this->value >= other;
+    Short operator<<(const Integer& other) const {
+        return Short(this->value << other.value);
+    }
+
+    Short operator<<(const char* other) const {
+        return Short(this->value << atoi(other));
+    }
+
+    template<typename Type>
+    Short operator<<(const Type& other) const {
+        return Short(this->value << other);
+    }
+
+
+
+    Short operator>>(const Short& other) const {
+        return Short(this->value >> other.value);
+    }
+
+    Short operator>>(const Integer& other) const {
+        return Short(this->value >> other.value);
+    }
+
+    Short operator>>(const char* other) const {
+        return Short(this->value >> atoi(other));
+    }
+
+    template<typename Type>
+    Short operator>>(const Type& other) const {
+        return Short(this->value >> other);
+    }
+
+
+
+    Short operator~() const {
+        return Short(~this->value);
+    }
+
+    Short operator-() const {
+        return Short(-this->value);
+    }
+
+    Short operator++() {
+        this->value++;
+        return *this;
+    }
+
+    Short operator++(int) {
+        Short tmp = *this;
+        this->value++;
+        return tmp;
+    }
+
+    Short operator--() {
+        this->value--;
+        return *this;
+    }
+
+    Short operator--(int) {
+        Short tmp = *this;
+        this->value--;
+        return tmp;
+    }
+
+
+
+    bool operator!() const {
+        return Short(!this->value);
     }
     
 
@@ -3088,24 +1433,15 @@ private:
     friend class Short;
     friend class Float;
     friend class Double;
+    friend class Boolean;
 public:
     Long() : value(0) {}
-    Long(const short int& value) : value(value) {}
     Long(const Long& other) : value(other.value) {}
     Long(const Integer& other) : value(other.value) {}
     Long(const Short& other) : value(other.value) {}
-    Long(const int& other) : value(other) {}
-    Long(const long& other) : value(other) {}
-    Long(const long long& other) : value(other) {}
-    Long(const unsigned int& other) : value(other) {}
-    Long(const unsigned long& other) : value(other) {}
-    Long(const unsigned long long& other) : value(other) {}
+    template<typename Type>
+    Long(const Type& other) : value(other) {}
     Long(const char* other) : value(atoi(other)) {}
-    Long(const float& other) : value(other) {}
-    Long(const double& other) : value(other) {}
-    Long(const long double& other) : value(other) {}
-    Long(const unsigned short& other) : value(other) {}
-
 
 
     Long& operator=(const Long& other) {
@@ -3123,69 +1459,19 @@ public:
         return *this;
     }
 
-    Long& operator=(const int& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Long& operator=(const long& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Long& operator=(const long long& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Long& operator=(const unsigned int& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Long& operator=(const unsigned long& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Long& operator=(const unsigned long long& other) {
-        this->value = other;
-        return *this;
-    }
-
     Long& operator=(const char* other) {
         this->value = atoi(other);
         return *this;
     }
 
+    template<typename Type>
     Long& operator=(const unsigned short& other) {
         this->value = other;
         return *this;
     }
 
-    Long& operator=(const short& other) {
-        this->value = other;
-        return *this;
-    }
 
-    Long& operator=(const float& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Long& operator=(const double& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Long& operator=(const long double& other) {
-        this->value = other;
-        return *this;
-    }
-
-
-
-        /**
+    /**
      * @brief A method that converts a Long to a String
      * 
      * @return auto 
@@ -3253,7 +1539,7 @@ public:
      * @return Long 
      */
     Long largestValue() {
-        return 2147483647;
+        return 9223372036854775807;
     }
 
     /**
@@ -3262,7 +1548,7 @@ public:
      * @return Long 
      */
     Long smallestValue() {
-        return -2147483648;
+        return -9223372036854775807;
     }
 
     /**
@@ -3271,10 +1557,10 @@ public:
      * @return Long 
      */
     Long signum() {
-        if (this->value > 0) {
+        if(this->value > 0) {
             return 1;
         }
-        else if (value < 0) {
+        else if(value < 0) {
             return -1;
         }
         else {
@@ -3288,7 +1574,7 @@ public:
      * @return Long& 
      */
     Long& abs() {
-        if (this->value < 0) {
+        if(this->value < 0) {
             this->value = -this->value;
         }
         return *this;
@@ -3381,51 +1667,12 @@ public:
         return this->value + other.value;
     }
 
-    Long operator+(const int& other) const {
-        return this->value + other;
-    }
-
-    Long operator+(const long& other) const {
-        return this->value + other;
-    }
-
-    Long operator+(const long long& other) const {
-        return this->value + other;
-    }
-
-    Long operator+(const unsigned int& other) const {
-        return this->value + other;
-    }
-
-    Long operator+(const unsigned long& other) const {
-        return this->value + other;
-    }
-
-    Long operator+(const unsigned long long& other) const {
-        return this->value + other;
-    }
-
     Long operator+(const char* other) const {
         return this->value + atoi(other);
     }
 
-    Long operator+(const unsigned short& other) const {
-        return this->value + other;
-    }
-
-    Long operator+(const short& other) const {
-        return this->value + other;
-    }
-
-    Long operator+(const float& other) const {
-        return this->value + other;
-    }
-
-    Long operator+(const double& other) const {
-        return this->value + other;
-    }
-
-    Long operator+(const long double& other) const {
+    template<typename Type>
+    Long operator+(const Type& other) const {
         return this->value + other;
     }
 
@@ -3443,51 +1690,12 @@ public:
         return this->value - other.value;
     }
 
-    Long operator-(const int& other) const {
-        return this->value - other;
-    }
-
-    Long operator-(const long& other) const {
-        return this->value - other;
-    }
-
-    Long operator-(const long long& other) const {
-        return this->value - other;
-    }
-
-    Long operator-(const unsigned int& other) const {
-        return this->value - other;
-    }
-
-    Long operator-(const unsigned long& other) const {
-        return this->value - other;
-    }
-
-    Long operator-(const unsigned long long& other) const {
-        return this->value - other;
-    }
-
     Long operator-(const char* other) const {
         return this->value - atoi(other);
     }
 
-    Long operator-(const unsigned short& other) const {
-        return this->value - other;
-    }
-
-    Long operator-(const short& other) const {
-        return this->value - other;
-    }
-
-    Long operator-(const float& other) const {
-        return this->value - other;
-    }
-
-    Long operator-(const double& other) const {
-        return this->value - other;
-    }
-
-    Long operator-(const long double& other) const {
+    template<typename Type>
+    Long operator-(const Type& other) const {
         return this->value - other;
     }
 
@@ -3505,54 +1713,15 @@ public:
         return this->value * other.value;
     }
 
-    Long operator*(const int& other) const {
-        return this->value * other;
-    }
-
-    Long operator*(const long& other) const {
-        return this->value * other;
-    }
-
-    Long operator*(const long long& other) const {
-        return this->value * other;
-    }
-
-    Long operator*(const unsigned int& other) const {
-        return this->value * other;
-    }
-
-    Long operator*(const unsigned long& other) const {
-        return this->value * other;
-    }
-
-    Long operator*(const unsigned long long& other) const {
-        return this->value * other;
-    }
-
     Long operator*(const char* other) const {
         return this->value * atoi(other);
     }
 
-    Long operator*(const unsigned short& other) const {
+    template<typename Type>
+    Long operator*(const Type& other) const {
         return this->value * other;
     }
-
-    Long operator*(const short& other) const {
-        return this->value * other;
-    }
-
-    Long operator*(const float& other) const {
-        return this->value * other;
-    }
-
-    Long operator*(const double& other) const {
-        return this->value * other;
-    }
-
-    Long operator*(const long double& other) const {
-        return this->value * other;
-    }
-
+    
 
 
     Long operator/(const Long& other) const {
@@ -3567,51 +1736,12 @@ public:
         return this->value / other.value;
     }
 
-    Long operator/(const int& other) const {
-        return this->value / other;
-    }
-
-    Long operator/(const long& other) const {
-        return this->value / other;
-    }
-
-    Long operator/(const long long& other) const {
-        return this->value / other;
-    }
-
-    Long operator/(const unsigned int& other) const {
-        return this->value / other;
-    }
-
-    Long operator/(const unsigned long& other) const {
-        return this->value / other;
-    }
-
-    Long operator/(const unsigned long long& other) const {
-        return this->value / other;
-    }
-
     Long operator/(const char* other) const {
         return this->value / atoi(other);
     }
 
-    Long operator/(const unsigned short& other) const {
-        return this->value / other;
-    }
-
-    Long operator/(const short& other) const {
-        return this->value / other;
-    }
-
-    Long operator/(const float& other) const {
-        return this->value / other;
-    }
-
-    Long operator/(const double& other) const {
-        return this->value / other;
-    }
-
-    Long operator/(const long double& other) const {
+    template<typename Type>
+    Long operator/(const Type& other) const {
         return this->value / other;
     }
 
@@ -3629,42 +1759,15 @@ public:
         return this->value % other.value;
     }
 
-    Long operator%(const int& other) const {
-        return this->value % other;
-    }
-
-    Long operator%(const long& other) const {
-        return this->value % other;
-    }
-
-    Long operator%(const long long& other) const {
-        return this->value % other;
-    }
-
-    Long operator%(const unsigned int& other) const {
-        return this->value % other;
-    }
-
-    Long operator%(const unsigned long& other) const {
-        return this->value % other;
-    }
-
-    Long operator%(const unsigned long long& other) const {
-        return this->value % other;
-    }
-
     Long operator%(const char* other) const {
         return this->value % atoi(other);
     }
 
-    Long operator%(const unsigned short& other) const {
+    template<typename Type>
+    Long operator%(const Type& other) const {
         return this->value % other;
     }
-
-    Long operator%(const short& other) const {
-        return this->value % other;
-    }
-
+    
 
 
     Long operator&(const Long& other) const {
@@ -3679,42 +1782,15 @@ public:
         return this->value & other.value;
     }
 
-    Long operator&(const int& other) const {
-        return this->value & other;
-    }
-
-    Long operator&(const long& other) const {
-        return this->value & other;
-    }
-
-    Long operator&(const long long& other) const {
-        return this->value & other;
-    }
-
-    Long operator&(const unsigned int& other) const {
-        return this->value & other;
-    }
-
-    Long operator&(const unsigned long& other) const {
-        return this->value & other;
-    }
-
-    Long operator&(const unsigned long long& other) const {
-        return this->value & other;
-    }
-
     Long operator&(const char* other) const {
         return this->value & atoi(other);
     }
 
-    Long operator&(const unsigned short& other) const {
+    template<typename Type>
+    Long operator&(const Type& other) const {
         return this->value & other;
     }
-
-    Long operator&(const short& other) const {
-        return this->value & other;
-    }
-
+    
 
 
     Long operator|(const Long& other) const {
@@ -3729,42 +1805,15 @@ public:
         return this->value | other.value;
     }
 
-    Long operator|(const int& other) const {
-        return this->value | other;
-    }
-
-    Long operator|(const long& other) const {
-        return this->value | other;
-    }
-
-    Long operator|(const long long& other) const {
-        return this->value | other;
-    }
-
-    Long operator|(const unsigned int& other) const {
-        return this->value | other;
-    }
-
-    Long operator|(const unsigned long& other) const {
-        return this->value | other;
-    }
-
-    Long operator|(const unsigned long long& other) const {
-        return this->value | other;
-    }
-
     Long operator|(const char* other) const {
         return this->value | atoi(other);
     }
 
-    Long operator|(const unsigned short& other) const {
+    template<typename Type>
+    Long operator|(const Type& other) const {
         return this->value | other;
     }
-
-    Long operator|(const short& other) const {
-        return this->value | other;
-    }
-
+    
 
 
     Long operator^(const Long& other) const {
@@ -3779,43 +1828,16 @@ public:
         return this->value ^ other.value;
     }
 
-    Long operator^(const int& other) const {
-        return this->value ^ other;
-    }
-
-    Long operator^(const long& other) const {
-        return this->value ^ other;
-    }
-
-    Long operator^(const long long& other) const {
-        return this->value ^ other;
-    }
-
-    Long operator^(const unsigned int& other) const {
-        return this->value ^ other;
-    }
-
-    Long operator^(const unsigned long& other) const {
-        return this->value ^ other;
-    }
-
-    Long operator^(const unsigned long long& other) const {
-        return this->value ^ other;
-    }
-
     Long operator^(const char* other) const {
         return this->value ^ atoi(other);
     }
 
-    Long operator^(const unsigned short& other) const {
+    template<typename Type>
+    Long operator^(const Type& other) const {
         return this->value ^ other;
     }
 
-    Long operator^(const short& other) const {
-        return this->value ^ other;
-    }
-
-
+    
 
     Long operator<<(const Long& other) const {
         return this->value << other.value;
@@ -3829,39 +1851,12 @@ public:
         return this->value << other.value;
     }
 
-    Long operator<<(const int& other) const {
-        return this->value << other;
-    }
-
-    Long operator<<(const long& other) const {
-        return this->value << other;
-    }
-
-    Long operator<<(const long long& other) const {
-        return this->value << other;
-    }
-
-    Long operator<<(const unsigned int& other) const {
-        return this->value << other;
-    }
-
-    Long operator<<(const unsigned long& other) const {
-        return this->value << other;
-    }
-
-    Long operator<<(const unsigned long long& other) const {
-        return this->value << other;
-    }
-
     Long operator<<(const char* other) const {
         return this->value << atoi(other);
     }
 
-    Long operator<<(const unsigned short& other) const {
-        return this->value << other;
-    }
-
-    Long operator<<(const short& other) const {
+    template<typename Type>
+    Long operator<<(const Type& other) const {
         return this->value << other;
     }
 
@@ -3879,42 +1874,15 @@ public:
         return this->value >> other.value;
     }
 
-    Long operator>>(const int& other) const {
-        return this->value >> other;
-    }
-
-    Long operator>>(const long& other) const {
-        return this->value >> other;
-    }
-
-    Long operator>>(const long long& other) const {
-        return this->value >> other;
-    }
-
-    Long operator>>(const unsigned int& other) const {
-        return this->value >> other;
-    }
-
-    Long operator>>(const unsigned long& other) const {
-        return this->value >> other;
-    }
-
-    Long operator>>(const unsigned long long& other) const {
-        return this->value >> other;
-    }
-
     Long operator>>(const char* other) const {
         return this->value >> atoi(other);
     }
 
-    Long operator>>(const unsigned short& other) const {
+    template<typename Type>
+    Long operator>>(const Type& other) const {
         return this->value >> other;
     }
-
-    Long operator>>(const short& other) const {
-        return this->value >> other;
-    }
-
+    
 
 
     Long operator~() const {
@@ -3938,66 +1906,17 @@ public:
         return *this;
     }
 
-    Long& operator+=(const int& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Long& operator+=(const long& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Long& operator+=(const long long& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Long& operator+=(const unsigned int& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Long& operator+=(const unsigned long& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Long& operator+=(const unsigned long long& other) {
-        this->value += other;
-        return *this;
-    }
-
     Long& operator+=(const char* other) {
         this->value += atoi(other);
         return *this;
     }
 
-    Long& operator+=(const unsigned short& other) {
+    template<typename Type>
+    Long& operator+=(const Type& other) {
         this->value += other;
         return *this;
     }
-
-    Long& operator+=(const short& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Long& operator+=(const float& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Long& operator+=(const double& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Long& operator+=(const long double& other) {
-        this->value += other;
-        return *this;
-    }
-
+    
 
 
     Long& operator-=(const Long& other) {
@@ -4015,66 +1934,17 @@ public:
         return *this;
     }
 
-    Long& operator-=(const int& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Long& operator-=(const long& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Long& operator-=(const long long& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Long& operator-=(const unsigned int& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Long& operator-=(const unsigned long& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Long& operator-=(const unsigned long long& other) {
-        this->value -= other;
-        return *this;
-    }
-
     Long& operator-=(const char* other) {
         this->value -= atoi(other);
         return *this;
     }
 
-    Long& operator-=(const unsigned short& other) {
+    template<typename Type>
+    Long& operator-=(const Type& other) {
         this->value -= other;
         return *this;
     }
-
-    Long& operator-=(const short& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Long& operator-=(const float& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Long& operator-=(const double& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Long& operator-=(const long double& other) {
-        this->value -= other;
-        return *this;
-    }
-
+    
 
 
     Long& operator*=(const Long& other) {
@@ -4092,62 +1962,13 @@ public:
         return *this;
     }
 
-    Long& operator*=(const int& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Long& operator*=(const long& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Long& operator*=(const long long& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Long& operator*=(const unsigned int& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Long& operator*=(const unsigned long& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Long& operator*=(const unsigned long long& other) {
-        this->value *= other;
-        return *this;
-    }
-
     Long& operator*=(const char* other) {
         this->value *= atoi(other);
         return *this;
     }
-    
-    Long& operator*=(const unsigned short& other) {
-        this->value *= other;
-        return *this;
-    }
 
-    Long& operator*=(const short& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Long& operator*=(const float& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Long& operator*=(const double& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Long& operator*=(const long double& other) {
+    template<typename Type>
+    Long& operator*=(const Type& other) {
         this->value *= other;
         return *this;
     }
@@ -4169,66 +1990,17 @@ public:
         return *this;
     }
 
-    Long& operator/=(const int& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Long& operator/=(const long& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Long& operator/=(const long long& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Long& operator/=(const unsigned int& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Long& operator/=(const unsigned long& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Long& operator/=(const unsigned long long& other) {
-        this->value /= other;
-        return *this;
-    }
-
     Long& operator/=(const char* other) {
         this->value /= atoi(other);
         return *this;
     }
 
-    Long& operator/=(const unsigned short& other) {
+    template<typename Type>
+    Long& operator/=(const Type& other) {
         this->value /= other;
         return *this;
     }
-
-    Long& operator/=(const short& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Long& operator/=(const float& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Long& operator/=(const double& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Long& operator/=(const long double& other) {
-        this->value /= other;
-        return *this;
-    }
-
+    
 
 
     Long& operator%=(const Long& other) {
@@ -4246,51 +2018,17 @@ public:
         return *this;
     }
 
-    Long& operator%=(const int& other) {
-        this->value %= other;
-        return *this;
-    }
-
-    Long& operator%=(const long& other) {
-        this->value %= other;
-        return *this;
-    }
-
-    Long& operator%=(const long long& other) {
-        this->value %= other;
-        return *this;
-    }
-
-    Long& operator%=(const unsigned int& other) {
-        this->value %= other;
-        return *this;
-    }
-
-    Long& operator%=(const unsigned long& other) {
-        this->value %= other;
-        return *this;
-    }
-
-    Long& operator%=(const unsigned long long& other) {
-        this->value %= other;
-        return *this;
-    }
-
     Long& operator%=(const char* other) {
         this->value %= atoi(other);
         return *this;
     }
 
-    Long& operator%=(const unsigned short& other) {
+    template<typename Type>
+    Long& operator%=(const Type& other) {
         this->value %= other;
         return *this;
     }
-
-    Long& operator%=(const short& other) {
-        this->value %= other;
-        return *this;
-    }
-
+    
 
 
     Long& operator&=(const Long& other) {
@@ -4308,51 +2046,17 @@ public:
         return *this;
     }
 
-    Long& operator&=(const int& other) {
-        this->value &= other;
-        return *this;
-    }
-
-    Long& operator&=(const long& other) {
-        this->value &= other;
-        return *this;
-    }
-
-    Long& operator&=(const long long& other) {
-        this->value &= other;
-        return *this;
-    }
-
-    Long& operator&=(const unsigned int& other) {
-        this->value &= other;
-        return *this;
-    }
-
-    Long& operator&=(const unsigned long& other) {
-        this->value &= other;
-        return *this;
-    }
-
-    Long& operator&=(const unsigned long long& other) {
-        this->value &= other;
-        return *this;
-    }
-
     Long& operator&=(const char* other) {
         this->value &= atoi(other);
         return *this;
     }
 
-    Long& operator&=(const unsigned short& other) {
+    template<typename Type>
+    Long& operator&=(const Type& other) {
         this->value &= other;
         return *this;
     }
-
-    Long& operator&=(const short& other) {
-        this->value &= other;
-        return *this;
-    }
-
+    
 
 
     Long& operator|=(const Long& other) {
@@ -4370,51 +2074,17 @@ public:
         return *this;
     }
 
-    Long& operator|=(const int& other) {
-        this->value |= other;
-        return *this;
-    }
-
-    Long& operator|=(const long& other) {
-        this->value |= other;
-        return *this;
-    }
-
-    Long& operator|=(const long long& other) {
-        this->value |= other;
-        return *this;
-    }
-
-    Long& operator|=(const unsigned int& other) {
-        this->value |= other;
-        return *this;
-    }
-
-    Long& operator|=(const unsigned long& other) {
-        this->value |= other;
-        return *this;
-    }
-
-    Long& operator|=(const unsigned long long& other) {
-        this->value |= other;
-        return *this;
-    }
-
     Long& operator|=(const char* other) {
         this->value |= atoi(other);
         return *this;
     }
 
-    Long& operator|=(const unsigned short& other) {
+    template<typename Type>
+    Long& operator|=(const Type& other) {
         this->value |= other;
         return *this;
     }
-
-    Long& operator|=(const short& other) {
-        this->value |= other;
-        return *this;
-    }
-
+    
 
 
     Long& operator^=(const Long& other) {
@@ -4432,51 +2102,17 @@ public:
         return *this;
     }
 
-    Long& operator^=(const int& other) {
-        this->value ^= other;
-        return *this;
-    }
-
-    Long& operator^=(const long& other) {
-        this->value ^= other;
-        return *this;
-    }
-
-    Long& operator^=(const long long& other) {
-        this->value ^= other;
-        return *this;
-    }
-
-    Long& operator^=(const unsigned int& other) {
-        this->value ^= other;
-        return *this;
-    }
-
-    Long& operator^=(const unsigned long& other) {
-        this->value ^= other;
-        return *this;
-    }
-
-    Long& operator^=(const unsigned long long& other) {
-        this->value ^= other;
-        return *this;
-    }
-
     Long& operator^=(const char* other) {
         this->value ^= atoi(other);
         return *this;
     }
 
-    Long& operator^=(const unsigned short& other) {
+    template<typename Type>
+    Long& operator^=(const Type& other) {
         this->value ^= other;
         return *this;
     }
-
-    Long& operator^=(const short& other) {
-        this->value ^= other;
-        return *this;
-    }
-
+    
 
 
     bool operator==(const Long& other) const {
@@ -4491,54 +2127,15 @@ public:
         return this->value == other.value;
     }
 
-    bool operator==(const short& other) const {
-        return this->value == other;
+    bool operator==(const char* other) const {
+        return this->value == atoi(other);
     }
 
-    bool operator==(const int& other) const {
+    template<typename Type>
+    bool operator==(const Type& other) const {
         return this->value == other;
     }
-
-    bool operator==(const long& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const long long& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const unsigned short& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const unsigned int& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const unsigned long& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const unsigned long long& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const char& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const float& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const double& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const long double& other) const {
-        return this->value == other;
-    }
-
+    
 
 
     bool operator!=(const Long& other) const {
@@ -4553,54 +2150,15 @@ public:
         return this->value != other.value;
     }
 
-    bool operator!=(const short& other) const {
-        return this->value != other;
+    bool operator!=(const char* other) const {
+        return this->value != atoi(other);
     }
 
-    bool operator!=(const int& other) const {
+    template<typename Type>
+    bool operator!=(const Type& other) const {
         return this->value != other;
     }
-
-    bool operator!=(const long& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const long long& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const unsigned short& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const unsigned int& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const unsigned long& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const unsigned long long& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const char& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const float& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const double& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const long double& other) const {
-        return this->value != other;
-    }
-
+    
 
 
     bool operator<(const Long& other) const {
@@ -4615,54 +2173,15 @@ public:
         return this->value < other.value;
     }
 
-    bool operator<(const short& other) const {
-        return this->value < other;
+    bool operator<(const char* other) const {
+        return this->value < atoi(other);
     }
 
-    bool operator<(const int& other) const {
+    template<typename Type>
+    bool operator<(const Type& other) const {
         return this->value < other;
     }
-
-    bool operator<(const long& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const long long& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const unsigned short& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const unsigned int& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const unsigned long& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const unsigned long long& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const char& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const float& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const double& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const long double& other) const {
-        return this->value < other;
-    }
-
+    
 
 
     bool operator<=(const Long& other) const {
@@ -4677,50 +2196,15 @@ public:
         return this->value <= other.value;
     }
 
-    bool operator<=(const short int& other) const {
-        return this->value <= other;
+    bool operator<=(const char* other) const {
+        return this->value <= atoi(other);
     }
 
-    bool operator<=(const int& other) const {
+    template<typename Type>
+    bool operator<=(const Type& other) const {
         return this->value <= other;
     }
-
-    bool operator<=(const long& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const long long& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const unsigned int& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const unsigned long& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const unsigned long long& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const char& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const float& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const double& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const long double& other) const {
-        return this->value <= other;
-    }
-
+    
 
 
     bool operator>(const Long& other) const {
@@ -4735,54 +2219,15 @@ public:
         return this->value > other.value;
     }
 
-    bool operator>(const short& other) const {
-        return this->value > other;
+    bool operator>(const char* other) const {
+        return this->value > atoi(other);
     }
 
-    bool operator>(const int& other) const {
+    template<typename Type>
+    bool operator>(const Type& other) const {
         return this->value > other;
     }
-
-    bool operator>(const long& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const long long& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const unsigned short& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const unsigned int& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const unsigned long& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const unsigned long long& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const char& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const float& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const double& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const long double& other) const {
-        return this->value > other;
-    }
-
+    
 
 
     bool operator>=(const Long& other) const {
@@ -4797,54 +2242,15 @@ public:
         return this->value >= other.value;
     }
 
-    bool operator>=(const short& other) const {
-        return this->value >= other;
+    bool operator>=(const char* other) const {
+        return this->value >= atoi(other);
     }
 
-    bool operator>=(const int& other) const {
+    template<typename Type>
+    bool operator>=(const Type& other) const {
         return this->value >= other;
     }
-
-    bool operator>=(const long& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const long long& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const unsigned short& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const unsigned int& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const unsigned long& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const unsigned long long& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const char& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const float& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const double& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const long double& other) const {
-        return this->value >= other;
-    }
-
+    
 
 
     bool operator!() const {
@@ -4863,58 +2269,15 @@ public:
         return this->value && other.value;
     }
 
-    bool operator&&(const short& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const int& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const long& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const long long& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const unsigned short& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const unsigned int& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const unsigned long& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const unsigned long long& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const char& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const float& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const double& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const long double& other) const {
-        return this->value && other;
-    }
-
     bool operator&&(const char* other) const {
-        return this->value && other;
+        return this->value && atoi(other);
     }
 
+    template<typename Type>
+    bool operator&&(const Type& other) const {
+        return this->value && other;
+    }
+    
 
 
     bool operator||(const Long& other) const {
@@ -4929,73 +2292,18 @@ public:
         return this->value || other.value;
     }
 
-    bool operator||(const short& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const int& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const long& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const long long& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const unsigned short& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const unsigned int& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const unsigned long& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const unsigned long long& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const char& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const float& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const double& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const long double& other) const {
-        return this->value || other;
-    }
-
     bool operator||(const char* other) const {
-        return this->value || other;
+        return this->value || atoi(other);
     }
 
+    template<typename Type>
+    bool operator||(const Type& other) const {
+        return this->value || other;
+    }
+    
 
 
     operator long long() const {
-        return this->value;
-    }
-
-    operator int() const {
-        return this->value;
-    }
-
-    operator long() const {
-        return this->value;
-    }
-
-    operator unsigned long long() const {
         return this->value;
     }
 
@@ -5023,38 +2331,20 @@ private:
     friend class Long;
     friend class Double;
     friend class Short;
+    friend class Boolean;
 public:
     Float() : value(0) {}
 
-    Float(float value) : value(value) {}
-
     Float(const Integer& integer) : value(integer.value) {}
-
-    Float(const long long& LL) : value(LL) {}
-
-    Float(const long& L) : value(L) {}
-
-    Float(const int& I) : value(I) {}
-
-    Float(const short& S) : value(S) {}
 
     Float(const Short& SHORT) : value(SHORT.value) {}
 
-    Float(const char* str) : value(atof(str)) {}
-
-    Float(const double& double_) : value(double_) {}
-
-    Float(const long double& long_double) : value(long_double) {}
-
-    Float(const unsigned int& UI) : value(UI) {}
-
-    Float(const unsigned long& UL) : value(UL) {}
-
-    Float(const unsigned long long& ULL) : value(ULL) {}
-
-    Float(const unsigned short& US) : value(US) {}
-
     Float(const Long& LONG) : value(LONG.value) {}
+
+    template<typename Type>
+    Float(const Type& other) : value(other) {}
+
+    Float(const char* other) : value(atof(other)) {}
 
 
 
@@ -5063,53 +2353,8 @@ public:
         return *this;
     }
 
-    Float& operator=(const float& other) {
-        this->value = other;
-        return *this;
-    }
-
     Float& operator=(const Integer& other) {
         this->value = other.value;
-        return *this;
-    }
-
-    Float& operator=(const long long& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Float& operator=(const long& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Float& operator=(const int& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Float& operator=(const double& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Float& operator=(const long double& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Float& operator=(const unsigned int& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Float& operator=(const unsigned long& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Float& operator=(const unsigned long long& other) {
-        this->value = other;
         return *this;
     }
 
@@ -5118,13 +2363,19 @@ public:
         return *this;
     }
 
-    Float& operator=(const char* other) {
-        this->value = atof(other);
+    Float& operator=(const Long& other) {
+        this->value = other.value;
         return *this;
     }
 
-    Float& operator=(const short& other) {
+    template<typename Type>
+    Float& operator=(const Type& other) {
         this->value = other;
+        return *this;
+    }
+
+    Float& operator=(const char* other) {
+        this->value = atof(other);
         return *this;
     }
 
@@ -5226,10 +2477,10 @@ public:
      * @return Float 
      */
     Float signum() {
-        if (this->value > 0) {
+        if(this->value > 0) {
             return 1;
         }
-        else if (this->value < 0) {
+        else if(this->value < 0) {
             return -1;
         }
         else {
@@ -5253,7 +2504,7 @@ public:
      * @return Float& 
      */
     Float& abs() {
-        if (this->value < 0) {
+        if(this->value < 0) {
             this->value = -this->value;
         }
         return *this;
@@ -5275,7 +2526,7 @@ public:
      */
     long long floor() {
         long long result;
-        if (this->value < 0) {
+        if(this->value < 0) {
             result = (long long)this->value - 1;
             return result;
         }
@@ -5288,7 +2539,7 @@ public:
      * @return long long 
      */
     long long ceil() {
-        if (this->value - (long long)this->value == 0) return this->value;
+        if(this->value - (long long)this->value == 0) return this->value;
         return this->floor() + 1;
     }
 
@@ -5298,18 +2549,18 @@ public:
      * @return long long 
      */
     long long round() {
-        if (this->value - (long long)this->value == 0) return this->value;
+        if(this->value - (long long)this->value == 0) return this->value;
         double number = this->value - (long long)this->value;
-        if (this->value < 0) {
+        if(this->value < 0) {
             double negativeValue = this->value - (long long)this->value;
             long long result;
-            if (negativeValue <= -0.5 && negativeValue > -1) result = this->floor();
-            else if (negativeValue > -0.5 && negativeValue < 0) result = this->ceil();
+            if(negativeValue <= -0.5 && negativeValue > -1) result = this->floor();
+            else if(negativeValue > -0.5 && negativeValue < 0) result = this->ceil();
             return result;
         }
         long long result;
-        if (number >= 0.5 && number < 1) result = this->ceil();
-        else if (number < 0.5 && number > 0) result = this->floor();
+        if(number >= 0.5 && number < 1) result = this->ceil();
+        else if(number < 0.5 && number > 0) result = this->floor();
         return result;
     }
 
@@ -5368,53 +2619,8 @@ public:
         return *this;
     }
 
-    Float& operator+=(const float& other) {
-        this->value += other;
-        return *this;
-    }
-
     Float& operator+=(const Integer& other) {
         this->value += other.value;
-        return *this;
-    }
-
-    Float& operator+=(const long long& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Float& operator+=(const long& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Float& operator+=(const int& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Float& operator+=(const double& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Float& operator+=(const long double& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Float& operator+=(const unsigned int& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Float& operator+=(const unsigned long& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Float& operator+=(const unsigned long long& other) {
-        this->value += other;
         return *this;
     }
 
@@ -5423,23 +2629,19 @@ public:
         return *this;
     }
 
+    Float& operator+=(const Long& other) {
+        this->value += other.value;
+        return *this;
+    }
+    
     Float& operator+=(const char* other) {
         this->value += atof(other);
         return *this;
     }
 
-    Float& operator+=(const short& other) {
+    template<typename Type>
+    Float& operator+=(const Type& other) {
         this->value += other;
-        return *this;
-    }
-
-    Float& operator+=(const unsigned short& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Float& operator+=(const Long& other) {
-        this->value += other.value;
         return *this;
     }
 
@@ -5450,57 +2652,17 @@ public:
         return *this;
     }
 
-    Float& operator-=(const float& other) {
-        this->value -= other;
-        return *this;
-    }
-
     Float& operator-=(const Integer& other) {
         this->value -= other.value;
         return *this;
     }
 
-    Float& operator-=(const long long& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Float& operator-=(const long& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Float& operator-=(const int& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Float& operator-=(const double& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Float& operator-=(const long double& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Float& operator-=(const unsigned int& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Float& operator-=(const unsigned long& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Float& operator-=(const unsigned long long& other) {
-        this->value -= other;
-        return *this;
-    }
-
     Float& operator-=(const Short& other) {
+        this->value -= other.value;
+        return *this;
+    }
+
+    Float& operator-=(const Long& other) {
         this->value -= other.value;
         return *this;
     }
@@ -5510,18 +2672,9 @@ public:
         return *this;
     }
 
-    Float& operator-=(const short& other) {
+    template<typename Type>
+    Float& operator-=(const Type& other) {
         this->value -= other;
-        return *this;
-    }
-
-    Float& operator-=(const unsigned short& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Float& operator-=(const Long& other) {
-        this->value -= other.value;
         return *this;
     }
 
@@ -5532,57 +2685,17 @@ public:
         return *this;
     }
 
-    Float& operator*=(const float& other) {
-        this->value *= other;
-        return *this;
-    }
-
     Float& operator*=(const Integer& other) {
         this->value *= other.value;
         return *this;
     }
 
-    Float& operator*=(const long long& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Float& operator*=(const long& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Float& operator*=(const int& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Float& operator*=(const double& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Float& operator*=(const long double& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Float& operator*=(const unsigned int& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Float& operator*=(const unsigned long& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Float& operator*=(const unsigned long long& other) {
-        this->value *= other;
-        return *this;
-    }
-
     Float& operator*=(const Short& other) {
+        this->value *= other.value;
+        return *this;
+    }
+
+    Float& operator*=(const Long& other) {
         this->value *= other.value;
         return *this;
     }
@@ -5592,18 +2705,9 @@ public:
         return *this;
     }
 
-    Float& operator*=(const short& other) {
+    template<typename Type>
+    Float& operator*=(const Type& other) {
         this->value *= other;
-        return *this;
-    }
-
-    Float& operator*=(const unsigned short& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Float& operator*=(const Long& other) {
-        this->value *= other.value;
         return *this;
     }
 
@@ -5614,57 +2718,17 @@ public:
         return *this;
     }
 
-    Float& operator/=(const float& other) {
-        this->value /= other;
-        return *this;
-    }
-
     Float& operator/=(const Integer& other) {
         this->value /= other.value;
         return *this;
     }
 
-    Float& operator/=(const long long& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Float& operator/=(const long& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Float& operator/=(const int& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Float& operator/=(const double& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Float& operator/=(const long double& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Float& operator/=(const unsigned int& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Float& operator/=(const unsigned long& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Float& operator/=(const unsigned long long& other) {
-        this->value /= other;
-        return *this;
-    }
-
     Float& operator/=(const Short& other) {
+        this->value /= other.value;
+        return *this;
+    }
+
+    Float& operator/=(const Long& other) {
         this->value /= other.value;
         return *this;
     }
@@ -5674,18 +2738,9 @@ public:
         return *this;
     }
 
-    Float& operator/=(const short& other) {
+    template<typename Type>
+    Float& operator/=(const Type& other) {
         this->value /= other;
-        return *this;
-    }
-
-    Float& operator/=(const unsigned short& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Float& operator/=(const Long& other) {
-        this->value /= other.value;
         return *this;
     }
 
@@ -5719,47 +2774,15 @@ public:
         return Float(this->value + other.value);
     }
 
-    Float operator+(const float& other) const {
-        return Float(this->value + other);
-    }
-
     Float operator+(const Integer& other) const {
         return Float(this->value + other.value);
     }
 
-    Float operator+(const long long& other) const {
-        return Float(this->value + other);
-    }
-
-    Float operator+(const long& other) const {
-        return Float(this->value + other);
-    }
-
-    Float operator+(const int& other) const {
-        return Float(this->value + other);
-    }
-
-    Float operator+(const double& other) const {
-        return Float(this->value + other);
-    }
-
-    Float operator+(const long double& other) const {
-        return Float(this->value + other);
-    }
-
-    Float operator+(const unsigned int& other) const {
-        return Float(this->value + other);
-    }
-
-    Float operator+(const unsigned long& other) const {
-        return Float(this->value + other);
-    }
-
-    Float operator+(const unsigned long long& other) const {
-        return Float(this->value + other);
-    }
-
     Float operator+(const Short& other) const {
+        return Float(this->value + other.value);
+    }
+
+    Float operator+(const Long& other) const {
         return Float(this->value + other.value);
     }
 
@@ -5767,16 +2790,9 @@ public:
         return Float(this->value + atof(other));
     }
 
-    Float operator+(const short& other) const {
+    template<typename Type>
+    Float operator+(const Type& other) const {
         return Float(this->value + other);
-    }
-
-    Float operator+(const unsigned short& other) const {
-        return Float(this->value + other);
-    }
-
-    Float operator+(const Long& other) const {
-        return Float(this->value + other.value);
     }
 
 
@@ -5785,47 +2801,15 @@ public:
         return Float(this->value - other.value);
     }
 
-    Float operator-(const float& other) const {
-        return Float(this->value - other);
-    }
-
     Float operator-(const Integer& other) const {
         return Float(this->value - other.value);
     }
 
-    Float operator-(const long long& other) const {
-        return Float(this->value - other);
-    }
-
-    Float operator-(const long& other) const {
-        return Float(this->value - other);
-    }
-
-    Float operator-(const int& other) const {
-        return Float(this->value - other);
-    }
-
-    Float operator-(const double& other) const {
-        return Float(this->value - other);
-    }
-
-    Float operator-(const long double& other) const {
-        return Float(this->value - other);
-    }
-
-    Float operator-(const unsigned int& other) const {
-        return Float(this->value - other);
-    }
-
-    Float operator-(const unsigned long& other) const {
-        return Float(this->value - other);
-    }
-
-    Float operator-(const unsigned long long& other) const {
-        return Float(this->value - other);
-    }
-
     Float operator-(const Short& other) const {
+        return Float(this->value - other.value);
+    }
+
+    Float operator-(const Long& other) const {
         return Float(this->value - other.value);
     }
 
@@ -5833,16 +2817,9 @@ public:
         return Float(this->value - atof(other));
     }
 
-    Float operator-(const short& other) const {
+    template<typename Type>
+    Float operator-(const Type& other) const {
         return Float(this->value - other);
-    }
-
-    Float operator-(const unsigned short& other) const {
-        return Float(this->value - other);
-    }
-
-    Float operator-(const Long& other) const {
-        return Float(this->value - other.value);
     }
 
 
@@ -5851,47 +2828,15 @@ public:
         return Float(this->value * other.value);
     }
 
-    Float operator*(const float& other) const {
-        return Float(this->value * other);
-    }
-
     Float operator*(const Integer& other) const {
         return Float(this->value * other.value);
     }
 
-    Float operator*(const long long& other) const {
-        return Float(this->value * other);
-    }
-
-    Float operator*(const long& other) const {
-        return Float(this->value * other);
-    }
-
-    Float operator*(const int& other) const {
-        return Float(this->value * other);
-    }
-
-    Float operator*(const double& other) const {
-        return Float(this->value * other);
-    }
-
-    Float operator*(const long double& other) const {
-        return Float(this->value * other);
-    }
-
-    Float operator*(const unsigned int& other) const {
-        return Float(this->value * other);
-    }
-
-    Float operator*(const unsigned long& other) const {
-        return Float(this->value * other);
-    }
-
-    Float operator*(const unsigned long long& other) const {
-        return Float(this->value * other);
-    }
-
     Float operator*(const Short& other) const {
+        return Float(this->value * other.value);
+    }
+
+    Float operator*(const Long& other) const {
         return Float(this->value * other.value);
     }
 
@@ -5899,16 +2844,9 @@ public:
         return Float(this->value * atof(other));
     }
 
-    Float operator*(const short& other) const {
+    template<typename Type>
+    Float operator*(const Type& other) const {
         return Float(this->value * other);
-    }
-
-    Float operator*(const unsigned short& other) const {
-        return Float(this->value * other);
-    }
-
-    Float operator*(const Long& other) const {
-        return Float(this->value * other.value);
     }
 
 
@@ -5917,47 +2855,15 @@ public:
         return Float(this->value / other.value);
     }
 
-    Float operator/(const float& other) const {
-        return Float(this->value / other);
-    }
-
     Float operator/(const Integer& other) const {
         return Float(this->value / other.value);
     }
 
-    Float operator/(const long long& other) const {
-        return Float(this->value / other);
-    }
-
-    Float operator/(const long& other) const {
-        return Float(this->value / other);
-    }
-
-    Float operator/(const int& other) const {
-        return Float(this->value / other);
-    }
-
-    Float operator/(const double& other) const {
-        return Float(this->value / other);
-    }
-
-    Float operator/(const long double& other) const {
-        return Float(this->value / other);
-    }
-
-    Float operator/(const unsigned int& other) const {
-        return Float(this->value / other);
-    }
-
-    Float operator/(const unsigned long& other) const {
-        return Float(this->value / other);
-    }
-
-    Float operator/(const unsigned long long& other) const {
-        return Float(this->value / other);
-    }
-
     Float operator/(const Short& other) const {
+        return Float(this->value / other.value);
+    }
+
+    Float operator/(const Long& other) const {
         return Float(this->value / other.value);
     }
 
@@ -5965,16 +2871,9 @@ public:
         return Float(this->value / atof(other));
     }
 
-    Float operator/(const short& other) const {
+    template<typename Type>
+    Float operator/(const Type& other) const {
         return Float(this->value / other);
-    }
-
-    Float operator/(const unsigned short& other) const {
-        return Float(this->value / other);
-    }
-
-    Float operator/(const Long& other) const {
-        return Float(this->value / other.value);
     }
 
 
@@ -5983,47 +2882,15 @@ public:
         return this->value == other.value;
     }
 
-    bool operator==(const float& other) const {
-        return this->value == other;
-    }
-
     bool operator==(const Integer& other) const {
         return this->value == other.value;
     }
 
-    bool operator==(const long long& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const long& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const int& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const double& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const long double& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const unsigned int& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const unsigned long& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const unsigned long long& other) const {
-        return this->value == other;
-    }
-
     bool operator==(const Short& other) const {
+        return this->value == other.value;
+    }
+
+    bool operator==(const Long& other) const {
         return this->value == other.value;
     }
 
@@ -6031,16 +2898,9 @@ public:
         return this->value == atof(other);
     }
 
-    bool operator==(const short& other) const {
+    template<typename Type>
+    bool operator==(const Type& other) const {
         return this->value == other;
-    }
-
-    bool operator==(const unsigned short& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const Long& other) const {
-        return this->value == other.value;
     }
 
 
@@ -6049,47 +2909,15 @@ public:
         return this->value != other.value;
     }
 
-    bool operator!=(const float& other) const {
-        return this->value != other;
-    }
-
     bool operator!=(const Integer& other) const {
         return this->value != other.value;
     }
 
-    bool operator!=(const long long& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const long& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const int& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const double& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const long double& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const unsigned int& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const unsigned long& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const unsigned long long& other) const {
-        return this->value != other;
-    }
-
     bool operator!=(const Short& other) const {
+        return this->value != other.value;
+    }
+
+    bool operator!=(const Long& other) const {
         return this->value != other.value;
     }
 
@@ -6097,53 +2925,26 @@ public:
         return this->value != atof(other);
     }
 
+    template<typename Type>
+    bool operator!=(const Type& other) const {
+        return this->value != other;
+    }
+    
 
 
     bool operator<(const Float& other) const {
         return this->value < other.value;
     }
 
-    bool operator<(const float& other) const {
-        return this->value < other;
-    }
-
     bool operator<(const Integer& other) const {
         return this->value < other.value;
     }
 
-    bool operator<(const long long& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const long& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const int& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const double& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const long double& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const unsigned int& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const unsigned long& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const unsigned long long& other) const {
-        return this->value < other;
-    }
-
     bool operator<(const Short& other) const {
+        return this->value < other.value;
+    }
+
+    bool operator<(const Long& other) const {
         return this->value < other.value;
     }
 
@@ -6151,16 +2952,9 @@ public:
         return this->value < atof(other);
     }
 
-    bool operator<(const short& other) const {
+    template<typename Type>
+    bool operator<(const Type& other) const {
         return this->value < other;
-    }
-
-    bool operator<(const unsigned short& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const Long& other) const {
-        return this->value < other.value;
     }
 
 
@@ -6169,47 +2963,15 @@ public:
         return this->value > other.value;
     }
 
-    bool operator>(const float& other) const {
-        return this->value > other;
-    }
-
     bool operator>(const Integer& other) const {
         return this->value > other.value;
     }
 
-    bool operator>(const long long& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const long& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const int& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const double& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const long double& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const unsigned int& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const unsigned long& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const unsigned long long& other) const {
-        return this->value > other;
-    }
-
     bool operator>(const Short& other) const {
+        return this->value > other.value;
+    }
+
+    bool operator>(const Long& other) const {
         return this->value > other.value;
     }
 
@@ -6217,65 +2979,26 @@ public:
         return this->value > atof(other);
     }
 
-    bool operator>(const short& other) const {
+    template<typename Type>
+    bool operator>(const Type& other) const {
         return this->value > other;
     }
-
-    bool operator>(const unsigned short& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const Long& other) const {
-        return this->value > other.value;
-    }
-
+    
 
 
     bool operator<=(const Float& other) const {
         return this->value <= other.value;
     }
 
-    bool operator<=(const float& other) const {
-        return this->value <= other;
-    }
-
     bool operator<=(const Integer& other) const {
         return this->value <= other.value;
     }
 
-    bool operator<=(const long long& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const long& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const int& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const double& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const long double& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const unsigned int& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const unsigned long& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const unsigned long long& other) const {
-        return this->value <= other;
-    }
-
     bool operator<=(const Short& other) const {
+        return this->value <= other.value;
+    }
+
+    bool operator<=(const Long& other) const {
         return this->value <= other.value;
     }
 
@@ -6283,65 +3006,26 @@ public:
         return this->value <= atof(other);
     }
 
-    bool operator<=(const short& other) const {
+    template<typename Type>
+    bool operator<=(const Type& other) const {
         return this->value <= other;
     }
-
-    bool operator<=(const unsigned short& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const Long& other) const {
-        return this->value <= other.value;
-    }
-
+    
 
 
     bool operator>=(const Float& other) const {
         return this->value >= other.value;
     }
 
-    bool operator>=(const float& other) const {
-        return this->value >= other;
-    }
-
     bool operator>=(const Integer& other) const {
         return this->value >= other.value;
     }
 
-    bool operator>=(const long long& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const long& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const int& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const double& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const long double& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const unsigned int& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const unsigned long& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const unsigned long long& other) const {
-        return this->value >= other;
-    }
-
     bool operator>=(const Short& other) const {
+        return this->value >= other.value;
+    }
+
+    bool operator>=(const Long& other) const {
         return this->value >= other.value;
     }
 
@@ -6349,16 +3033,9 @@ public:
         return this->value >= atof(other);
     }
 
-    bool operator>=(const short& other) const {
+    template<typename Type>
+    bool operator>=(const Type& other) const {
         return this->value >= other;
-    }
-
-    bool operator>=(const unsigned short& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const Long& other) const {
-        return this->value >= other.value;
     }
 
 
@@ -6373,47 +3050,15 @@ public:
         return this->value && other.value;
     }
 
-    bool operator&&(const float& other) const {
-        return this->value && other;
-    }
-
     bool operator&&(const Integer& other) const {
         return this->value && other.value;
     }
 
-    bool operator&&(const long long& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const long& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const int& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const double& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const long double& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const unsigned int& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const unsigned long& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const unsigned long long& other) const {
-        return this->value && other;
-    }
-
     bool operator&&(const Short& other) const {
+        return this->value && other.value;
+    }
+
+    bool operator&&(const Long& other) const {
         return this->value && other.value;
     }
 
@@ -6421,16 +3066,9 @@ public:
         return this->value && atof(other);
     }
 
-    bool operator&&(const short& other) const {
+    template<typename Type>
+    bool operator&&(const Type& other) const {
         return this->value && other;
-    }
-
-    bool operator&&(const unsigned short& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const Long& other) const {
-        return this->value && other.value;
     }
 
 
@@ -6439,47 +3077,15 @@ public:
         return this->value || other.value;
     }
 
-    bool operator||(const float& other) const {
-        return this->value || other;
-    }
-
     bool operator||(const Integer& other) const {
         return this->value || other.value;
     }
 
-    bool operator||(const long long& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const long& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const int& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const double& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const long double& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const unsigned int& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const unsigned long& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const unsigned long long& other) const {
-        return this->value || other;
-    }
-
     bool operator||(const Short& other) const {
+        return this->value || other.value;
+    }
+
+    bool operator||(const Long& other) const {
         return this->value || other.value;
     }
 
@@ -6487,14 +3093,11 @@ public:
         return this->value || atof(other);
     }
 
-    bool operator||(const short& other) const {
+    template<typename Type>
+    bool operator||(const Type& other) const {
         return this->value || other;
     }
-
-    bool operator||(const unsigned short& other) const {
-        return this->value || other;
-    }
-
+    
 
 
     friend std::ostream& operator<<(std::ostream& out, const Float& floatNum) {
@@ -6519,40 +3122,24 @@ private:
     friend class Long;
     friend class Float;
     friend class Short;
+    friend class Boolean;
 public:
     Double() : value(0) {}
-
-    Double(double value) : value(value) {}
 
     Double(const Integer& integer) : value(integer.value) {}
 
     Double(const Float& floatNum) : value(floatNum.value) {}
 
-    Double(const long long& longNum) : value(longNum) {}
-
-    Double(const long& longNum) : value(longNum) {}
-
-    Double(const int& intNum) : value(intNum) {}
-
     Double(const Double& other) : value(other.value) {}
-
-    Double(const unsigned int& unsignedIntNum) : value(unsignedIntNum) {}
-
-    Double(const long double& longDoubleNum) : value(longDoubleNum) {}
-
-    Double(const unsigned long long& unsignedLongNum) : value(unsignedLongNum) {}
-
-    Double(const unsigned long& unsignedLongNum) : value(unsignedLongNum) {}
-
-    Double(const short& shortNum) : value(shortNum) {}
-
-    Double(const char* string) : value(atof(string)) {}
 
     Double(const Short& shortNum) : value(shortNum.value) {}
 
-    Double(const unsigned short& unsignedShortNum) : value(unsignedShortNum) {}
-
     Double(const Long& other) : value(other.value) {}
+
+    Double(const char* other) : value(atof(other)) {}
+
+    template<typename Type>
+    Double(const Type& other) : value(other) {}
 
 
 
@@ -6571,48 +3158,13 @@ public:
         return *this;
     }
 
-    Double& operator=(const long long& other) {
-        this->value = other;
+    Double& operator=(const Short& other) {
+        this->value = other.value;
         return *this;
     }
 
-    Double& operator=(const long& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Double& operator=(const double& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Double& operator=(const int& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Double& operator=(const unsigned long long& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Double& operator=(const unsigned long& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Double& operator=(const unsigned int& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Double& operator=(const long double& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Double& operator=(const short& other) {
-        this->value = other;
+    Double& operator=(const Long& other) {
+        this->value = other.value;
         return *this;
     }
 
@@ -6621,18 +3173,9 @@ public:
         return *this;
     }
 
-    Double& operator=(const Short& other) {
-        this->value = other.value;
-        return *this;
-    }
-
-    Double& operator=(const unsigned short& other) {
+    template<typename Type>
+    Double& operator=(const Type& other) {
         this->value = other;
-        return *this;
-    }
-
-    Double& operator=(const Long& other) {
-        this->value = other.value;
         return *this;
     }
 
@@ -6681,7 +3224,7 @@ public:
      * @return Double& 
      */
     Double& abs() {
-        if (this->value < 0) {
+        if(this->value < 0) {
             this->value = -this->value;
         }
         return *this;
@@ -6714,7 +3257,7 @@ public:
      */
     long long floor() {
         long long result;
-        if (this->value < 0) {
+        if(this->value < 0) {
             result = (long long)this->value - 1;
             return result;
         }
@@ -6727,7 +3270,7 @@ public:
      * @return long long 
      */
     long long ceil() {
-        if (this->value - (long long)this->value == 0) return this->value;
+        if(this->value - (long long)this->value == 0) return this->value;
         return this->floor() + 1;
     }
 
@@ -6737,18 +3280,18 @@ public:
      * @return long long 
      */
     long long round() {
-        if (this->value - (long long)this->value == 0) return this->value;
+        if(this->value - (long long)this->value == 0) return this->value;
         double number = this->value - (long long)this->value;
-        if (this->value < 0) {
+        if(this->value < 0) {
             double negativeValue = this->value - (long long)this->value;
             long long result;
-            if (negativeValue <= -0.5 && negativeValue > -1) result = this->floor();
-            else if (negativeValue > -0.5 && negativeValue < 0) result = this->ceil();
+            if(negativeValue <= -0.5 && negativeValue > -1) result = this->floor();
+            else if(negativeValue > -0.5 && negativeValue < 0) result = this->ceil();
             return result;
         }
         long long result;
-        if (number >= 0.5 && number < 1) result = this->ceil();
-        else if (number < 0.5 && number > 0) result = this->floor();
+        if(number >= 0.5 && number < 1) result = this->ceil();
+        else if(number < 0.5 && number > 0) result = this->floor();
         return result;
     }
 
@@ -6758,10 +3301,10 @@ public:
      * @return Double& 
      */
     Double& signum() {
-        if (this->value < 0) {
+        if(this->value < 0) {
             this->value = -1;
         }
-        else if (this->value > 0) {
+        else if(this->value > 0) {
             this->value = 1;
         }
         else {
@@ -6869,68 +3412,24 @@ public:
         return *this;
     }
 
-    Double& operator+=(const long long& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Double& operator+=(const long& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Double& operator+=(const double& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Double& operator+=(const int& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Double& operator+=(const unsigned long long& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Double& operator+=(const unsigned long& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Double& operator+=(const unsigned int& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Double& operator+=(const long double& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Double& operator+=(const char* other) {
-        this->value += atof(other);
-        return *this;
-    }
-
     Double& operator+=(const Short& other) {
         this->value += other.value;
         return *this;
     }
 
-    Double& operator+=(const short& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Double& operator+=(const unsigned short& other) {
-        this->value += other;
-        return *this;
-    }
-
     Double& operator+=(const Long& other) {
         this->value += other.value;
+        return *this;
+    }
+
+    Double& operator+=(const char* other) {
+        this->value += std::stod(other);
+        return *this;
+    }
+
+    template<typename Type>
+    Double& operator+=(const Type& other) {
+        this->value += other;
         return *this;
     }
 
@@ -6951,68 +3450,24 @@ public:
         return *this;
     }
 
-    Double& operator-=(const long long& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Double& operator-=(const long& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Double& operator-=(const double& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Double& operator-=(const int& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Double& operator-=(const unsigned long long& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Double& operator-=(const unsigned long& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Double& operator-=(const unsigned int& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Double& operator-=(const long double& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Double& operator-=(const char* other) {
-        this->value -= atof(other);
-        return *this;
-    }
-
     Double& operator-=(const Short& other) {
         this->value -= other.value;
         return *this;
     }
 
-    Double& operator-=(const short& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Double& operator-=(const unsigned short& other) {
-        this->value -= other;
-        return *this;
-    }
-
     Double& operator-=(const Long& other) {
         this->value -= other.value;
+        return *this;
+    }
+
+    Double& operator-=(const char* other) {
+        this->value -= std::stod(other);
+        return *this;
+    }
+
+    template<typename Type>
+    Double& operator-=(const Type& other) {
+        this->value -= other;
         return *this;
     }
 
@@ -7033,63 +3488,8 @@ public:
         return *this;
     }
 
-    Double& operator*=(const long long& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Double& operator*=(const long& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Double& operator*=(const double& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Double& operator*=(const int& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Double& operator*=(const unsigned long long& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Double& operator*=(const unsigned long& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Double& operator*=(const unsigned int& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Double& operator*=(const long double& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Double& operator*=(const char* other) {
-        this->value *= atof(other);
-        return *this;
-    }
-
     Double& operator*=(const Short& other) {
         this->value *= other.value;
-        return *this;
-    }
-
-    Double& operator*=(const short& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Double& operator*=(const unsigned short& other) {
-        this->value *= other;
         return *this;
     }
 
@@ -7098,7 +3498,16 @@ public:
         return *this;
     }
 
+    Double& operator*=(const char* other) {
+        this->value *= std::stod(other);
+        return *this;
+    }
 
+    template<typename Type>
+    Double& operator*=(const Type& other) {
+        this->value *= other;
+        return *this;
+    }
 
 
 
@@ -7117,63 +3526,8 @@ public:
         return *this;
     }
 
-    Double& operator/=(const long long& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Double& operator/=(const long& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Double& operator/=(const double& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Double& operator/=(const int& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Double& operator/=(const unsigned long long& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Double& operator/=(const unsigned long& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Double& operator/=(const unsigned int& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Double& operator/=(const long double& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Double& operator/=(const char* other) {
-        this->value /= atof(other);
-        return *this;
-    }
-
     Double& operator/=(const Short& other) {
         this->value /= other.value;
-        return *this;
-    }
-
-    Double& operator/=(const short& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Double& operator/=(const unsigned short& other) {
-        this->value /= other;
         return *this;
     }
 
@@ -7182,7 +3536,18 @@ public:
         return *this;
     }
 
+    Double& operator/=(const char* other) {
+        this->value /= std::stod(other);
+        return *this;
+    }
 
+    template<typename Type>
+    Double& operator/=(const Type& other) {
+        this->value /= other;
+        return *this;
+    }
+
+    
 
     Double& operator++() {
         this->value++;
@@ -7220,58 +3585,23 @@ public:
         return Double(this->value + other.value);
     }
 
-    Double operator+(const long long& other) const {
-        return Double(this->value + other);
-    }
-
-    Double operator+(const long& other) const {
-        return Double(this->value + other);
-    }
-
-    Double operator+(const double& other) const {
-        return Double(this->value + other);
-    }
-
-    Double operator+(const int& other) const {
-        return Double(this->value + other);
-    }
-
-    Double operator+(const unsigned long long& other) const {
-        return Double(this->value + other);
-    }
-
-    Double operator+(const unsigned long& other) const {
-        return Double(this->value + other);
-    }
-
-    Double operator+(const unsigned int& other) const {
-        return Double(this->value + other);
-    }
-
-    Double operator+(const long double& other) const {
-        return Double(this->value + other);
-    }
-
-    Double operator+(const char* other) const {
-        return Double(this->value + atof(other));
-    }
-
     Double operator+(const Short& other) const {
         return Double(this->value + other.value);
-    }
-
-    Double operator+(const short& other) const {
-        return Double(this->value + other);
-    }
-
-    Double operator+(const unsigned short& other) const {
-        return Double(this->value + other);
     }
 
     Double operator+(const Long& other) const {
         return Double(this->value + other.value);
     }
 
+    Double operator+(const char* other) const {
+        return Double(this->value + std::stod(other));
+    }
+
+    template<typename Type>
+    Double operator+(const Type& other) const {
+        return Double(this->value + other);
+    }
+    
 
 
     Double operator-(const Double& other) const {
@@ -7286,58 +3616,23 @@ public:
         return Double(this->value - other.value);
     }
 
-    Double operator-(const long long& other) const {
-        return Double(this->value - other);
-    }
-
-    Double operator-(const long& other) const {
-        return Double(this->value - other);
-    }
-
-    Double operator-(const double& other) const {
-        return Double(this->value - other);
-    }
-
-    Double operator-(const int& other) const {
-        return Double(this->value - other);
-    }
-
-    Double operator-(const unsigned long long& other) const {
-        return Double(this->value - other);
-    }
-
-    Double operator-(const unsigned long& other) const {
-        return Double(this->value - other);
-    }
-
-    Double operator-(const unsigned int& other) const {
-        return Double(this->value - other);
-    }
-
-    Double operator-(const long double& other) const {
-        return Double(this->value - other);
-    }
-
-    Double operator-(const char* other) const {
-        return Double(this->value - atof(other));
-    }
-
     Double operator-(const Short& other) const {
         return Double(this->value - other.value);
-    }
-
-    Double operator-(const short& other) const {
-        return Double(this->value - other);
-    }
-
-    Double operator-(const unsigned short& other) const {
-        return Double(this->value - other);
     }
 
     Double operator-(const Long& other) const {
         return Double(this->value - other.value);
     }
 
+    Double operator-(const char* other) const {
+        return Double(this->value - std::stod(other));
+    }
+
+    template<typename Type>
+    Double operator-(const Type& other) const {
+        return Double(this->value - other);
+    }
+    
 
 
     Double operator*(const Double& other) const {
@@ -7352,58 +3647,23 @@ public:
         return Double(this->value * other.value);
     }
 
-    Double operator*(const long long& other) const {
-        return Double(this->value * other);
-    }
-
-    Double operator*(const long& other) const {
-        return Double(this->value * other);
-    }
-
-    Double operator*(const double& other) const {
-        return Double(this->value * other);
-    }
-
-    Double operator*(const int& other) const {
-        return Double(this->value * other);
-    }
-
-    Double operator*(const unsigned long long& other) const {
-        return Double(this->value * other);
-    }
-
-    Double operator*(const unsigned long& other) const {
-        return Double(this->value * other);
-    }
-
-    Double operator*(const unsigned int& other) const {
-        return Double(this->value * other);
-    }
-
-    Double operator*(const long double& other) const {
-        return Double(this->value * other);
-    }
-
-    Double operator*(const char* other) const {
-        return Double(this->value * atof(other));
-    }
-
     Double operator*(const Short& other) const {
         return Double(this->value * other.value);
-    }
-
-    Double operator*(const short& other) const {
-        return Double(this->value * other);
-    }
-
-    Double operator*(const unsigned short& other) const {
-        return Double(this->value * other);
     }
 
     Double operator*(const Long& other) const {
         return Double(this->value * other.value);
     }
 
+    Double operator*(const char* other) const {
+        return Double(this->value * std::stod(other));
+    }
+
+    template<typename Type>
+    Double operator*(const Type& other) const {
+        return Double(this->value * other);
+    }
+    
 
 
     Double operator/(const Double& other) const {
@@ -7418,56 +3678,21 @@ public:
         return Double(this->value / other.value);
     }
 
-    Double operator/(const long long& other) const {
-        return Double(this->value / other);
-    }
-
-    Double operator/(const long& other) const {
-        return Double(this->value / other);
-    }
-
-    Double operator/(const double& other) const {
-        return Double(this->value / other);
-    }
-
-    Double operator/(const int& other) const {
-        return Double(this->value / other);
-    }
-
-    Double operator/(const unsigned long long& other) const {
-        return Double(this->value / other);
-    }
-
-    Double operator/(const unsigned long& other) const {
-        return Double(this->value / other);
-    }
-
-    Double operator/(const unsigned int& other) const {
-        return Double(this->value / other);
-    }
-
-    Double operator/(const long double& other) const {
-        return Double(this->value / other);
-    }
-
-    Double operator/(const char* other) const {
-        return Double(this->value / atof(other));
-    }
-
     Double operator/(const Short& other) const {
         return Double(this->value / other.value);
     }
 
-    Double operator/(const short& other) const {
-        return Double(this->value / other);
-    }
-
-    Double operator/(const unsigned short& other) const {
-        return Double(this->value / other);
-    }
-
     Double operator/(const Long& other) const {
         return Double(this->value / other.value);
+    }
+
+    Double operator/(const char* other) const {
+        return Double(this->value / std::stod(other));
+    }
+
+    template<typename Type>
+    Double operator/(const Type& other) const {
+        return Double(this->value / other);
     }
 
 
@@ -7484,63 +3709,24 @@ public:
         return this->value == other.value;
     }
 
-    bool operator==(const long long& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const long& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const double& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const int& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const unsigned long long& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const unsigned long& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const unsigned int& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const bool& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const long double& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const char* other) const {
-        return this->value == atof(other);
-    }
-
     bool operator==(const Short& other) const {
         return this->value == other.value;
-    }
-
-    bool operator==(const short& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const unsigned short& other) const {
-        return this->value == other;
     }
 
     bool operator==(const Long& other) const {
         return this->value == other.value;
     }
 
+    bool operator==(const char* other) const {
+        return this->value == std::stod(other);
+    }
 
+    template<typename Type>
+    bool operator==(const Type& other) const {
+        return this->value == other;
+    }
+
+    
 
     bool operator!=(const Double& other) const {
         return this->value != other.value;
@@ -7554,58 +3740,23 @@ public:
         return this->value != other.value;
     }
 
-    bool operator!=(const long long& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const long& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const double& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const int& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const unsigned long long& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const unsigned long& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const unsigned int& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const bool& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const long double& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const char* other) const {
-        return this->value != atof(other);
-    }
-
     bool operator!=(const Short& other) const {
         return this->value != other.value;
     }
 
-    bool operator!=(const short& other) const {
-        return this->value != other;
+    bool operator!=(const Long& other) const {
+        return this->value != other.value;
     }
 
-    bool operator!=(const unsigned short& other) const {
-        return this->value != other;
+    bool operator!=(const char* other) const {
+        return this->value != std::stod(other);
     }
 
+    template<typename Type>
+    bool operator!=(const Type& other) const {
+        return this->value != other;
+    }
+    
 
 
     bool operator<(const Double& other) const {
@@ -7620,58 +3771,23 @@ public:
         return this->value < other.value;
     }
 
-    bool operator<(const long long& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const long& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const double& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const int& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const unsigned long long& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const unsigned long& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const unsigned int& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const long double& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const char* other) const {
-        return this->value < atof(other);
-    }
-
     bool operator<(const Short& other) const {
         return this->value < other.value;
-    }
-
-    bool operator<(const short& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const unsigned short& other) const {
-        return this->value < other;
     }
 
     bool operator<(const Long& other) const {
         return this->value < other.value;
     }
 
+    bool operator<(const char* other) const {
+        return this->value < std::stod(other);
+    }
+
+    template<typename Type>
+    bool operator<(const Type& other) const {
+        return this->value < other;
+    }
+    
 
 
     bool operator>(const Double& other) const {
@@ -7686,58 +3802,23 @@ public:
         return this->value > other.value;
     }
 
-    bool operator>(const long long& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const long& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const double& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const int& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const unsigned long long& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const unsigned long& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const unsigned int& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const long double& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const char* other) const {
-        return this->value > atof(other);
-    }
-
     bool operator>(const Short& other) const {
         return this->value > other.value;
-    }
-
-    bool operator>(const short& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const unsigned short& other) const {
-        return this->value > other;
     }
 
     bool operator>(const Long& other) const {
         return this->value > other.value;
     }
 
+    bool operator>(const char* other) const {
+        return this->value > std::stod(other);
+    }
+
+    template<typename Type>
+    bool operator>(const Type& other) const {
+        return this->value > other;
+    }
+    
 
 
     bool operator<=(const Double& other) const {
@@ -7752,58 +3833,23 @@ public:
         return this->value <= other.value;
     }
 
-    bool operator<=(const long long& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const long& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const double& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const int& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const unsigned long long& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const unsigned long& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const unsigned int& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const long double& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const char* other) const {
-        return this->value <= atof(other);
-    }
-
     bool operator<=(const Short& other) const {
         return this->value <= other.value;
-    }
-
-    bool operator<=(const short& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const unsigned short& other) const {
-        return this->value <= other;
     }
 
     bool operator<=(const Long& other) const {
         return this->value <= other.value;
     }
 
+    bool operator<=(const char* other) const {
+        return this->value <= std::stod(other);
+    }
+
+    template<typename Type>
+    bool operator<=(const Type& other) const {
+        return this->value <= other;
+    }
+    
 
 
     bool operator>=(const Double& other) const {
@@ -7818,58 +3864,23 @@ public:
         return this->value >= other.value;
     }
 
-    bool operator>=(const long long& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const long& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const double& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const int& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const unsigned long long& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const unsigned long& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const unsigned int& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const long double& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const char* other) const {
-        return this->value >= atof(other);
-    }
-
     bool operator>=(const Short& other) const {
         return this->value >= other.value;
-    }
-
-    bool operator>=(const short& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const unsigned short& other) const {
-        return this->value >= other;
     }
 
     bool operator>=(const Long& other) const {
         return this->value >= other.value;
     }
 
+    bool operator>=(const char* other) const {
+        return this->value >= std::stod(other);
+    }
+
+    template<typename Type>
+    bool operator>=(const Type& other) const {
+        return this->value >= other;
+    }
+    
 
 
     bool operator!() const {
@@ -7888,70 +3899,23 @@ public:
         return this->value && other.value;
     }
 
-    bool operator&&(const long long& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const long& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const double& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const int& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const bool& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const unsigned int& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const unsigned long& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const unsigned long long& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const char& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const char* other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const unsigned char& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const long double& other) const {
-        return this->value && other;
-    }
-
     bool operator&&(const Short& other) const {
         return this->value && other.value;
-    }
-
-    bool operator&&(const short& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const unsigned short& other) const {
-        return this->value && other;
     }
 
     bool operator&&(const Long& other) const {
         return this->value && other.value;
     }
 
+    bool operator&&(const char* other) const {
+        return this->value && std::stod(other);
+    }
+
+    template<typename Type>
+    bool operator&&(const Type& other) const {
+        return this->value && other;
+    }
+    
 
 
     bool operator||(const Double& other) const {
@@ -7966,68 +3930,21 @@ public:
         return this->value || other.value;
     }
 
-    bool operator||(const long long& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const long& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const double& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const int& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const bool& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const unsigned long long& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const unsigned long& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const unsigned int& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const unsigned short& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const unsigned char& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const char& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const char* other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const long double& other) const {
-        return this->value || other;
-    }
-
     bool operator||(const Short& other) const {
         return this->value || other.value;
     }
 
-    bool operator||(const short& other) const {
-        return this->value || other;
-    }
-
     bool operator||(const Long& other) const {
         return this->value || other.value;
+    }
+
+    bool operator||(const char* other) const {
+        return this->value || std::stod(other);
+    }
+
+    template<typename Type>
+    bool operator||(const Type& other) const {
+        return this->value || other;
     }
 
 
@@ -8052,299 +3969,158 @@ public:
 class Boolean {
 private:
     bool value;
+    friend class Integer;
+    friend class Short;
+    friend class Long;
+    friend class Float;
+    friend class Double;
 public:
     Boolean() : value(false) {}
-
-    Boolean(const bool& value) : value(value) {}
-
-    Boolean(const int& value) : value(value) {}
-
+    template<typename Type>
+    Boolean(const Type& value) : value(value) {}
     Boolean(const Boolean& other) : value(other.value) {}
+    Boolean(Boolean&& other) : value(other.value) {}
+    Boolean(const Integer& other) : value(other.value) {}
+    Boolean(const Short& other) : value(other.value) {}
+    Boolean(const Long& other) : value(other.value) {}
+    Boolean(const Float& other) : value(other.value) {}
+    Boolean(const Double& other) : value(other.value) {}
 
-    Boolean(const std::string& value) {
-        if (value != "false") {
-            this->value = true;
-        }
-        else if (value == "false") {
-            this->value = false;
-        }
-        else {
-            throw std::invalid_argument("Invalid boolean value");
-        }
-    }
-
-
-
-    operator bool() {
-        return this->value;
-    }
-
-    /**
-     * @brief Set the Value object
-     * 
-     * @param value 
-     */
-    void setValue(bool value) {
-        this->value = value;
-    }
-
-    /**
-     * @brief Get the Value object
-     * 
-     * @return true 
-     * @return false 
-     */
-    bool getValue() const {
-        return this->value;
-    }
-
-    /**
-     * @brief A method that returns the type of the object
-     * 
-     * @return const char* 
-     */
-    const char* type() {
-        return "Boolean";
-    }
-
-
-
-    Boolean& operator=(const bool& other) {
-        this->value = other;
-        return *this;
-    }
-
-    Boolean& operator=(const Boolean& other) {
-        this->value = other.value;
-        return *this;
-    }
-
-    Boolean& operator=(const std::string& value) {
-        if (value == "true") {
-            this->value = true;
-            return *this;
-        }
-        this->value = false;
-        return *this;
-    }
-
-    Boolean& operator=(const char* value) {
-        if (value != "false") {
-            this->value = true;
-            return *this;
-        }
-        this->value = false;
-        return *this;
-    }
-
-    Boolean& operator=(const char& value) {
-        if (value == 'f' || value == '0') {
-            this->value = false;
-            return *this;
-        }
-        this->value = true;
-        return *this;
-    }
-
-    Boolean& operator=(const int& other) {
-        if (other != 0) {
-            this->value = true;
-            return *this;
-        }
-        this->value = false;
-        return *this;
-    }
 
 
     operator bool() const {
         return this->value;
     }
 
-
-
-    bool operator==(const bool& other) const {
-        return this->value == other;
+    void setValue(const bool& value) {
+        this->value = value;
     }
+
+    void setValue(bool&& value) {
+        this->value = value;
+    }
+
+    bool getValue() const {
+        return this->value;
+    }
+
+    const char* toString() const {
+        return this->value ? "true" : "false";
+    }
+
+    const char* type() const {
+        return "Boolean";
+    }
+
+
+
+    Boolean& operator=(const Boolean& other) {
+        this->value = other.value;
+        return *this;
+    }
+
+    Boolean& operator=(Boolean&& other) {
+        this->value = other.value;
+        return *this;
+    }
+
+    Boolean& operator=(const Integer& other) {
+        this->value = other.value;
+        return *this;
+    }
+
+    Boolean& operator=(const Short& other) {
+        this->value = other.value;
+        return *this;
+    }
+
+    Boolean& operator=(const Long& other) {
+        this->value = other.value;
+        return *this;
+    }
+
+    Boolean& operator=(const Float& other) {
+        this->value = other.value;
+        return *this;
+    }
+
+    Boolean& operator=(const Double& other) {
+        this->value = other.value;
+        return *this;
+    }
+    
+    template<typename Type>
+    Boolean& operator=(const Type& other) {
+        this->value = other;
+        return *this;
+    }
+
+
 
     bool operator==(const Boolean& other) const {
         return this->value == other.value;
     }
 
-    bool operator==(const std::string& other) const {
-        if (other == "true" || other == "1") {
-            return this->value == true;
-        }
-        else if (other == "false" || other == "0") {
-            return this->value == false;
-        }
-        else {
-            throw std::invalid_argument("Invalid boolean value");
-        }
+    bool operator==(const Integer& other) const {
+        return this->value == other.value;
     }
 
-    bool operator==(const char* other) const {
-        if (other != "false" || other != "0") {
-            return this->value == true;
-        }
-        return this->value == false;
+    bool operator==(const Short& other) const {
+        return this->value == other.value;
     }
 
-    bool operator==(const char& other) const {
-        if (other == 'f' || other == '0') {
-            return this->value == false;
-        }
-        return this->value == true;
+    bool operator==(const Long& other) const {
+        return this->value == other.value;
     }
 
-    template<typename type>
-    bool operator==(const type& other) const {
-        if (other != "false" || other != "0" || other != '0' || other != 'f' || other != 0) {
-            return this->value == true;
-        }
-        return this->value == false;
+    bool operator==(const Float& other) const {
+        return this->value == other.value;
+    }
+
+    bool operator==(const Double& other) const {
+        return this->value == other.value;
+    }
+
+    template<typename Type>
+    bool operator==(const Type& other) const {
+        return this->value == other;
     }
 
 
-    bool operator!=(const bool& other) const {
-        return this->value != other;
-    }
 
     bool operator!=(const Boolean& other) const {
         return this->value != other.value;
     }
 
-    bool operator!=(const std::string& other) const {
-        if (other == "true" || other == "1") {
-            return this->value != true;
-        }
-        else if (other == "false" || other == "0") {
-            return this->value != false;
-        }
-        else {
-            throw std::invalid_argument("Invalid boolean value");
-        }
+    bool operator!=(const Integer& other) const {
+        return this->value != other.value;
     }
 
-    bool operator!=(const char* other) const {
-        if (other != "false" || other != "0") {
-            return this->value != true;
-        }
-        return this->value != false;
+    bool operator!=(const Short& other) const {
+        return this->value != other.value;
     }
 
-    bool operator!=(const char& other) const {
-        if (other == 'f' || other == '0') {
-            return this->value != false;
-        }
-        return this->value != true;
+    bool operator!=(const Long& other) const {
+        return this->value != other.value;
     }
 
-    bool operator!=(const long double& other) const {
-        if (other != 0) {
-            return this->value != true;
-        }
-        return this->value != false;
+    bool operator!=(const Float& other) const {
+        return this->value != other.value;
     }
 
-    bool operator!() const {
-        return !this->value;
+    bool operator!=(const Double& other) const {
+        return this->value != other.value;
     }
 
-    bool operator&&(const bool& other) const {
-        return this->value && other;
-    }
-
-    bool operator&&(const Boolean& other) const {
-        return this->value && other.value;
-    }
-
-    bool operator&&(const std::string& other) const {
-        if (other == "true" || other == "1") {
-            return this->value && true;
-        }
-        else if (other == "false" || other == "0") {
-            return this->value && false;
-        }
-        else {
-            throw std::invalid_argument("Invalid boolean value");
-        }
-    }
-
-    bool operator&&(const char* other) const {
-        if (other != "false" || other != "0") {
-            return this->value && true;
-        }
-        return this->value && false;
-    }
-
-    bool operator&&(const char& other) const {
-        if (other == 'f' || other == '0') {
-            return this->value && false;
-        }
-        return this->value && true;
-    }
-
-    bool operator&&(const long double& other) const {
-        if (other != 0) {
-            return this->value && true;
-        }
-        return this->value && false;
-    }
-
-    bool operator&&(const int& other) const {
-        if (other != 0) {
-            return this->value && true;
-        }
-        return this->value && false;
-    }
-
-
-
-    bool operator||(const bool& other) const {
-        return this->value || other;
-    }
-
-    bool operator||(const Boolean& other) const {
-        return this->value || other.value;
-    }
-
-    bool operator||(const std::string& other) const {
-        if (other == "true" || other == "1") {
-            return this->value || true;
-        }
-        else if (other == "false" || other == "0") {
-            return this->value || false;
-        }
-        else {
-            throw std::invalid_argument("Invalid boolean value");
-        }
-    }
-
-    bool operator||(const char* other) const {
-        if (other != "false" || other != "0") {
-            return this->value || true;
-        }
-        return this->value || false;
-    }
-
-    bool operator||(const char& other) const {
-        if (other == 'f' || other == '0') {
-            return this->value || false;
-        }
-        return this->value || true;
-    }
-
-    bool operator||(const long double& other) const {
-        if (other != 0) {
-            return this->value || true;
-        }
-        return this->value || false;
+    template<typename Type>
+    bool operator!=(const Type& other) const {
+        return this->value != other;
     }
 
 
 
     friend std::ostream& operator<<(std::ostream& out, const Boolean& boolean) {
-        if (boolean.value == true) {
+        if(boolean.value == true) {
             out << true;
             return out;
         }
@@ -8369,9 +4145,8 @@ private:
 public:
     Character() : value('\0') {}
 
-    Character(const int& other) : value(other) {}
-
-    Character(const char& value) : value(value) {} 
+    template<typename Type>
+    Character(const Type& other) : value(other) {}
 
     Character(const Character& other) : value(other.value) {}
 
@@ -8379,12 +4154,10 @@ public:
 
     ~Character() {}
 
-    Character& operator=(const int& other) {
-        this->value = other;
-        return *this;
-    }
 
-    Character& operator=(const char& other) {
+
+    template<typename Type>
+    Character& operator=(const Type& other) {
         this->value = other;
         return *this;
     }
@@ -8421,7 +4194,7 @@ public:
      * @return Character& 
      */
     Character& isAlphabet() {
-        if (isalpha(this->value)) {
+        if(isalpha(this->value)) {
             return *this;
         }
         throw std::invalid_argument("Invalid alphabet");
@@ -8433,7 +4206,7 @@ public:
      * @return Character& 
      */
     Character& isDigit() {
-        if (isdigit(this->value)) {
+        if(isdigit(this->value)) {
             return *this;
         }
         throw std::invalid_argument("Invalid digit");
@@ -8445,7 +4218,7 @@ public:
      * @return Character& 
      */
     Character& isAlphanumeric() {
-        if (isalnum(this->value)) {
+        if(isalnum(this->value)) {
             return *this;
         }
         throw std::invalid_argument("Invalid alphanumeric");
@@ -8457,7 +4230,7 @@ public:
      * @return Character& 
      */
     Character& isSpace() {
-        if (isspace(this->value)) {
+        if(isspace(this->value)) {
             return *this;
         }
         throw std::invalid_argument("Invalid space");
@@ -8469,7 +4242,7 @@ public:
      * @return Character& 
      */
     Character& isPunctuation() {
-        if (ispunct(this->value)) {
+        if(ispunct(this->value)) {
             return *this;
         }
         throw std::invalid_argument("Invalid punctuation");
@@ -8481,7 +4254,7 @@ public:
      * @return Character& 
      */
     Character& isPrintable() {
-        if (isprint(this->value)) {
+        if(isprint(this->value)) {
             return *this;
         }
         throw std::invalid_argument("Invalid printable");
@@ -8493,7 +4266,7 @@ public:
      * @return Character& 
      */
     Character& isBlank() {
-        if (isblank(this->value)) {
+        if(isblank(this->value)) {
             return *this;
         }
         throw std::invalid_argument("Invalid blank");
@@ -8583,7 +4356,7 @@ public:
      * @return bool 
      */
     bool isSameChar(const char& other) const {
-        if (this->value == other) {
+        if(this->value == other) {
             return true;
         }
         return false;
@@ -8596,7 +4369,7 @@ public:
      * @return bool
      */
     bool isSameChar(const Character& other) const {
-        if (this->value == other.value) {
+        if(this->value == other.value) {
             return true;
         }
         return false;
@@ -8618,7 +4391,7 @@ public:
      * @return bool
      */
     bool equalsIgnoreCase(const Character& other) const {
-        if (toupper(this->value) == toupper(other.value)) {
+        if(toupper(this->value) == toupper(other.value)) {
             return true;
         }
         return false;
@@ -8632,7 +4405,7 @@ public:
      * @return false 
      */
     bool equalsIgnoreCase(const char& other) const {
-        if (toupper(this->value) == toupper(other)) {
+        if(toupper(this->value) == toupper(other)) {
             return true;
         }
         return false;
@@ -8645,7 +4418,7 @@ public:
      * @return bool
      */
     bool equalsIgnoreCase(const int& other) const {
-        if (toupper(this->value) == toupper(other)) {
+        if(toupper(this->value) == toupper(other)) {
             return true;
         }
         return false;
@@ -8675,12 +4448,8 @@ public:
 
 
 
+    template<typename Type>
     Character& operator+=(const int& other) {
-        this->value += other;
-        return *this;
-    }
-
-    Character& operator+=(const char& other) {
         this->value += other;
         return *this;
     }
@@ -8692,12 +4461,8 @@ public:
 
 
 
+    template<typename Type>
     Character& operator-=(const int& other) {
-        this->value -= other;
-        return *this;
-    }
-
-    Character& operator-=(const char& other) {
         this->value -= other;
         return *this;
     }
@@ -8709,12 +4474,8 @@ public:
 
 
 
-    Character& operator*=(const int& other) {
-        this->value *= other;
-        return *this;
-    }
-
-    Character& operator*=(const char& other) {
+    template<typename Type>
+    Character& operator*=(const Type& other) {
         this->value *= other;
         return *this;
     }
@@ -8726,12 +4487,8 @@ public:
 
 
 
-    Character& operator/=(const int& other) {
-        this->value /= other;
-        return *this;
-    }
-
-    Character& operator/=(const char& other) {
+    template<typename Type>
+    Character& operator/=(const Type& other) {
         this->value /= other;
         return *this;
     }
@@ -8743,12 +4500,8 @@ public:
 
 
 
-    Character& operator%=(const int& other) {
-        this->value %= other;
-        return *this;
-    }
-
-    Character& operator%=(const char& other) {
+    template<typename Type>
+    Character& operator%=(const Type& other) {
         this->value %= other;
         return *this;
     }
@@ -8784,11 +4537,8 @@ public:
     
 
 
-    Character operator+(const int& other) const {
-        return this->value + other;
-    }
-
-    Character operator+(const char& other) const {
+    template<typename Type>
+    Character operator+(const Type& other) const {
         return this->value + other;
     }
 
@@ -8798,25 +4548,19 @@ public:
 
 
 
-    Character operator-(const int& other) const {
+    template<typename Type>
+    Character operator-(const Type& other) const {
         return this->value - other;
     }
-
-    Character operator-(const char& other) const {
-        return this->value - other;
-    }
-
+    
     Character operator-(const Character& other) const {
         return this->value - other.value;
     }
 
 
 
-    Character operator*(const int& other) const {
-        return this->value * other;
-    }
-
-    Character operator*(const char& other) const {
+    template<typename Type>
+    Character operator*(const Type& other) const {
         return this->value * other;
     }
 
@@ -8826,11 +4570,8 @@ public:
 
 
 
-    Character operator/(const int& other) const {
-        return this->value / other;
-    }
-
-    Character operator/(const char& other) const {
+    template<typename Type>
+    Character operator/(const Type& other) const {
         return this->value / other;
     }
 
@@ -8840,11 +4581,8 @@ public:
 
 
 
-    Character operator%(const int& other) const {
-        return this->value % other;
-    }
-
-    Character operator%(const char& other) const {
+    template<typename Type>
+    Character operator%(const Type& other) const {
         return this->value % other;
     }
 
@@ -8854,25 +4592,30 @@ public:
 
 
 
-    Character operator^(const int& other) const {
+    template<typename Type>
+    bool operator^(const Type& other) const {
         return this->value ^ other;
     }
 
-    Character operator^(const char& other) const {
-        return this->value ^ other;
-    }
-
-    Character operator^(const Character& other) const {
+    bool operator^(const Character& other) const {
         return this->value ^ other.value;
     }
 
 
 
-    Character operator&(const int& other) const {
-        return this->value & other;
+    template<typename Type>
+    bool operator==(const Type& other) const {
+        return this->value == other;
     }
 
-    Character operator&(const char& other) const {
+    bool operator==(const Character& other) const {
+        return this->value == other.value;
+    }
+
+
+
+    template<typename Type>
+    Character operator&(const Type& other) const {
         return this->value & other;
     }
 
@@ -8882,11 +4625,8 @@ public:
 
 
 
-    Character operator|(const int& other) const {
-        return this->value | other;
-    }
-
-    Character operator|(const char& other) const {
+    template<typename Type>
+    Character operator|(const Type& other) const {
         return this->value | other;
     }
 
@@ -8900,31 +4640,14 @@ public:
         return ~this->value;
     }
 
-    Character operator!() const {
+    bool operator!() const {
         return !this->value;
     }
 
 
 
-    bool operator==(const int& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const char& other) const {
-        return this->value == other;
-    }
-
-    bool operator==(const Character& other) const {
-        return this->value == other.value;
-    }
-
-
-
-    bool operator!=(const int& other) const {
-        return this->value != other;
-    }
-
-    bool operator!=(const char& other) const {
+    template<typename Type>
+    bool operator!=(const Type& other) const {
         return this->value != other;
     }
 
@@ -8934,11 +4657,8 @@ public:
 
 
 
-    bool operator<(const int& other) const {
-        return this->value < other;
-    }
-
-    bool operator<(const char& other) const {
+    template<typename Type>
+    bool operator<(const Type& other) const {
         return this->value < other;
     }
 
@@ -8948,11 +4668,8 @@ public:
 
     
 
-    bool operator>(const int& other) const {
-        return this->value > other;
-    }
-
-    bool operator>(const char& other) const {
+    template<typename Type>
+    bool operator>(const Type& other) const {
         return this->value > other;
     }
 
@@ -8962,11 +4679,8 @@ public:
 
     
 
-    bool operator<=(const int& other) const {
-        return this->value <= other;
-    }
-
-    bool operator<=(const char& other) const {
+    template<typename Type>
+    bool operator<=(const Type& other) const {
         return this->value <= other;
     }
 
@@ -8976,11 +4690,8 @@ public:
 
 
 
-    bool operator>=(const int& other) const {
-        return this->value >= other;
-    }
-
-    bool operator>=(const char& other) const {
+    template<typename Type>
+    bool operator>=(const Type& other) const {
         return this->value >= other;
     }
 
@@ -9018,7 +4729,7 @@ private:
     void copy(const char* other) {
         this->length = strlen(other);
         this->value = new char[this->length + 1];
-        for (size_t i = 0; i <= this->length; i++) {
+        for(size_t i = 0; i <= this->length; i++) {
             this->value[i] = other[i];
         }
         this->value[this->length] = '\0';
@@ -9031,8 +4742,8 @@ private:
      * @return bool
      */
     bool equalityCompare(const char* other) const {
-        for (size_t i = 0; i <= this->length; i++) {
-            if (this->value[i] != other[i]) {
+        for(size_t i = 0; i <= this->length; i++) {
+            if(this->value[i] != other[i]) {
                 return false;
             }
         }
@@ -9046,7 +4757,7 @@ private:
      * @return char 
      */
     char tolower(const char& other) const {
-        if (other >= 'A' && other <= 'Z') {
+        if(other >= 'A' && other <= 'Z') {
             return other + 32;
         }
         return other;
@@ -9059,7 +4770,7 @@ private:
      * @return char 
      */
     char tolower(char& other) const {
-        if (other >= 'A' && other <= 'Z') {
+        if(other >= 'A' && other <= 'Z') {
             return other + 32;
         }
         return other;
@@ -9072,7 +4783,7 @@ private:
      * @return char 
      */
     char toupper(const char& other) const {
-        if (other >= 'a' && other <= 'z') {
+        if(other >= 'a' && other <= 'z') {
             return other - 32;
         }
         return other;
@@ -9086,7 +4797,7 @@ private:
      * @return char 
      */
     char toupper(char& other) const {
-        if (other >= 'a' && other <= 'z') {
+        if(other >= 'a' && other <= 'z') {
             return other - 32;
         }
         return other;
@@ -9112,9 +4823,9 @@ private:
         int ToInt = 0;
 
         for(int i = 0; this->value[i] != '\0'; i++) {
-            if (i == 0 && this->value[i] == '.') continue;
+            if(i == 0 && this->value[i] == '.') continue;
             else if(this->value[i] == '.') break;
-            if (this->value[i] > '9' || this->value[i] < '0') continue;
+            if(this->value[i] > '9' || this->value[i] < '0') continue;
             ToInt = ToInt * 10 + this->value[i] - '0';
         }
 
@@ -9126,9 +4837,9 @@ private:
         int ToshortInt = 0;
 
         for(int i = 0; this->value[i] != '\0'; i++) {
-            if (i == 0 && this->value[i] == '.') continue;
+            if(i == 0 && this->value[i] == '.') continue;
             else if(this->value[i] == '.') break;
-            if (this->value[i] > '9' || this->value[i] < '0') continue;
+            if(this->value[i] > '9' || this->value[i] < '0') continue;
             ToshortInt = ToshortInt * 10 + this->value[i] - '0';
         }
 
@@ -9218,7 +4929,7 @@ private:
 
         ToDouble = ToDouble + Division;
         if(this->value[0] == '-') {
-            if (ToDouble - (int)ToDouble == 0) return -1 * (ToDouble - 1);
+            if(ToDouble - (int)ToDouble == 0) return -1 * (ToDouble - 1);
             return -ToDouble;
         }
 
@@ -9229,42 +4940,42 @@ private:
     long long toLLInt() {
         long long ToLongLong = 0;
 
-        for (int i = 0; this->value[i] != '\0'; i++) {
-            if (i == 0 && this->value[i] == '.') continue;
+        for(int i = 0; this->value[i] != '\0'; i++) {
+            if(i == 0 && this->value[i] == '.') continue;
             else if(this->value[i] == '.') break;
-            if (this->value[i] > '9' || this->value[i] < '0') continue;
+            if(this->value[i] > '9' || this->value[i] < '0') continue;
             ToLongLong = ToLongLong * 10 + this->value[i] - '0';
         }
 
-        if (this->value[0] == '-') return -ToLongLong;
+        if(this->value[0] == '-') return -ToLongLong;
         return ToLongLong;
     }
 
     long toLInt() {
         long ToLong = 0;
 
-        for (int i = 0; this->value[i] != '\0'; i++) {
-            if (i == 0 && this->value[i] == '.') continue;
+        for(int i = 0; this->value[i] != '\0'; i++) {
+            if(i == 0 && this->value[i] == '.') continue;
             else if(this->value[i] == '.') break;
-            if (this->value[i] > '9' || this->value[i] < '0') continue;
+            if(this->value[i] > '9' || this->value[i] < '0') continue;
             ToLong = ToLong * 10 + this->value[i] - '0';
         }
 
-        if (this->value[0] == '-') return -ToLong;
+        if(this->value[0] == '-') return -ToLong;
         return ToLong;
     }
 
     unsigned short int toUShortInt() {
         unsigned short int ToUShortInt = 0;
 
-        for (int i = 0; this->value[i] != '\0'; i++) {
-            if (i == 0 && this->value[i] == '.') continue;
+        for(int i = 0; this->value[i] != '\0'; i++) {
+            if(i == 0 && this->value[i] == '.') continue;
             else if(this->value[i] == '.') break;
-            if (this->value[i] > '9' || this->value[i] < '0') continue;
+            if(this->value[i] > '9' || this->value[i] < '0') continue;
             ToUShortInt = ToUShortInt * 10 + this->value[i] - '0';
         }
 
-        if (this->value[0] == '-') return -ToUShortInt;
+        if(this->value[0] == '-') return -ToUShortInt;
         return ToUShortInt;
     }
 
@@ -9272,10 +4983,10 @@ private:
         if(this->value[0] == '-') return 0;
         unsigned int ToUnsignedInt = 0;
 
-        for (int i = 0; this->value[i] != '\0'; i++) {
-            if (i == 0 && this->value[i] == '.') continue;
+        for(int i = 0; this->value[i] != '\0'; i++) {
+            if(i == 0 && this->value[i] == '.') continue;
             else if(this->value[i] == '.') break;
-            if (this->value[i] > '9' || this->value[i] < '0') continue;
+            if(this->value[i] > '9' || this->value[i] < '0') continue;
             ToUnsignedInt = ToUnsignedInt * 10 + this->value[i] - '0';
         }
 
@@ -9286,10 +4997,10 @@ private:
         if(this->value[0] == '-') return 0;
         unsigned long ToUnsignedLong = 0;
 
-        for (int i = 0; this->value[i] != '\0'; i++) {
-            if (i == 0 && this->value[i] == '.') continue;
+        for(int i = 0; this->value[i] != '\0'; i++) {
+            if(i == 0 && this->value[i] == '.') continue;
             else if(this->value[i] == '.') break;
-            if (this->value[i] > '9' || this->value[i] < '0') continue;
+            if(this->value[i] > '9' || this->value[i] < '0') continue;
             ToUnsignedLong = ToUnsignedLong * 10 + this->value[i] - '0';
         }
 
@@ -9300,10 +5011,10 @@ private:
         if(this->value[0] == '-') return 0;
         unsigned long long ToUnsignedLongLong = 0;
 
-        for (int i = 0; this->value[i] != '\0'; i++) {
-            if (i == 0 && this->value[i] == '.') continue;
+        for(int i = 0; this->value[i] != '\0'; i++) {
+            if(i == 0 && this->value[i] == '.') continue;
             else if(this->value[i] == '.') break;
-            if (this->value[i] > '9' || this->value[i] < '0') continue;
+            if(this->value[i] > '9' || this->value[i] < '0') continue;
             ToUnsignedLongLong = ToUnsignedLongLong * 10 + this->value[i] - '0';
         }
 
@@ -9522,7 +5233,7 @@ public:
     String(const char* value, size_t length) {
         this->length = length;
         this->value = new char[this->length + 1];
-        for (size_t i = 0; i < this->length; i++) {
+        for(size_t i = 0; i < this->length; i++) {
             this->value[i] = value[i];
         }
         this->value[this->length] = '\0';
@@ -9531,6 +5242,8 @@ public:
     ~String() {
         delete[] this->value;
     }
+
+
 
     /**
      * @brief The largest possible string
@@ -9553,6 +5266,8 @@ public:
     operator char* () const {
         return this->value;
     }
+
+    
 
     /**
      * @brief A method that returns the length of the string
@@ -9605,10 +5320,10 @@ public:
     String& append(const char* other) {
         size_t newLength = this->length + strlen(other);
         char* newValue = new char[newLength + 1];
-        for (size_t i = 0; i <= this->length; i++) {
+        for(size_t i = 0; i <= this->length; i++) {
             newValue[i] = this->value[i];
         }
-        for (size_t i = this->length; i <= newLength; i++) {
+        for(size_t i = this->length; i <= newLength; i++) {
             newValue[i] = other[i - this->length];
         }
         newValue[newLength] = '\0';
@@ -9627,10 +5342,10 @@ public:
     String& append(_StringView other) {
         size_t newLength = this->length + other.length;
         char* newValue = new char[newLength + 1];
-        for (size_t i = 0; i <= this->length; i++) {
+        for(size_t i = 0; i <= this->length; i++) {
             newValue[i] = this->value[i];
         }
-        for (size_t i = this->length; i <= newLength; i++) {
+        for(size_t i = this->length; i <= newLength; i++) {
             newValue[i] = other.value[i - this->length];
         }
         newValue[newLength] = '\0';
@@ -9670,21 +5385,21 @@ public:
      * @return String& 
      */
     String& erase(const size_t& start, const size_t& end) {
-        if (start > end) {
+        if(start > end) {
             throw std::invalid_argument("Start index must be smaller than end index");
         }
-        if (start > this->length) {
+        if(start > this->length) {
             throw std::invalid_argument("Start index must be smaller than length of string");
         }
-        if (end > this->length) {
+        if(end > this->length) {
             throw std::invalid_argument("End index must be smaller than length of string");
         }
         size_t newLength = this->length - (end - start);
         char* newValue = new char[newLength + 1];
-        for (size_t i = 0; i < start; i++) {
+        for(size_t i = 0; i < start; i++) {
             newValue[i] = this->value[i];
         }
-        for (size_t i = start; i <= newLength; i++) {
+        for(size_t i = start; i <= newLength; i++) {
             newValue[i] = this->value[i + (end - start)];
         }
         newValue[newLength] = '\0';
@@ -9701,15 +5416,15 @@ public:
      * @return String& 
      */
     String& erase(const size_t& start) {
-        if (start > this->length) {
+        if(start > this->length) {
             throw std::invalid_argument("Start index must be smaller than length of string");
         }
         size_t newLength = this->length - 1;
         char* newValue = new char[newLength + 1];
-        for (size_t i = 0; i < start; i++) {
+        for(size_t i = 0; i < start; i++) {
             newValue[i] = this->value[i];
         }
-        for (size_t i = start; i <= newLength; i++) {
+        for(size_t i = start; i <= newLength; i++) {
             newValue[i] = this->value[i + 1];
         }
         newValue[newLength] = '\0';
@@ -9729,21 +5444,21 @@ public:
      * @return String& 
      */
     String& erase(const size_t& start, const size_t& end, const char& replacement) {
-        if (start > end) {
+        if(start > end) {
             throw std::invalid_argument("Start index must be smaller than end index");
         }
-        if (start > this->length) {
+        if(start > this->length) {
             throw std::invalid_argument("Start index must be smaller than length of string");
         }
-        if (end > this->length) {
+        if(end > this->length) {
             throw std::invalid_argument("End index must be smaller than length of string");
         }
         size_t newLength = this->length - (end - start) + 1;
         char* newValue = new char[newLength + 1];
-        for (size_t i = 0; i < start; i++) {
+        for(size_t i = 0; i < start; i++) {
             newValue[i] = this->value[i];
         }
-        for (size_t i = start; i <= newLength; i++) {
+        for(size_t i = start; i <= newLength; i++) {
             newValue[i] = replacement;
         }
         newValue[newLength] = '\0';
@@ -9762,15 +5477,15 @@ public:
      * @return String& 
      */
     String& erase(const size_t& start, const char& replacement) {
-        if (start > this->length) {
+        if(start > this->length) {
             throw std::invalid_argument("Start index must be smaller than length of string");
         }
         size_t newLength = this->length - 1 + 1;
         char* newValue = new char[newLength + 1];
-        for (size_t i = 0; i < start; i++) {
+        for(size_t i = 0; i < start; i++) {
             newValue[i] = this->value[i];
         }
-        for (size_t i = start; i <= newLength; i++) {
+        for(size_t i = start; i <= newLength; i++) {
             newValue[i] = replacement;
         }
         newValue[newLength] = '\0';
@@ -9789,10 +5504,10 @@ public:
     String& joins(_StringView other) {
         size_t newLength = this->length + other.length;
         char* newValue = new char[newLength + 1];
-        for (size_t i = 0; i <= this->length; i++) {
+        for(size_t i = 0; i <= this->length; i++) {
             newValue[i] = this->value[i];
         }
-        for (size_t i = this->length; i <= newLength; i++) {
+        for(size_t i = this->length; i <= newLength; i++) {
             newValue[i] = other.value[i - this->length];
         }
         newValue[newLength] = '\0';
@@ -9811,10 +5526,10 @@ public:
     String& joins(const char* other) {
         size_t newLength = this->length + strlen(other);
         char* newValue = new char[newLength + 1];
-        for (size_t i = 0; i <= this->length; i++) {
+        for(size_t i = 0; i <= this->length; i++) {
             newValue[i] = this->value[i];
         }
-        for (size_t i = this->length; i <= newLength; i++) {
+        for(size_t i = this->length; i <= newLength; i++) {
             newValue[i] = other[i - this->length];
         }
         newValue[newLength] = '\0';
@@ -9833,7 +5548,7 @@ public:
     String& joins(const char& other) {
         size_t newLength = this->length + 1;
         char* newValue = new char[newLength + 1];
-        for (size_t i = 0; i <= this->length; i++) {
+        for(size_t i = 0; i <= this->length; i++) {
             newValue[i] = this->value[i];
         }
         newValue[newLength - 1] = other;
@@ -9853,10 +5568,10 @@ public:
     String& push(_StringView other) {
         size_t newLength = this->length + other.length;
         char* newValue = new char[newLength + 1];
-        for (size_t i = 0; i <= this->length; i++) {
+        for(size_t i = 0; i <= this->length; i++) {
             newValue[i] = this->value[i];
         }
-        for (size_t i = this->length; i <= newLength; i++) {
+        for(size_t i = this->length; i <= newLength; i++) {
             newValue[i] = other.value[i - this->length];
         }
         newValue[newLength] = '\0';
@@ -9875,10 +5590,10 @@ public:
     String& push(const char* other) {
         size_t newLength = this->length + strlen(other);
         char* newValue = new char[newLength + 1];
-        for (size_t i = 0; i <= this->length; i++) {
+        for(size_t i = 0; i <= this->length; i++) {
             newValue[i] = this->value[i];
         }
-        for (size_t i = this->length; i <= newLength; i++) {
+        for(size_t i = this->length; i <= newLength; i++) {
             newValue[i] = other[i - this->length];
         }
         newValue[newLength] = '\0';
@@ -9897,7 +5612,7 @@ public:
     String& push(const char& other) {
         size_t newLength = this->length + 1;
         char* newValue = new char[newLength + 1];
-        for (size_t i = 0; i <= this->length; i++) {
+        for(size_t i = 0; i <= this->length; i++) {
             newValue[i] = this->value[i];
         }
         newValue[newLength - 1] = other;
@@ -9914,12 +5629,12 @@ public:
      * @return String& 
      */
     String& pop() {
-        if (this->length == 0) {
+        if(this->length == 0) {
             throw std::out_of_range("Cannot pop from empty string");
         }
         size_t newLength = this->length - 1;
         char* newValue = new char[newLength + 1];
-        for (size_t i = 0; i < newLength; i++) {
+        for(size_t i = 0; i < newLength; i++) {
             newValue[i] = this->value[i];
         }
         newValue[newLength] = '\0';
@@ -9936,12 +5651,12 @@ public:
      * @return String& 
      */
     String& pop(const size_t& count) {
-        if (count > this->length) {
+        if(count > this->length) {
             throw std::out_of_range("Cannot pop more than length of string");
         }
         size_t newLength = this->length - count;
         char* newValue = new char[newLength + 1];
-        for (size_t i = 0; i < newLength; i++) {
+        for(size_t i = 0; i < newLength; i++) {
             newValue[i] = this->value[i];
         }
         newValue[newLength] = '\0';
@@ -9958,7 +5673,7 @@ public:
      * @return char 
      */
     char charAt(const size_t& index) const {
-        if (index > this->length) {
+        if(index > this->length) {
             throw std::invalid_argument("Index must be smaller than length of string");
         }
         return this->value[index];
@@ -10007,11 +5722,11 @@ public:
      * @return bool
      */
     bool startsWith(_StringView other) const {
-        if (other.length > this->length) {
+        if(other.length > this->length) {
             return false;
         }
-        for (size_t i = 0; i < other.length; i++) {
-            if (this->value[i] != other.value[i]) {
+        for(size_t i = 0; i < other.length; i++) {
+            if(this->value[i] != other.value[i]) {
                 return false;
             }
         }
@@ -10026,11 +5741,11 @@ public:
      */
     bool startsWith(const char* other) const {
         size_t otherLength = strlen(other);
-        if (otherLength > this->length) {
+        if(otherLength > this->length) {
             return false;
         }
-        for (size_t i = 0; i < otherLength; i++) {
-            if (this->value[i] != other[i]) {
+        for(size_t i = 0; i < otherLength; i++) {
+            if(this->value[i] != other[i]) {
                 return false;
             }
         }
@@ -10044,10 +5759,10 @@ public:
      * @return bool
      */
     bool startsWith(const char& other) const {
-        if (this->length < 1) {
+        if(this->length < 1) {
             return false;
         }
-        if (this->value[0] != other) {
+        if(this->value[0] != other) {
             return false;
         }
         return true;
@@ -10060,11 +5775,11 @@ public:
      * @return bool
      */
     bool endsWith(_StringView other) const {
-        if (other.length > this->length) {
+        if(other.length > this->length) {
             throw std::invalid_argument("Other string must be smaller than length of string");
         }
-        for (size_t i = this->length - other.length; i < this->length; i++) {
-            if (this->value[i] != other.value[i - (this->length - other.length)]) {
+        for(size_t i = this->length - other.length; i < this->length; i++) {
+            if(this->value[i] != other.value[i - (this->length - other.length)]) {
                 return false;
             }
         }
@@ -10079,11 +5794,11 @@ public:
      */
     bool endsWith(const char* other) const {
         size_t otherLength = strlen(other);
-        if (otherLength > this->length) {
+        if(otherLength > this->length) {
             throw std::invalid_argument("Other string must be smaller than length of string");
         }
-        for (size_t i = this->length - otherLength; i < this->length; i++) {
-            if (this->value[i] != other[i - (this->length - otherLength)]) {
+        for(size_t i = this->length - otherLength; i < this->length; i++) {
+            if(this->value[i] != other[i - (this->length - otherLength)]) {
                 return false;
             }
         }
@@ -10097,10 +5812,10 @@ public:
      * @return bool
      */
     bool endsWith(const char& other) const {
-        if (this->length < 1) {
+        if(this->length < 1) {
             return false;
         }
-        if (this->value[this->length - 1] != other) {
+        if(this->value[this->length - 1] != other) {
             return false;
         }
         return true;
@@ -10112,8 +5827,8 @@ public:
      * @return String& 
      */
     String& toLower() {
-        for (size_t i = 0; i < this->length; i++) {
-            if (this->value[i] >= 'A' && this->value[i] <= 'Z') {
+        for(size_t i = 0; i < this->length; i++) {
+            if(this->value[i] >= 'A' && this->value[i] <= 'Z') {
                 this->value[i] += 32;
             }
         }
@@ -10126,8 +5841,8 @@ public:
      * @return String& 
      */
     String& toUpper() {
-        for (size_t i = 0; i < this->length; i++) {
-            if (this->value[i] >= 'a' && this->value[i] <= 'z') {
+        for(size_t i = 0; i < this->length; i++) {
+            if(this->value[i] >= 'a' && this->value[i] <= 'z') {
                 this->value[i] -= 32;
             }
         }
@@ -10143,24 +5858,24 @@ public:
     String& trim() {
         size_t start = 0;
         size_t end = this->length;
-        for (size_t i = 0; i < this->length; i++) {
-            if (this->value[i] != ' ' && this->value[i] != '\t' && this->value[i] != '\n' && this->value[i] != '\r') {
+        for(size_t i = 0; i < this->length; i++) {
+            if(this->value[i] != ' ' && this->value[i] != '\t' && this->value[i] != '\n' && this->value[i] != '\r') {
                 start = i;
                 break;
             }
         }
-        for (size_t i = this->length - 1; i > 0; i--) {
-            if (this->value[i] != ' ' && this->value[i] != '\t' && this->value[i] != '\n' && this->value[i] != '\r') {
+        for(size_t i = this->length - 1; i > 0; i--) {
+            if(this->value[i] != ' ' && this->value[i] != '\t' && this->value[i] != '\n' && this->value[i] != '\r') {
                 end = i + 1;
                 break;
             }
         }
-        if (start == 0 && end == this->length) {
+        if(start == 0 && end == this->length) {
             return *this;
         }
         size_t newLength = end - start;
         char* newValue = new char[newLength + 1];
-        for (size_t i = 0; i < newLength; i++) {
+        for(size_t i = 0; i < newLength; i++) {
             newValue[i] = this->value[i + start];
         }
         newValue[newLength] = '\0';
@@ -10179,10 +5894,10 @@ public:
     String& concat(_StringView other) {
         size_t newLength = this->length + other.length;
         char* newValue = new char[newLength + 1];
-        for (size_t i = 0; i <= this->length; i++) {
+        for(size_t i = 0; i <= this->length; i++) {
             newValue[i] = this->value[i];
         }
-        for (size_t i = this->length; i <= newLength; i++) {
+        for(size_t i = this->length; i <= newLength; i++) {
             newValue[i] = other.value[i - this->length];
         }
         newValue[newLength] = '\0';
@@ -10202,10 +5917,10 @@ public:
         size_t otherLength = strlen(other);
         size_t newLength = this->length + otherLength;
         char* newValue = new char[newLength + 1];
-        for (size_t i = 0; i <= this->length; i++) {
+        for(size_t i = 0; i <= this->length; i++) {
             newValue[i] = this->value[i];
         }
-        for (size_t i = this->length; i <= newLength; i++) {
+        for(size_t i = this->length; i <= newLength; i++) {
             newValue[i] = other[i - this->length];
         }
         newValue[newLength] = '\0';
@@ -10224,7 +5939,7 @@ public:
     String& concat(const char& other) {
         size_t newLength = this->length + 1;
         char* newValue = new char[newLength + 1];
-        for (size_t i = 0; i <= this->length; i++) {
+        for(size_t i = 0; i <= this->length; i++) {
             newValue[i] = this->value[i];
         }
         newValue[newLength - 1] = other;
@@ -10242,8 +5957,8 @@ public:
      * @return int 
      */
     int lastIndexOf(const char& other) const {
-        for (int i = this->length - 1; i >= 0; i--) {
-            if (this->value[i] == other) {
+        for(int i = this->length - 1; i >= 0; i--) {
+            if(this->value[i] == other) {
                 return i;
             }
         }
@@ -10259,8 +5974,8 @@ public:
      * @return bool
      */
     bool includes(const char& other) const {
-        for (size_t i = 0; i < this->length; i++) {
-            if (this->value[i] == other) {
+        for(size_t i = 0; i < this->length; i++) {
+            if(this->value[i] == other) {
                 return true;
             }
         }
@@ -10276,16 +5991,16 @@ public:
      * @return bool
      */
     bool includes(_StringView other) const {
-        for (size_t i = 0; i < this->length; i++) {
-            if (this->value[i] == other.value[0]) {
+        for(size_t i = 0; i < this->length; i++) {
+            if(this->value[i] == other.value[0]) {
                 bool found = true;
-                for (size_t j = 0; j < other.length; j++) {
-                    if (this->value[i + j] != other.value[j]) {
+                for(size_t j = 0; j < other.length; j++) {
+                    if(this->value[i + j] != other.value[j]) {
                         found = false;
                         break;
                     }
                 }
-                if (found) {
+                if(found) {
                     return true;
                 }
             }
@@ -10303,16 +6018,16 @@ public:
      */
     bool includes(const char* other) const {
         size_t otherLength = strlen(other);
-        for (size_t i = 0; i < this->length; i++) {
-            if (this->value[i] == other[0]) {
+        for(size_t i = 0; i < this->length; i++) {
+            if(this->value[i] == other[0]) {
                 bool found = true;
-                for (size_t j = 0; j < otherLength; j++) {
-                    if (this->value[i + j] != other[j]) {
+                for(size_t j = 0; j < otherLength; j++) {
+                    if(this->value[i + j] != other[j]) {
                         found = false;
                         break;
                     }
                 }
-                if (found) {
+                if(found) {
                     return true;
                 }
             }
@@ -10330,7 +6045,7 @@ public:
     String& repeat(size_t count) {
         size_t newLength = this->length * count;
         char* newValue = new char[newLength + 1];
-        for (size_t i = 0; i < newLength; i++) {
+        for(size_t i = 0; i < newLength; i++) {
             newValue[i] = this->value[i % this->length];
         }
         newValue[newLength] = '\0';
@@ -10348,20 +6063,20 @@ public:
      * @return String 
      */
     String substring(size_t start, size_t end) const {
-        if (start > end) {
+        if(start > end) {
             size_t temp = start;
             start = end;
             end = temp;
         }
-        if (start > this->length) {
+        if(start > this->length) {
             start = this->length;
         }
-        if (end > this->length) {
+        if(end > this->length) {
             end = this->length;
         }
         size_t newLength = end - start;
         char* newValue = new char[newLength + 1];
-        for (size_t i = 0; i < newLength; i++) {
+        for(size_t i = 0; i < newLength; i++) {
             newValue[i] = this->value[i + start];
         }
         newValue[newLength] = '\0';
@@ -10388,8 +6103,8 @@ public:
      * @return String& 
      */
     String& replace(const char& old, const char& newChar) {
-        for (size_t i = 0; i < this->length; i++) {
-            if (this->value[i] == old) {
+        for(size_t i = 0; i < this->length; i++) {
+            if(this->value[i] == old) {
                 this->value[i] = newChar;
             }
         }
@@ -10404,18 +6119,18 @@ public:
      * @return String& 
      */
     String& replace(_StringView old, _StringView newString) {
-        for (size_t i = 0; i < this->length; i++) {
-            if (this->value[i] == old.value[0]) {
+        for(size_t i = 0; i < this->length; i++) {
+            if(this->value[i] == old.value[0]) {
                 bool found = true;
-                for (size_t j = 0; j < old.length; j++) {
-                    if (this->value[i + j] != old.value[j]) {
+                for(size_t j = 0; j < old.length; j++) {
+                    if(this->value[i + j] != old.value[j]) {
                         found = false;
                         break;
                     }
                 }
-                if (found) {
+                if(found) {
                     this->value[i] = newString.value[0];
-                    for (size_t j = 1; j < newString.length; j++) {
+                    for(size_t j = 1; j < newString.length; j++) {
                         this->value[i + j] = newString.value[j];
                     }
                     i += newString.length - 1;
@@ -10435,18 +6150,18 @@ public:
     String& replace(const char* old, const char* newString) {
         size_t oldLength = strlen(old);
         size_t newLength = strlen(newString);
-        for (size_t i = 0; i < this->length; i++) {
-            if (this->value[i] == old[0]) {
+        for(size_t i = 0; i < this->length; i++) {
+            if(this->value[i] == old[0]) {
                 bool found = true;
-                for (size_t j = 0; j < oldLength; j++) {
-                    if (this->value[i + j] != old[j]) {
+                for(size_t j = 0; j < oldLength; j++) {
+                    if(this->value[i + j] != old[j]) {
                         found = false;
                         break;
                     }
                 }
-                if (found) {
+                if(found) {
                     this->value[i] = newString[0];
-                    for (size_t j = 1; j < newLength; j++) {
+                    for(size_t j = 1; j < newLength; j++) {
                         this->value[i + j] = newString[j];
                     }
                     i += newLength - 1;
@@ -10464,8 +6179,8 @@ public:
      * @return String& 
      */
     String& replaceFirst(const char& old, const char& newChar) {
-        for (size_t i = 0; i < this->length; i++) {
-            if (this->value[i] == old) {
+        for(size_t i = 0; i < this->length; i++) {
+            if(this->value[i] == old) {
                 this->value[i] = newChar;
                 return *this;
             }
@@ -10481,18 +6196,18 @@ public:
      * @return String& 
      */
     String& replaceFirst(_StringView old, _StringView newString) {
-        for (size_t i = 0; i < this->length; i++) {
-            if (this->value[i] == old.value[0]) {
+        for(size_t i = 0; i < this->length; i++) {
+            if(this->value[i] == old.value[0]) {
                 bool found = true;
-                for (size_t j = 0; j < old.length; j++) {
-                    if (this->value[i + j] != old.value[j]) {
+                for(size_t j = 0; j < old.length; j++) {
+                    if(this->value[i + j] != old.value[j]) {
                         found = false;
                         break;
                     }
                 }
-                if (found) {
+                if(found) {
                     this->value[i] = newString.value[0];
-                    for (size_t j = 1; j < newString.length; j++) {
+                    for(size_t j = 1; j < newString.length; j++) {
                         this->value[i + j] = newString.value[j];
                     }
                     return *this;
@@ -10512,18 +6227,18 @@ public:
     String& replaceFirst(const char* old, const char* newString) {
         size_t oldLength = strlen(old);
         size_t newLength = strlen(newString);
-        for (size_t i = 0; i < this->length; i++) {
-            if (this->value[i] == old[0]) {
+        for(size_t i = 0; i < this->length; i++) {
+            if(this->value[i] == old[0]) {
                 bool found = true;
-                for (size_t j = 0; j < oldLength; j++) {
-                    if (this->value[i + j] != old[j]) {
+                for(size_t j = 0; j < oldLength; j++) {
+                    if(this->value[i + j] != old[j]) {
                         found = false;
                         break;
                     }
                 }
-                if (found) {
+                if(found) {
                     this->value[i] = newString[0];
-                    for (size_t j = 1; j < newLength; j++) {
+                    for(size_t j = 1; j < newLength; j++) {
                         this->value[i + j] = newString[j];
                     }
                     return *this;
@@ -10540,8 +6255,8 @@ public:
      * @return int 
      */
     int indexOf(const char& other) const {
-        for (size_t i = 0; i < this->length; i++) {
-            if (this->value[i] == other) {
+        for(size_t i = 0; i < this->length; i++) {
+            if(this->value[i] == other) {
                 return i;
             }
         }
@@ -10570,7 +6285,7 @@ public:
      * @return bool
      */
     bool isEmpty() const {
-        if (this->length == 0) {
+        if(this->length == 0) {
             return true;
         }
         return false;
@@ -10583,11 +6298,11 @@ public:
      * @return bool
      */
     bool compare(_StringView other) const {
-        if (this->length != other.length) {
+        if(this->length != other.length) {
             return false;
         }
-        for (size_t i = 0; i < this->length; i++) {
-            if (this->value[i] != other.value[i]) {
+        for(size_t i = 0; i < this->length; i++) {
+            if(this->value[i] != other.value[i]) {
                 return false;
             }
         }
@@ -10601,11 +6316,40 @@ public:
      * @return String& 
      */
     String& forEach(const std::function<void(char&)>& func) {
-        for (size_t i = 0; i < this->length; i++) {
+        for(size_t i = 0; i < this->length; i++) {
             func(this->value[i]);
         }
         return *this;
     }
+
+    /**
+     * @brief A map method that iterates through a string and applies a function to each character
+     * 
+     * @param func 
+     * @return String& 
+     */
+    String& map(const std::function<char(char&)>& func) {
+        for(size_t i = 0; i < this->length; i++) {
+            this->value[i] = func(this->value[i]);
+        }
+        return *this;
+    }
+
+    /**
+     * @brief A method that filters a string
+     * 
+     * @param func 
+     * @return String& 
+     */
+    String& filter(const std::function<bool(char&)>& func) {
+        for(size_t i = 0; i < this->length; i++) {
+            if(!func(this->value[i])) {
+                this->value[i] = '\0';
+            }
+        }
+        return *this;
+    }
+
 
     /**
      * @brief A method checks if two strings are equal ignoring the case
@@ -10615,11 +6359,11 @@ public:
      * @return false 
      */
     bool equalIgnoreCase(_StringView other) const {
-        if (this->length != other.length) {
+        if(this->length != other.length) {
             return false;
         }
-        for (size_t i = 0; i < this->length; i++) {
-            if (this->tolower(this->value[i]) != this->tolower(other.value[i])) {
+        for(size_t i = 0; i < this->length; i++) {
+            if(this->tolower(this->value[i]) != this->tolower(other.value[i])) {
                 return false;
             }
         }
@@ -10632,7 +6376,7 @@ public:
      * @return String& 
      */
     String& reverse() {
-        for (size_t i = 0; i < this->length / 2; i++) {
+        for(size_t i = 0; i < this->length / 2; i++) {
             char temp = this->value[i];
             this->value[i] = this->value[this->length - i - 1];
             this->value[this->length - i - 1] = temp;
@@ -10656,8 +6400,8 @@ public:
      * @return String& 
      */
     String& capitalize() {
-        for (size_t i = 0; i < this->length; i++) {
-            if (i == 0) {
+        for(size_t i = 0; i < this->length; i++) {
+            if(i == 0) {
                 this->value[i] = toupper(this->value[i]);
             }
             else {
@@ -10675,8 +6419,8 @@ public:
      */
     size_t count(const char& other) const {
         size_t count = 0;
-        for (size_t i = 0; i < this->length; i++) {
-            if (this->value[i] == other) {
+        for(size_t i = 0; i < this->length; i++) {
+            if(this->value[i] == other) {
                 count++;
             }
         }
@@ -10691,16 +6435,16 @@ public:
      */
     size_t count(_StringView other) const {
         size_t count = 0;
-        for (size_t i = 0; i < this->length; i++) {
-            if (this->value[i] == other.value[0]) {
+        for(size_t i = 0; i < this->length; i++) {
+            if(this->value[i] == other.value[0]) {
                 bool found = true;
-                for (size_t j = 0; j < other.length; j++) {
-                    if (this->value[i + j] != other.value[j]) {
+                for(size_t j = 0; j < other.length; j++) {
+                    if(this->value[i + j] != other.value[j]) {
                         found = false;
                         break;
                     }
                 }
-                if (found) {
+                if(found) {
                     count++;
                     i += other.length - 1;
                 }
@@ -10718,16 +6462,16 @@ public:
     size_t count(const char* other) const {
         size_t count = 0;
         size_t otherLength = strlen(other);
-        for (size_t i = 0; i < this->length; i++) {
-            if (this->value[i] == other[0]) {
+        for(size_t i = 0; i < this->length; i++) {
+            if(this->value[i] == other[0]) {
                 bool found = true;
-                for (size_t j = 0; j < otherLength; j++) {
-                    if (this->value[i + j] != other[j]) {
+                for(size_t j = 0; j < otherLength; j++) {
+                    if(this->value[i + j] != other[j]) {
                         found = false;
                         break;
                     }
                 }
-                if (found) {
+                if(found) {
                     count++;
                     i += otherLength - 1;
                 }
@@ -10743,7 +6487,7 @@ public:
      */
     String casefold() const {
         String result = *this;
-        for (size_t i = 0; i < this->length; i++) {
+        for(size_t i = 0; i < this->length; i++) {
             result.value[i] = tolower(this->value[i]);
         }
         return result;
@@ -10755,11 +6499,11 @@ public:
      * @return String& 
      */
     String& swapCase() {
-        for (size_t i = 0; i < this->length; i++) {
-            if (this->value[i] >= 'a' && this->value[i] <= 'z') {
+        for(size_t i = 0; i < this->length; i++) {
+            if(this->value[i] >= 'a' && this->value[i] <= 'z') {
                 this->value[i] = toupper(this->value[i]);
             }
-            else if (this->value[i] >= 'A' && this->value[i] <= 'Z') {
+            else if(this->value[i] >= 'A' && this->value[i] <= 'Z') {
                 this->value[i] = tolower(this->value[i]);
             }
         }
@@ -10773,8 +6517,8 @@ public:
      * @return bool
      */
     bool find(const char& other) const {
-        for (size_t i = 0; i < this->length; i++) {
-            if (this->value[i] == other) {
+        for(size_t i = 0; i < this->length; i++) {
+            if(this->value[i] == other) {
                 return true;
             }
         }
@@ -10788,16 +6532,16 @@ public:
      * @return bool
      */
     bool find(_StringView other) const {
-        for (size_t i = 0; i < this->length; i++) {
-            if (this->value[i] == other.value[0]) {
+        for(size_t i = 0; i < this->length; i++) {
+            if(this->value[i] == other.value[0]) {
                 bool found = true;
-                for (size_t j = 0; j < other.length; j++) {
-                    if (this->value[i + j] != other.value[j]) {
+                for(size_t j = 0; j < other.length; j++) {
+                    if(this->value[i + j] != other.value[j]) {
                         found = false;
                         break;
                     }
                 }
-                if (found) {
+                if(found) {
                     return true;
                 }
             }
@@ -10813,16 +6557,16 @@ public:
      */
     bool find(const char* other) const {
         size_t otherLength = strlen(other);
-        for (size_t i = 0; i < this->length; i++) {
-            if (this->value[i] == other[0]) {
+        for(size_t i = 0; i < this->length; i++) {
+            if(this->value[i] == other[0]) {
                 bool found = true;
-                for (size_t j = 0; j < otherLength; j++) {
-                    if (this->value[i + j] != other[j]) {
+                for(size_t j = 0; j < otherLength; j++) {
+                    if(this->value[i + j] != other[j]) {
                         found = false;
                         break;
                     }
                 }
-                if (found) {
+                if(found) {
                     return true;
                 }
             }
@@ -10836,8 +6580,8 @@ public:
      * @return bool
      */
     bool isAlphabet() const {
-        for (size_t i = 0; i < this->length; i++) {
-            if (!isalpha(this->value[i])) {
+        for(size_t i = 0; i < this->length; i++) {
+            if(!isalpha(this->value[i])) {
                 return false;
             }
         }
@@ -10851,8 +6595,8 @@ public:
      * @return false 
      */
     bool isNumeric() const {
-        for (size_t i = 0; i < this->length; i++) {
-            if (!isalnum(this->value[i])) {
+        for(size_t i = 0; i < this->length; i++) {
+            if(!isalnum(this->value[i])) {
                 return false;
             }
         }
@@ -10867,20 +6611,20 @@ public:
      * @return String& 
      */
     String& insert(size_t index, const char* other) {
-        if (index > this->length) {
+        if(index > this->length) {
             return *this;
         }
 
         size_t otherLength = strlen(other);
         size_t newLength = this->length + otherLength;
         char* newValue = new char[newLength + 1];
-        for (size_t i = 0; i < index; i++) {
+        for(size_t i = 0; i < index; i++) {
             newValue[i] = this->value[i];
         }
-        for (size_t i = 0; i < otherLength; i++) {
+        for(size_t i = 0; i < otherLength; i++) {
             newValue[index + i] = other[i];
         }
-        for (size_t i = index; i < this->length; i++) {
+        for(size_t i = index; i < this->length; i++) {
             newValue[otherLength + i] = this->value[i];
         }
         newValue[newLength] = '\0';
@@ -10898,19 +6642,19 @@ public:
      * @return String& 
      */
     String& insert(size_t index, _StringView other) {
-        if (index > this->length) {
+        if(index > this->length) {
             return *this;
         }
 
         size_t newLength = this->length + other.length;
         char* newValue = new char[newLength + 1];
-        for (size_t i = 0; i < index; i++) {
+        for(size_t i = 0; i < index; i++) {
             newValue[i] = this->value[i];
         }
-        for (size_t i = 0; i < other.length; i++) {
+        for(size_t i = 0; i < other.length; i++) {
             newValue[index + i] = other.value[i];
         }
-        for (size_t i = index; i < this->length; i++) {
+        for(size_t i = index; i < this->length; i++) {
             newValue[other.length + i] = this->value[i];
         }
         newValue[newLength] = '\0';
@@ -10928,17 +6672,17 @@ public:
      * @return String& 
      */
     String& insert(size_t index, const char& other) {
-        if (index > this->length) {
+        if(index > this->length) {
             return *this;
         }
 
         size_t newLength = this->length + 1;
         char* newValue = new char[newLength + 1];
-        for (size_t i = 0; i < index; i++) {
+        for(size_t i = 0; i < index; i++) {
             newValue[i] = this->value[i];
         }
         newValue[index] = other;
-        for (size_t i = index; i < this->length; i++) {
+        for(size_t i = index; i < this->length; i++) {
             newValue[1 + i] = this->value[i];
         }
         newValue[newLength] = '\0';
@@ -10982,10 +6726,10 @@ public:
      * @return String& 
      */
     String& removePrefix(const char& other) {
-        if (this->value[0] == other) {
+        if(this->value[0] == other) {
             size_t newLength = this->length - 1;
             char* newValue = new char[newLength + 1];
-            for (size_t i = 1; i < this->length; i++) {
+            for(size_t i = 1; i < this->length; i++) {
                 newValue[i - 1] = this->value[i];
             }
             newValue[newLength] = '\0';
@@ -11003,11 +6747,11 @@ public:
      * @return String& 
      */
     String& removePrefix(_StringView other) {
-        if (this->value[0] == other.value[0]) {
+        if(this->value[0] == other.value[0]) {
             size_t otherLength = other.length;
             size_t newLength = this->length - otherLength;
             char* newValue = new char[newLength + 1];
-            for (size_t i = otherLength; i < this->length; i++) {
+            for(size_t i = otherLength; i < this->length; i++) {
                 newValue[i - otherLength] = this->value[i];
             }
             newValue[newLength] = '\0';
@@ -11026,10 +6770,10 @@ public:
      */
     String& removePrefix(const char* other) {
         size_t otherLength = strlen(other);
-        if (this->value[0] == other[0]) {
+        if(this->value[0] == other[0]) {
             size_t newLength = this->length - otherLength;
             char* newValue = new char[newLength + 1];
-            for (size_t i = otherLength; i < this->length; i++) {
+            for(size_t i = otherLength; i < this->length; i++) {
                 newValue[i - otherLength] = this->value[i];
             }
             newValue[newLength] = '\0';
@@ -11047,10 +6791,10 @@ public:
      * @return String& 
      */
     String& removeSuffix(const char& other) {
-        if (this->value[this->length - 1] == other) {
+        if(this->value[this->length - 1] == other) {
             size_t newLength = this->length - 1;
             char* newValue = new char[newLength + 1];
-            for (size_t i = 0; i < newLength; i++) {
+            for(size_t i = 0; i < newLength; i++) {
                 newValue[i] = this->value[i];
             }
             newValue[newLength] = '\0';
@@ -11068,11 +6812,11 @@ public:
      * @return String& 
      */
     String& removeSuffix(_StringView other) {
-        if (this->value[this->length - 1] == other.value[other.length - 1]) {
+        if(this->value[this->length - 1] == other.value[other.length - 1]) {
             size_t otherLength = other.length;
             size_t newLength = this->length - otherLength;
             char* newValue = new char[newLength + 1];
-            for (size_t i = 0; i < newLength; i++) {
+            for(size_t i = 0; i < newLength; i++) {
                 newValue[i] = this->value[i];
             }
             newValue[newLength] = '\0';
@@ -11091,10 +6835,10 @@ public:
      */
     String& removeSuffix(const char* other) {
         size_t otherLength = strlen(other);
-        if (this->value[this->length - 1] == other[otherLength - 1]) {
+        if(this->value[this->length - 1] == other[otherLength - 1]) {
             size_t newLength = this->length - otherLength;
             char* newValue = new char[newLength + 1];
-            for (size_t i = 0; i < newLength; i++) {
+            for(size_t i = 0; i < newLength; i++) {
                 newValue[i] = this->value[i];
             }
             newValue[newLength] = '\0';
@@ -11111,8 +6855,8 @@ public:
      * @return bool
      */
     bool isLower() const {
-        for (size_t i = 0; i < this->length; i++) {
-            if (this->value[i] < 'a' || this->value[i] > 'z') {
+        for(size_t i = 0; i < this->length; i++) {
+            if(this->value[i] < 'a' || this->value[i] > 'z') {
                 return false;
             }
         }
@@ -11125,8 +6869,8 @@ public:
      * @return bool
      */
     bool isUpper() const {
-        for (size_t i = 0; i < this->length; i++) {
-            if (this->value[i] < 'A' || this->value[i] > 'Z') {
+        for(size_t i = 0; i < this->length; i++) {
+            if(this->value[i] < 'A' || this->value[i] > 'Z') {
                 return false;
             }
         }
@@ -11164,10 +6908,10 @@ public:
     String& operator+=(const char* value) {
         size_t newLength = this->length + strlen(value);
         char* newValue = new char[newLength + 1];
-        for (size_t i = 0; i < this->length; i++) {
+        for(size_t i = 0; i < this->length; i++) {
             newValue[i] = this->value[i];
         }
-        for (size_t i = this->length; i < newLength; i++) {
+        for(size_t i = this->length; i < newLength; i++) {
             newValue[i] = value[i - this->length];
         }
         newValue[newLength] = '\0';
@@ -11180,10 +6924,10 @@ public:
     String& operator+=(_StringView other) {
         size_t newLength = this->length + other.length;
         char* newValue = new char[newLength + 1];
-        for (size_t i = 0; i < this->length; i++) {
+        for(size_t i = 0; i < this->length; i++) {
             newValue[i] = this->value[i];
         }
-        for (size_t i = this->length; i < newLength; i++) {
+        for(size_t i = this->length; i < newLength; i++) {
             newValue[i] = other.value[i - this->length];
         }
         newValue[newLength] = '\0';
@@ -11196,7 +6940,7 @@ public:
     String& operator+=(const char& value) {
         size_t newLength = this->length + 1;
         char* newValue = new char[newLength + 1];
-        for (size_t i = 0; i < this->length; i++) {
+        for(size_t i = 0; i < this->length; i++) {
             newValue[i] = this->value[i];
         }
         newValue[this->length] = value;
@@ -11227,11 +6971,81 @@ public:
         return result;
     }
 
+    template<typename Type>
+    String operator+(const Type& value) const {
+        String result = *this;
+        result += std::to_string(value);
+        return result;
+    }
+
+
+
+    String& operator+=(const char* value) {
+        size_t newLength = this->length + strlen(value);
+        char* newValue = new char[newLength + 1];
+        for(size_t i = 0; i < this->length; i++) {
+            newValue[i] = this->value[i];
+        }
+        for(size_t i = this->length; i < newLength; i++) {
+            newValue[i] = value[i - this->length];
+        }
+        newValue[newLength] = '\0';
+        delete[] this->value;
+        this->value = newValue;
+        this->length = newLength;
+        return *this;
+    }
+
+    String& operator+=(_StringView other) {
+        size_t newLength = this->length + other.length;
+        char* newValue = new char[newLength + 1];
+        for(size_t i = 0; i < this->length; i++) {
+            newValue[i] = this->value[i];
+        }
+        for(size_t i = this->length; i < newLength; i++) {
+            newValue[i] = other.value[i - this->length];
+        }
+        newValue[newLength] = '\0';
+        delete[] this->value;
+        this->value = newValue;
+        this->length = newLength;
+        return *this;
+    }
+
+    String& operator+=(const char& value) {
+        size_t newLength = this->length + 1;
+        char* newValue = new char[newLength + 1];
+        for(size_t i = 0; i < this->length; i++) {
+            newValue[i] = this->value[i];
+        }
+        newValue[this->length] = value;
+        newValue[newLength] = '\0';
+        delete[] this->value;
+        this->value = newValue;
+        this->length = newLength;
+        return *this;
+    }
+
+    template<typename Type>
+    String& operator+=(const Type& value) {
+        size_t newLength = this->length + std::to_string(value).length();
+        char* newValue = new char[newLength + 1];
+        for(size_t i = 0; i < this->length; i++) {
+            newValue[i] = this->value[i];
+        }
+        newValue[this->length] = std::to_string(value).c_str()[0];
+        newValue[newLength] = '\0';
+        delete[] this->value;
+        this->value = newValue;
+        this->length = newLength;
+        return *this;
+    }
+
 
 
     String operator*(size_t times) const {
         String result = *this;
-        for (size_t i = 0; i < times - 1; i++) {
+        for(size_t i = 0; i < times - 1; i++) {
             result += *this;
         }
         return result;
@@ -11367,7 +7181,7 @@ public:
     String& operator--() {
         this->length--;
         char* newValue = new char[this->length + 1];
-        for (size_t i = 0; i < this->length; i++) {
+        for(size_t i = 0; i < this->length; i++) {
             newValue[i] = this->value[i + 1];
         }
         newValue[this->length] = '\0';
@@ -11380,7 +7194,7 @@ public:
         String result = *this;
         this->length--;
         char* newValue = new char[this->length + 1];
-        for (size_t i = 0; i < this->length; i++) {
+        for(size_t i = 0; i < this->length; i++) {
             newValue[i] = this->value[i + 1];
         }
         newValue[this->length] = '\0';
@@ -11509,57 +7323,8 @@ public:
     }
 
 
-    String& operator<<(short int& value) {
-        this->value = this->toString(value);
-        return *this;
-    }
-
-    String& operator<<(int& value) {
-        this->toString(value);
-        return *this;
-    }
-
-    String& operator<<(float& value) {
-        this->toString(value);
-        return *this;
-    }
-    
-    String& operator<<(double& value) {
-        this->toString(value);
-        return *this;
-    }
-
-    String& operator<<(long double& value) {
-        this->toString(value);
-        return *this;
-    }
-
-    String& operator<<(long& value) {
-        this->toString(value);
-        return *this;
-    }
-
-    String& operator<<(long long& value) {
-        this->toString(value);
-        return *this;
-    }
-
-    String& operator<<(unsigned int& value) {
-        this->toString(value);
-        return *this;
-    }
-
-    String& operator<<(unsigned long& value) {
-        this->toString(value);
-        return *this;
-    }
-
-    String& operator<<(unsigned long long& value) {
-        this->toString(value);
-        return *this;
-    }
-
-    String& operator<<(unsigned short int& value) {
+    template<typename Type>
+    String& operator<<(Type& value) {
         this->toString(value);
         return *this;
     }
@@ -11595,7 +7360,7 @@ public:
         string.reAllocate(0);
         char c;
         while (in.get(c)) {
-            if (c == '\n') {
+            if(c == '\n') {
                 break;
             }
             string += c;
@@ -11699,6 +7464,12 @@ public:
         operator const char*() const {
             return this->current;
         }
+
+        typedef std::random_access_iterator_tag iterator_category;
+
+        iterator_category category() {
+            return std::random_access_iterator_tag();
+        }
     };
 
     Iterator begin() {
@@ -11709,9 +7480,36 @@ public:
         return Iterator(this->value + this->length);
     }
 
+    Iterator rbegin() {
+        return Iterator(this->value + this->length - 1);
+    }
+
+    Iterator rend() {
+        return Iterator(this->value - 1);
+    }
+
+    // Iterator operator+(int offset) {
+    //     return Iterator(this->value + offset);
+    // }
+
+    // Iterator operator-(int offset) {
+    //     return Iterator(this->value - offset);
+    // }
+
+    // int operator-(const Iterator& other) {
+    //     return this->value - other.current;
+    // }
+
+    // char& operator[](int offset) {
+    //     return this->value[offset];
+    // }
+
+    // char operator[](int offset) const {
+    //     return this->value[offset];
+    // }
+
     
 };
-
 
 String operator""_s(const char* str, size_t len)
 {
