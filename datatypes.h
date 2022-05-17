@@ -3,14 +3,14 @@
 // ! Omar Estietie
 
 #include <iostream>
+
+
+#ifndef _DATATYPES_HPP_
+#define _DATATYPES_HPP_
+
 #include <cstring>
-#include <string>
 #include <functional>
 #include <iterator>
-
-#ifndef _INTEGER_HPP_
-#define _INTEGER_HPP_
-
 
 /**
  * @brief An integer wrapper class
@@ -1465,7 +1465,7 @@ public:
     }
 
     template<typename Type>
-    Long& operator=(const unsigned short& other) {
+    Long& operator=(const Type& other) {
         this->value = other;
         return *this;
     }
@@ -1504,7 +1504,7 @@ public:
      * @param string 
      * @return Long& 
      */
-    Long& parseInt(const char* string) {
+    Long& parseLong(const char* string) {
         value = atoi(string);
         return *this;
     }
@@ -4750,6 +4750,15 @@ private:
         return true;
     }
 
+    bool equalityCompareString(const String& other) const {
+        for(size_t i = 0; i <= this->length; i++) {
+            if(this->value[i] != other.value[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * @brief A method that converts a character into a lowercase
      * 
@@ -4823,9 +4832,9 @@ private:
         int ToInt = 0;
 
         for(int i = 0; this->value[i] != '\0'; i++) {
-            if(i == 0 && this->value[i] == '.') continue;
+            if(i == 0 && this->value[i] == '-') continue;
             else if(this->value[i] == '.') break;
-            if(this->value[i] > '9' || this->value[i] < '0') continue;
+            if(this->value[i] > '9' || this->value[i] < '0') break;
             ToInt = ToInt * 10 + this->value[i] - '0';
         }
 
@@ -4837,7 +4846,7 @@ private:
         int ToshortInt = 0;
 
         for(int i = 0; this->value[i] != '\0'; i++) {
-            if(i == 0 && this->value[i] == '.') continue;
+            if(i == 0 && this->value[i] == '-') continue;
             else if(this->value[i] == '.') break;
             if(this->value[i] > '9' || this->value[i] < '0') continue;
             ToshortInt = ToshortInt * 10 + this->value[i] - '0';
@@ -4886,14 +4895,33 @@ private:
         return Division;
     }
 
+    long double readFractions(int start, int end, long double& Division) {
+        long double Fractions = 0;
+        int j, Count = 0;
+
+        for(int k = start; this->value[k] != '\0'; k++) {
+            if(this->value[start] == '0' && this->value[k] == '0') Count++;
+            if(Count == (end - start)) return 0;
+        }
+
+        for(int j = start; this->value[j] != '\0'; j++) {
+            if(this->value[j] > '9' || this->value[j] < '0') continue;
+            Division = Division * 10;
+            if(this->value[j] != '.') Fractions = Fractions * 10 + this->value[j] - '0';
+            
+        }
+        Division = Fractions / Division;
+        return Division;
+    }
+
     float toFloat() {
         float ToFloat = 0, Division = 1;
         int i;
         int LengthOfString = this->Length;
         for(i = 0; this->value[i] != '\0'; i++) {
-            if(i == 0 && this->value[i] == '.') continue;
+            if(i == 0 && (this->value[i] == '.' || this->value[i] == '-')) continue;
             if(i != 0 && this->value[i] == '.') break;
-            if(this->value[i] > '9' || this->value[i] < '0') continue;
+            if(this->value[i] > '9' || this->value[i] < '0') break;
             ToFloat = ToFloat * 10 + this->value[i] - '0';
         }
     
@@ -4917,9 +4945,9 @@ private:
         int i = 0, j;
 
         for(i = 0; this->value[i] != '\0'; i++) {
-            if(i == 0 && this->value[i] == '.') continue;
+            if(i == 0 && (this->value[i] == '.' || this->value[i] == '-')) continue;
             if(i != 0 && this->value[i] == '.') break;
-            if(this->value[i] > '9' || this->value[i] < '0') continue;
+            if(this->value[i] > '9' || this->value[i] < '0') break;
             ToDouble = ToDouble * 10 + this->value[i] - '0';
         }
 
@@ -4937,13 +4965,39 @@ private:
         return ToDouble;
     }
 
+    long double toLDouble() {
+        long double ToLDouble = 0, Division = 1;
+        int LengthOfString = this->length;
+        int i = 0, j;
+
+        for(i = 0; this->value[i] != '\0'; i++) {
+            if(i == 0 && (this->value[i] == '.' || this->value[i] == '-')) continue;
+            if(i != 0 && this->value[i] == '.') break;
+            if(this->value[i] > '9' || this->value[i] < '0') break;
+            ToLDouble = ToLDouble * 10 + this->value[i] - '0';
+        }
+
+        if(this->value[i] == '.') {
+            readFractions(i + 1, LengthOfString, Division);
+        }
+
+        ToLDouble = ToLDouble + Division;
+        if(this->value[0] == '-') {
+            if(ToLDouble - (int)ToLDouble == 0) return -1 * (ToLDouble - 1);
+            return -ToLDouble;
+        }
+
+        if(ToLDouble - (int)ToLDouble == 0) return ToLDouble - 1;
+        return ToLDouble;
+    }
+
     long long toLLInt() {
         long long ToLongLong = 0;
 
         for(int i = 0; this->value[i] != '\0'; i++) {
-            if(i == 0 && this->value[i] == '.') continue;
+            if(i == 0 && this->value[i] == '-') continue;
             else if(this->value[i] == '.') break;
-            if(this->value[i] > '9' || this->value[i] < '0') continue;
+            if(this->value[i] > '9' || this->value[i] < '0') break;
             ToLongLong = ToLongLong * 10 + this->value[i] - '0';
         }
 
@@ -4955,9 +5009,9 @@ private:
         long ToLong = 0;
 
         for(int i = 0; this->value[i] != '\0'; i++) {
-            if(i == 0 && this->value[i] == '.') continue;
+            if(i == 0 && this->value[i] == '-') continue;
             else if(this->value[i] == '.') break;
-            if(this->value[i] > '9' || this->value[i] < '0') continue;
+            if(this->value[i] > '9' || this->value[i] < '0') break;
             ToLong = ToLong * 10 + this->value[i] - '0';
         }
 
@@ -4969,55 +5023,55 @@ private:
         unsigned short int ToUShortInt = 0;
 
         for(int i = 0; this->value[i] != '\0'; i++) {
-            if(i == 0 && this->value[i] == '.') continue;
+            if(i == 0 && this->value[i] == '-') continue;
             else if(this->value[i] == '.') break;
-            if(this->value[i] > '9' || this->value[i] < '0') continue;
+            if(this->value[i] > '9' || this->value[i] < '0') break;
             ToUShortInt = ToUShortInt * 10 + this->value[i] - '0';
         }
 
-        if(this->value[0] == '-') return -ToUShortInt;
+        if(this->value[0] == '-') return ToUShortInt;
         return ToUShortInt;
     }
 
     unsigned int toUInt() {
-        if(this->value[0] == '-') return 0;
         unsigned int ToUnsignedInt = 0;
 
         for(int i = 0; this->value[i] != '\0'; i++) {
-            if(i == 0 && this->value[i] == '.') continue;
+            if(i == 0 && this->value[i] == '-') continue;
             else if(this->value[i] == '.') break;
-            if(this->value[i] > '9' || this->value[i] < '0') continue;
+            if(this->value[i] > '9' || this->value[i] < '0') break;
             ToUnsignedInt = ToUnsignedInt * 10 + this->value[i] - '0';
         }
 
+        if(this->value[0] == '-') return ToUnsignedInt;
         return ToUnsignedInt;
     }
 
     unsigned long toULInt() {
-        if(this->value[0] == '-') return 0;
         unsigned long ToUnsignedLong = 0;
 
         for(int i = 0; this->value[i] != '\0'; i++) {
-            if(i == 0 && this->value[i] == '.') continue;
+            if(i == 0 && this->value[i] == '-') continue;
             else if(this->value[i] == '.') break;
-            if(this->value[i] > '9' || this->value[i] < '0') continue;
+            if(this->value[i] > '9' || this->value[i] < '0') break;
             ToUnsignedLong = ToUnsignedLong * 10 + this->value[i] - '0';
         }
 
+        if(this->value[0] == '-') return ToUnsignedLong;
         return ToUnsignedLong;
     }
 
     unsigned long long toULLInt() {
-        if(this->value[0] == '-') return 0;
         unsigned long long ToUnsignedLongLong = 0;
 
         for(int i = 0; this->value[i] != '\0'; i++) {
-            if(i == 0 && this->value[i] == '.') continue;
+            if(i == 0 && this->value[i] == '-') continue;
             else if(this->value[i] == '.') break;
-            if(this->value[i] > '9' || this->value[i] < '0') continue;
+            if(this->value[i] > '9' || this->value[i] < '0') break;
             ToUnsignedLongLong = ToUnsignedLongLong * 10 + this->value[i] - '0';
         }
 
+        if(this->value[0] == '-') return ToUnsignedLongLong;
         return ToUnsignedLongLong;
     }
 
@@ -5249,7 +5303,7 @@ public:
      * @brief The largest possible string
      * 
      */
-    const size_t LargeValue = -1;
+    static const size_t LargeValue = -1;
 
     /**
      * @brief The length of the string
@@ -5677,6 +5731,32 @@ public:
             throw std::invalid_argument("Index must be smaller than length of string");
         }
         return this->value[index];
+    }
+
+    /**
+     * @brief Returns the Unicode value of the character at the specified location.
+     * 
+     * @param index 
+     * @return int 
+     */
+    int charCodeAt(const size_t& index) const {
+        if(index > this->length) {
+            throw std::invalid_argument("Index must be smaller than length of string");
+        }
+        return this->value[index];
+    }
+
+    /**
+     * @brief Returns the hash code for this string.
+     * 
+     * @return long long 
+     */
+    Long hashCode() const {
+        long long hash = 0;
+        for(size_t i = 0; i < this->length; i++) {
+            hash = 31 * hash + this->value[i];
+        }
+        return hash;
     }
 
     /**
@@ -6715,8 +6795,33 @@ public:
      * 
      * @return const char* 
      */
-    const char* cString() const {
+    const char* cString() {
+        char* cString = new char[this->length + 1];
+        for(size_t i = 0; i < this->length; i++) {
+            cString[i] = this->value[i];
+        }
+        cString[this->length] = '\0';
+        delete[] this->value;
+        this->value = cString;
         return this->value;
+        return cString;
+    }
+
+    /**
+     * @brief A method that returns a C style string
+     * 
+     * @return char* 
+     */
+    char* c_string() {
+        char* cString = new char[this->length + 1];
+        for(size_t i = 0; i < this->length; i++) {
+            cString[i] = this->value[i];
+        }
+        cString[this->length] = '\0';
+        delete[] this->value;
+        this->value = cString;
+        return this->value;
+        return cString;
     }
 
     /**
@@ -6954,14 +7059,14 @@ public:
 
 
     String operator+(const char* value) const {
-        String result = *this;
-        result += value;
-        return result;
+        String newString = *this;
+        newString.append(value);
+        return newString;
     }
 
     String operator+(_StringView other) const {
         String result = *this;
-        result += other;
+        result.append(other);
         return result;
     }
 
@@ -6976,69 +7081,6 @@ public:
         String result = *this;
         result += std::to_string(value);
         return result;
-    }
-
-
-
-    String& operator+=(const char* value) {
-        size_t newLength = this->length + strlen(value);
-        char* newValue = new char[newLength + 1];
-        for(size_t i = 0; i < this->length; i++) {
-            newValue[i] = this->value[i];
-        }
-        for(size_t i = this->length; i < newLength; i++) {
-            newValue[i] = value[i - this->length];
-        }
-        newValue[newLength] = '\0';
-        delete[] this->value;
-        this->value = newValue;
-        this->length = newLength;
-        return *this;
-    }
-
-    String& operator+=(_StringView other) {
-        size_t newLength = this->length + other.length;
-        char* newValue = new char[newLength + 1];
-        for(size_t i = 0; i < this->length; i++) {
-            newValue[i] = this->value[i];
-        }
-        for(size_t i = this->length; i < newLength; i++) {
-            newValue[i] = other.value[i - this->length];
-        }
-        newValue[newLength] = '\0';
-        delete[] this->value;
-        this->value = newValue;
-        this->length = newLength;
-        return *this;
-    }
-
-    String& operator+=(const char& value) {
-        size_t newLength = this->length + 1;
-        char* newValue = new char[newLength + 1];
-        for(size_t i = 0; i < this->length; i++) {
-            newValue[i] = this->value[i];
-        }
-        newValue[this->length] = value;
-        newValue[newLength] = '\0';
-        delete[] this->value;
-        this->value = newValue;
-        this->length = newLength;
-        return *this;
-    }
-
-    template<typename Type>
-    String& operator+=(const Type& value) {
-        size_t newLength = this->length + std::to_string(value).length();
-        char* newValue = new char[newLength + 1];
-        for(size_t i = 0; i < this->length; i++) {
-            newValue[i] = this->value[i];
-        }
-        newValue[this->length] = std::to_string(value).c_str()[0];
-        newValue[newLength] = '\0';
-        delete[] this->value;
-        this->value = newValue;
-        this->length = newLength;
-        return *this;
     }
 
 
@@ -7058,7 +7100,7 @@ public:
     }
 
     bool operator==(_StringView other) const {
-        return this->equalityCompare(other.value);
+        return this->equalityCompareString(other.value);
     }
 
     bool operator==(const char& other) const {
@@ -7281,6 +7323,11 @@ public:
         return *this;
     }
 
+    String& operator>>(long double& value) {
+        value = this->toLDouble();
+        return *this;
+    }
+
     /**
      * @brief A method that converts the string to a Double
      * 
@@ -7298,6 +7345,11 @@ public:
     }
 
     String& operator>>(long long& value) {
+        value = this->toLLInt();
+        return *this;
+    }
+
+    String& operator>>(Long& value) {
         value = this->toLLInt();
         return *this;
     }
@@ -7323,8 +7375,58 @@ public:
     }
 
 
-    template<typename Type>
-    String& operator<<(Type& value) {
+
+    String& operator<<(short& value) {
+        this->toString(value);
+        return *this;
+    }
+
+    String& operator<<(int& value) {
+        this->toString(value);
+        return *this;
+    }
+
+    String& operator<<(long& value) {
+        this->toString(value);
+        return *this;
+    }
+
+    String& operator<<(long long& value) {
+        this->toString(value);
+        return *this;
+    }
+
+    String& operator<<(unsigned short& value) {
+        this->toString(value);
+        return *this;
+    }
+
+    String& operator<<(unsigned int& value) {
+        this->toString(value);
+        return *this;
+    }
+
+    String& operator<<(unsigned long& value) {
+        this->toString(value);
+        return *this;
+    }
+
+    String& operator<<(unsigned long long& value) {
+        this->toString(value);
+        return *this;
+    }
+
+    String& operator<<(float& value) {
+        this->toString(value);
+        return *this;
+    }
+
+    String& operator<<(double& value) {
+        this->toString(value);
+        return *this;
+    }
+
+    String& operator<<(long double& value) {
         this->toString(value);
         return *this;
     }
@@ -7486,29 +7588,7 @@ public:
 
     Iterator rend() {
         return Iterator(this->value - 1);
-    }
-
-    // Iterator operator+(int offset) {
-    //     return Iterator(this->value + offset);
-    // }
-
-    // Iterator operator-(int offset) {
-    //     return Iterator(this->value - offset);
-    // }
-
-    // int operator-(const Iterator& other) {
-    //     return this->value - other.current;
-    // }
-
-    // char& operator[](int offset) {
-    //     return this->value[offset];
-    // }
-
-    // char operator[](int offset) const {
-    //     return this->value[offset];
-    // }
-
-    
+    }    
 };
 
 String operator""_s(const char* str, size_t len)
@@ -7610,6 +7690,10 @@ String type(const WrapperClass& wrapper) {
         return "char";
     }
 
+    if(std::is_same<unsigned char, WrapperClass>::value) {
+        return "unsigned char";
+    }
+
     if(std::is_same<std::string, WrapperClass>::value) {
         return "string";
     }
@@ -7647,6 +7731,139 @@ String type(const WrapperClass& wrapper) {
     }
 
     return "Unknown";
+}
+
+
+
+
+/**
+ * @brief Scan a string.
+ * Used such as:
+ * (String / std::string / char* / const char*) str = input(); 
+ * Would ask you to enter something without printing anything before it.
+ * While doing:
+ * (String / std::string / char* / const char*) str = input("Enter something: ");
+ * Would ask you to enter something with the text "Enter something: " before it. 
+ * 
+ * @param prompt A phrase to inform the user about what to enter.
+ * @return String 
+ */
+String input(StringView prompt = "") {
+    std::cout << prompt;
+    String input;
+    std::cin >> input;
+    return input;
+}
+
+/**
+ * @brief Convert a string to an integer.
+ * (Integer / int) number = parseInt("123"); std::cout << number; => 123
+ * Can be used with input() to get an integer from the user by doing
+ * (Integer / int) number = parseInt(input("Enter a number: "));
+ * 
+ * @param input 
+ * @return int 
+ */
+int parseInt(String&& input) {
+    int temp(0);
+    input >> temp;
+    return temp;
+}
+
+/**
+ * @brief Convert a string to a float
+ * (Float / float) number = parseFloat("123.456"); std::cout << number; => 123.456
+ * Can be used with input() to get a float from the user by doing
+ * (Float / float) number = parseFloat(input("Enter a number: "));
+ * 
+ * @param input 
+ * @return float 
+ */
+float parseFloat(String&& input) {
+    Float temp(0);
+    input >> temp;
+    return temp;
+}
+
+/**
+ * @brief Convert a string to a double
+ * (Double / double) number = parseDouble("123.456"); std::cout << number; => 123.456
+ * Can be used with input() to get a double from the user by doing
+ * (Double / double) number = parseDouble(input("Enter a number: "));
+ * 
+ * @param input 
+ * @return double 
+ */
+double parseDouble(String&& input) {
+    Double temp(0);
+    input >> temp;
+    return temp;
+}
+
+/**
+ * @brief Convert a string to a short
+ * (Short / short) number = parseShort("123"); std::cout << number; => 123
+ * Can be used with input() to get a short from the user by doing
+ * (Short / short) number = parseShort(input("Enter a number: "));
+ * 
+ * @param input 
+ * @return short int 
+ */
+short int parseShort(String&& input) {
+    Short temp(0);
+    input >> temp;
+    return temp;
+}
+
+/**
+ * @brief Convert a string to a long long
+ * (Long / long long) number = parseLong("123"); std::cout << number; => 123
+ * Can be used with input() to get a long long from the user by doing
+ * (Long / long long) number = parseLong(input("Enter a number: "));
+ * 
+ * @param input 
+ * @return long long 
+ */
+long long parseLong(String&& input) {
+    Long temp(0);
+    input >> temp;
+    return temp;
+}
+
+/**
+ * @brief Convert any type into a string (except for wrapper classes)
+ * 
+ * @tparam Type The type to convert to a string.
+ * @param input Input from user.
+ * @return String 
+ */
+template<typename Type>
+String parseString(Type&& input) {
+    String temp;
+    temp << input;
+    return temp;
+}
+
+/**
+ * @brief Prints out a new line.
+ * 
+ */
+void print() {
+    std::cout << '\n';
+}
+
+/**
+ * @brief Prints out any number of arguments.
+ * 
+ * @tparam Type The first type.
+ * @tparam Types Any other type/types.
+ * @param value The first value.
+ * @param values The other values.
+ */
+template<typename Type, typename... Types>
+void print(const Type& value, Types... values) {
+    std::cout << value << ' ';
+    print(values...);
 }
 
 #endif
