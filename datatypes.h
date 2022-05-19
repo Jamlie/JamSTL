@@ -9,6 +9,7 @@
 #define _DATATYPES_HPP_
 
 #include <cstring>
+#include <string>
 #include <functional>
 #include <iterator>
 
@@ -2551,14 +2552,13 @@ public:
     long long round() {
         if(this->value - (long long)this->value == 0) return this->value;
         double number = this->value - (long long)this->value;
+        long long result = 0;
         if(this->value < 0) {
             double negativeValue = this->value - (long long)this->value;
-            long long result;
             if(negativeValue <= -0.5 && negativeValue > -1) result = this->floor();
             else if(negativeValue > -0.5 && negativeValue < 0) result = this->ceil();
             return result;
         }
-        long long result;
         if(number >= 0.5 && number < 1) result = this->ceil();
         else if(number < 0.5 && number > 0) result = this->floor();
         return result;
@@ -3282,14 +3282,13 @@ public:
     long long round() {
         if(this->value - (long long)this->value == 0) return this->value;
         double number = this->value - (long long)this->value;
+        long long result = 0;
         if(this->value < 0) {
             double negativeValue = this->value - (long long)this->value;
-            long long result;
             if(negativeValue <= -0.5 && negativeValue > -1) result = this->floor();
             else if(negativeValue > -0.5 && negativeValue < 0) result = this->ceil();
             return result;
         }
-        long long result;
         if(number >= 0.5 && number < 1) result = this->ceil();
         else if(number < 0.5 && number > 0) result = this->floor();
         return result;
@@ -3979,8 +3978,8 @@ public:
     template<typename Type>
     Boolean(const Type& value) : value(value) {}
     Boolean(const Boolean& other) : value(other.value) {}
-    Boolean(Boolean&& other) : value(other.value) {}
-    Boolean(const Integer& other) : value(other.value) {}
+    Boolean(Boolean&& other) noexcept : value(other.value) {}
+    Boolean(const Integer& other) noexcept : value(other.value) {}
     Boolean(const Short& other) : value(other.value) {}
     Boolean(const Long& other) : value(other.value) {}
     Boolean(const Float& other) : value(other.value) {}
@@ -4019,7 +4018,7 @@ public:
         return *this;
     }
 
-    Boolean& operator=(Boolean&& other) {
+    Boolean& operator=(Boolean&& other) noexcept {
         this->value = other.value;
         return *this;
     }
@@ -4866,7 +4865,7 @@ private:
             if(Count == (end - start)) return 0;
         }
 
-        for(int j = start; this->value[j] != '\0'; j++) {
+        for(j = start; this->value[j] != '\0'; j++) {
             if(this->value[j] > '9' || this->value[j] < '0') continue;
             Division = Division * 10;
             if(this->value[j] != '.') Fractions = Fractions * 10 + this->value[j] - '0';
@@ -4885,7 +4884,7 @@ private:
             if(Count == (end - start)) return 0;
         }
 
-        for(int j = start; this->value[j] != '\0'; j++) {
+        for(j = start; this->value[j] != '\0'; j++) {
             if(this->value[j] > '9' || this->value[j] < '0') continue;
             Division = Division * 10;
             if(this->value[j] != '.') Fractions = Fractions * 10 + this->value[j] - '0';
@@ -4904,7 +4903,7 @@ private:
             if(Count == (end - start)) return 0;
         }
 
-        for(int j = start; this->value[j] != '\0'; j++) {
+        for(j = start; this->value[j] != '\0'; j++) {
             if(this->value[j] > '9' || this->value[j] < '0') continue;
             Division = Division * 10;
             if(this->value[j] != '.') Fractions = Fractions * 10 + this->value[j] - '0';
@@ -4942,7 +4941,7 @@ private:
     double toDouble() {
         double ToDouble = 0, Division = 1;
         int LengthOfString = this->length;
-        int i = 0, j;
+        int i = 0;
 
         for(i = 0; this->value[i] != '\0'; i++) {
             if(i == 0 && (this->value[i] == '.' || this->value[i] == '-')) continue;
@@ -4968,7 +4967,7 @@ private:
     long double toLDouble() {
         long double ToLDouble = 0, Division = 1;
         int LengthOfString = this->length;
-        int i = 0, j;
+        int i = 0;
 
         for(i = 0; this->value[i] != '\0'; i++) {
             if(i == 0 && (this->value[i] == '.' || this->value[i] == '-')) continue;
@@ -5076,177 +5075,207 @@ private:
     }
 
     String& toString(int& value) {
-        const char* string = std::to_string(value).c_str();
         if(this->value != nullptr) delete[] this->value;
-        this->value = new char[strlen(string) + 1];
-        strcpy(this->value, string);
-        this->length = strlen(string);
+        this->value = new char[strlen(std::to_string(value).c_str()) + 1];
+        strncpy(this->value,
+                std::to_string(value).c_str(),
+                strlen(std::to_string(value).c_str()) + 1);
+                this->length = strlen(std::to_string(value).c_str());
         return *this;
     }
 
     String& toString(Integer& value) {
-        const char* string = std::to_string(value).c_str();
         if(this->value != nullptr) delete[] this->value;
-        this->value = new char[strlen(string) + 1];
-        strcpy(this->value, string);
-        this->length = strlen(string);
+        this->value = new char[strlen(std::to_string(value).c_str()) + 1];
+        strncpy(this->value, 
+                std::to_string(value).c_str(),
+                strlen(std::to_string(value).c_str()) + 1);
+        this->length = strlen(std::to_string(value).c_str());
         return *this;
     }
 
     String& toString(float& value) {
         if(value - (long long)value == 0) {
-            const char* string = std::to_string((long long)value).c_str();
             if(this->value != nullptr) delete[] this->value;
-            this->value = new char[strlen(string) + 1];
-            strncpy(this->value, string, strlen(string) + 1);
-            this->length = strlen(string);
+            this->value = new char[strlen(std::to_string(value).c_str()) + 1];
+            strncpy(this->value,
+                    std::to_string(value).c_str(),
+                    strlen(std::to_string(value).c_str()) + 1);
+            this->length = strlen(std::to_string(value).c_str());
             return *this;
         }
-        const char* string = std::to_string(value).c_str();
         if(this->value != nullptr) delete[] this->value;
-        this->value = new char[strlen(string) + 1];
-        strncpy(this->value, string, strlen(string) + 1);
-        this->length = strlen(string);
+        this->value = new char[strlen(std::to_string(value).c_str()) + 1];
+        strncpy(this->value, 
+                std::to_string(value).c_str(), 
+                strlen(std::to_string(value).c_str()) + 1);
+        this->length = strlen(std::to_string(value).c_str());
         return *this;
     }
 
     String& toString(Float& value) {
         if(value - (long long)value == 0) {
-            const char* string = std::to_string((long long)value).c_str();
             if(this->value != nullptr) delete[] this->value;
-            this->value = new char[strlen(string) + 1];
-            strncpy(this->value, string, strlen(string) + 1);
-            this->length = strlen(string);
+            this->value = new char[strlen(std::to_string(value).c_str()) + 1];
+            strncpy(this->value, 
+                    std::to_string(value).c_str(), 
+                    strlen(std::to_string(value).c_str()) + 1);
+            this->length = strlen(std::to_string(value).c_str());
             return *this;
         }
-        const char* string = std::to_string(value).c_str();
         if(this->value != nullptr) delete[] this->value;
-        this->value = new char[strlen(string) + 1];
-        strncpy(this->value, string, strlen(string) + 1);
-        this->length = strlen(string);
+        this->value = new char[strlen(std::to_string(value).c_str()) + 1];
+        strncpy(this->value, 
+                std::to_string(value).c_str(),
+                strlen(std::to_string(value).c_str()) + 1);
+        this->length = strlen(std::to_string(value).c_str());
         return *this;
     }
 
     String& toString(double& value) {
         if(value - (long long)value == 0) {
-            const char* string = std::to_string((long long)value).c_str();
             if(this->value != nullptr) delete[] this->value;
-            this->value = new char[strlen(string) + 1];
-            strncpy(this->value, string, strlen(string) + 1);
-            this->length = strlen(string);
+            this->value = new char[strlen(std::to_string(value).c_str()) + 1];
+            strncpy(this->value, 
+                    std::to_string(value).c_str(), 
+                    strlen(std::to_string(value).c_str()) + 1);
+            this->length = strlen(std::to_string(value).c_str());
             return *this;
         }
-        const char* string = std::to_string(value).c_str(); 
         if(this->value != nullptr) delete[] this->value;
-        this->value = new char[strlen(string) + 1];
-        strncpy(this->value, string, strlen(string) + 1);
-        this->length = strlen(string);
+        this->value = new char[strlen(std::to_string(value).c_str()) + 1];
+        strncpy(this->value, 
+                std::to_string(value).c_str(), 
+                strlen(std::to_string(value).c_str()) + 1);
+        this->length = strlen(std::to_string(value).c_str());
         return *this;
     }
 
     String& toString(Double& value) {
         if(value - (long long)value == 0) {
-            const char* string = std::to_string((long long)value).c_str();
             if(this->value != nullptr) delete[] this->value;
-            this->value = new char[strlen(string) + 1];
-            strncpy(this->value, string, strlen(string) + 1);
-            this->length = strlen(string);
+            this->value = new char[strlen(std::to_string(value).c_str()) + 1];
+            strncpy(this->value, 
+                    std::to_string(value).c_str(), 
+                    strlen(std::to_string(value).c_str()) + 1);
+            this->length = strlen(std::to_string(value).c_str());
             return *this;
         }
-        const char* string = std::to_string(value).c_str(); 
         if(this->value != nullptr) delete[] this->value;
-        this->value = new char[strlen(string) + 1];
-        strncpy(this->value, string, strlen(string) + 1);
-        this->length = strlen(string);
+        this->value = new char[strlen(std::to_string(value).c_str()) + 1];
+        strncpy(this->value, 
+                std::to_string(value).c_str(), 
+                strlen(std::to_string(value).c_str()) + 1);
+        this->length = strlen(std::to_string(value).c_str());
         return *this;
     }
 
     String& toString(long double& value) {
         if(value - (long long)value == 0) {
-            const char* string = std::to_string((long long)value).c_str();
             if(this->value != nullptr) delete[] this->value;
-            this->value = new char[strlen(string) + 1];
-            strncpy(this->value, string, strlen(string) + 1);
-            this->length = strlen(string);
+            this->value = new char[strlen(std::to_string(value).c_str()) + 1];
+            strncpy(this->value, 
+                    std::to_string(value).c_str(), 
+                    strlen(std::to_string(value).c_str()) + 1);
+            this->length = strlen(std::to_string(value).c_str());
             return *this;
         }
-        const char* string = std::to_string(value).c_str();
         if(this->value != nullptr) delete[] this->value;
-        this->value = new char[strlen(string) + 1];
-        strncpy(this->value, string, strlen(string) + 1);
-        this->length = strlen(string);
+        this->value = new char[strlen(std::to_string(value).c_str()) + 1];
+        strncpy(this->value, 
+                std::to_string(value).c_str(), 
+                strlen(std::to_string(value).c_str()) + 1);
+        this->length = strlen(std::to_string(value).c_str());
         return *this;
     }
 
     String& toString(short& value) {
-        const char* string = std::to_string(value).c_str();
         if(this->value != nullptr) delete[] this->value;
-        this->value = new char[strlen(string) + 1];
-        strncpy(this->value, string, strlen(string) + 1);
-        this->length = strlen(string);
+        this->value = new char[strlen(std::to_string(value).c_str()) + 1];
+        strncpy(this->value, 
+                std::to_string(value).c_str(), 
+                strlen(std::to_string(value).c_str()) + 1);
+        this->length = strlen(std::to_string(value).c_str());
         return *this;
     }
 
     String& toString(Short& value) {
-        const char* string = std::to_string(value).c_str();
         if(this->value != nullptr) delete[] this->value;
-        this->value = new char[strlen(string) + 1];
-        strncpy(this->value, string, strlen(string) + 1);
-        this->length = strlen(string);
+        this->value = new char[strlen(std::to_string(value).c_str()) + 1];
+        strncpy(this->value, 
+                std::to_string(value).c_str(), 
+                strlen(std::to_string(value).c_str()) + 1);
+        this->length = strlen(std::to_string(value).c_str());
         return *this;
     }
 
     String& toString(unsigned short& value) {
-        const char* string = std::to_string(value).c_str();
         if(this->value != nullptr) delete[] this->value;
-        this->value = new char[strlen(string) + 1];
-        strncpy(this->value, string, strlen(string) + 1);
-        this->length = strlen(string);
+        this->value = new char[strlen(std::to_string(value).c_str()) + 1];
+        strncpy(this->value, 
+                std::to_string(value).c_str(), 
+                strlen(std::to_string(value).c_str()) + 1);
+        this->length = strlen(std::to_string(value).c_str());
         return *this;
     }
 
     String& toString(unsigned int& value) {
-        const char* string = std::to_string(value).c_str();
         if(this->value != nullptr) delete[] this->value;
-        this->value = new char[strlen(string) + 1];
-        strncpy(this->value, string, strlen(string) + 1);
-        this->length = strlen(string);
+        this->value = new char[strlen(std::to_string(value).c_str()) + 1];
+        strncpy(this->value, 
+                std::to_string(value).c_str(), 
+                strlen(std::to_string(value).c_str()) + 1);
+        this->length = strlen(std::to_string(value).c_str());
         return *this;
     }
 
     String& toString(unsigned long& value) {
-        const char* string = std::to_string(value).c_str();
         if(this->value != nullptr) delete[] this->value;
-        this->value = new char[strlen(string) + 1];
-        strncpy(this->value, string, strlen(string) + 1);
-        this->length = strlen(string);
+        this->value = new char[strlen(std::to_string(value).c_str()) + 1];
+        strncpy(this->value, 
+                std::to_string(value).c_str(), 
+                strlen(std::to_string(value).c_str()) + 1);
+        this->length = strlen(std::to_string(value).c_str());
         return *this;
     }
 
     String& toString(unsigned long long& value) {
-        const char* string = std::to_string(value).c_str();
         if(this->value != nullptr) delete[] this->value;
-        this->value = new char[strlen(string) + 1];
-        strncpy(this->value, string, strlen(string) + 1);
-        this->length = strlen(string);
+        this->value = new char[strlen(std::to_string(value).c_str()) + 1];
+        strncpy(this->value, 
+                std::to_string(value).c_str(), 
+                strlen(std::to_string(value).c_str()) + 1);
+        this->length = strlen(std::to_string(value).c_str());
         return *this;
     }
 
     String& toString(long& value) {
-        const char* string = std::to_string(value).c_str();
         if(this->value != nullptr) delete[] this->value;
-        this->value = new char[strlen(string) + 1];
-        strncpy(this->value, string, strlen(string) + 1);
-        this->length = strlen(string);
+        this->value = new char[strlen(std::to_string(value).c_str()) + 1];
+        strncpy(this->value, 
+                std::to_string(value).c_str(), 
+                strlen(std::to_string(value).c_str()) + 1);
+        this->length = strlen(std::to_string(value).c_str());
         return *this;
     }
 
     String& toString(long long& value) {
-        const char* string = std::to_string(value).c_str();
         if(this->value != nullptr) delete[] this->value;
-        this->value = new char[strlen(string) + 1];
-        strncpy(this->value, string, strlen(string) + 1);
-        this->length = strlen(string);
+        this->value = new char[strlen(std::to_string(value).c_str()) + 1];
+        strncpy(this->value, 
+                std::to_string(value).c_str(), 
+                strlen(std::to_string(value).c_str()) + 1);
+        this->length = strlen(std::to_string(value).c_str());
+        return *this;
+    }
+
+    String& toString(Long& value) {
+        if(this->value != nullptr) delete[] this->value;
+        this->value = new char[strlen(std::to_string(value).c_str()) + 1];
+        strncpy(this->value, 
+                std::to_string(value).c_str(), 
+                strlen(std::to_string(value).c_str()) + 1);
+        this->length = strlen(std::to_string(value).c_str());
         return *this;
     }
 
@@ -7451,6 +7480,11 @@ public:
         return *this;
     }
 
+    String& operator<<(Long& value) {
+        this->toString(value);
+        return *this;
+    }
+
 
 
     friend std::ostream& operator<<(std::ostream& out, _StringView string) {
@@ -7734,115 +7768,6 @@ String type(const WrapperClass& wrapper) {
 }
 
 
-
-
-/**
- * @brief Scan a string.
- * Used such as:
- * (String / std::string / char* / const char*) str = input(); 
- * Would ask you to enter something without printing anything before it.
- * While doing:
- * (String / std::string / char* / const char*) str = input("Enter something: ");
- * Would ask you to enter something with the text "Enter something: " before it. 
- * 
- * @param prompt A phrase to inform the user about what to enter.
- * @return String 
- */
-String input(StringView prompt = "") {
-    std::cout << prompt;
-    String input;
-    std::cin >> input;
-    return input;
-}
-
-/**
- * @brief Convert a string to an integer.
- * (Integer / int) number = parseInt("123"); std::cout << number; => 123
- * Can be used with input() to get an integer from the user by doing
- * (Integer / int) number = parseInt(input("Enter a number: "));
- * 
- * @param input 
- * @return int 
- */
-int parseInt(String&& input) {
-    int temp(0);
-    input >> temp;
-    return temp;
-}
-
-/**
- * @brief Convert a string to a float
- * (Float / float) number = parseFloat("123.456"); std::cout << number; => 123.456
- * Can be used with input() to get a float from the user by doing
- * (Float / float) number = parseFloat(input("Enter a number: "));
- * 
- * @param input 
- * @return float 
- */
-float parseFloat(String&& input) {
-    Float temp(0);
-    input >> temp;
-    return temp;
-}
-
-/**
- * @brief Convert a string to a double
- * (Double / double) number = parseDouble("123.456"); std::cout << number; => 123.456
- * Can be used with input() to get a double from the user by doing
- * (Double / double) number = parseDouble(input("Enter a number: "));
- * 
- * @param input 
- * @return double 
- */
-double parseDouble(String&& input) {
-    Double temp(0);
-    input >> temp;
-    return temp;
-}
-
-/**
- * @brief Convert a string to a short
- * (Short / short) number = parseShort("123"); std::cout << number; => 123
- * Can be used with input() to get a short from the user by doing
- * (Short / short) number = parseShort(input("Enter a number: "));
- * 
- * @param input 
- * @return short int 
- */
-short int parseShort(String&& input) {
-    Short temp(0);
-    input >> temp;
-    return temp;
-}
-
-/**
- * @brief Convert a string to a long long
- * (Long / long long) number = parseLong("123"); std::cout << number; => 123
- * Can be used with input() to get a long long from the user by doing
- * (Long / long long) number = parseLong(input("Enter a number: "));
- * 
- * @param input 
- * @return long long 
- */
-long long parseLong(String&& input) {
-    Long temp(0);
-    input >> temp;
-    return temp;
-}
-
-/**
- * @brief Convert any type into a string (except for wrapper classes)
- * 
- * @tparam Type The type to convert to a string.
- * @param input Input from user.
- * @return String 
- */
-template<typename Type>
-String parseString(Type&& input) {
-    String temp;
-    temp << input;
-    return temp;
-}
 
 /**
  * @brief Prints out a new line.
