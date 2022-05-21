@@ -1,6 +1,6 @@
 #pragma once
 
-#include <iostream>
+#include <istream>
 
 #ifndef _SCANNER_H
 #define _SCANNER_H
