@@ -2,21 +2,419 @@
 
 // ! Omar Estietie
 
+
+
+#ifndef JAMSTL_DT_H_
+#define JAMSTL_DT_H_
 #include <iostream>
 
-
-#ifndef JAMSTL_DATATYPES_H_
-#define JAMSTL_DATATYPES_H_
-
+#include "Macros.h"
 #include <cstring>
 #include <functional>
 #include <iterator>
 #include "type_traits.h"
-#include "Macros.h"
 #include "Math.h"
-#include <cmath>
 
-JAMSTL_NAMESPACE_BEGIN
+namespace test_jamstl {
+    using namespace jamstl;
+
+    /**
+     * @brief An integer wrapper class
+     * 
+     */
+    class Byte {
+    private:
+        unsigned char value;
+    public:
+        Byte() : value('\0') {}
+
+        template <typename Type>
+        Byte(const Type &other) : value(other) {};
+        Byte(const Byte &other) : value(other.value) {}
+        Byte(unsigned char other) : value(other) {}
+        ~Byte() {}
+
+        template<typename Type>
+        Byte& operator=(const Type& other) {
+            value = other;
+            return *this;
+        }
+
+        Byte& operator=(const Byte& other) {
+            value = other.value;
+            return *this;
+        }
+
+        Byte& operator=(unsigned char other) {
+            value = other;
+            return *this;
+        }
+
+        Byte& toUpper() {
+            value = static_cast<unsigned char>(toupper(value));
+            return *this;
+        }
+
+        Byte& toLower() {
+            value = static_cast<unsigned char>(tolower(value));
+            return *this;
+        }
+
+        bool isAlphabet() const {
+            return isalpha(value);
+        }
+
+        bool isDigit() const {
+            return isdigit(value);
+        }
+
+        bool isAlphanumeric() const {
+            return isalnum(value);
+        }
+
+        bool isSpace() const {
+            return isspace(value);
+        }
+
+        bool isPunctuation() const {
+            return ispunct(value);
+        }
+
+        bool isPrintable() const {
+            return isprint(value);
+        }
+
+        bool isBlank() const {
+            return isblank(value);
+        }
+
+        unsigned char toString() const {
+            return value;
+        }
+
+        Byte clear() {
+            value = '\0';
+            return *this;
+        }
+
+        Byte& empty() {
+            value = '\0';
+            return *this;
+        }
+
+        void swap(Byte& other) {
+            unsigned char temp = value;
+            value = other.value;
+            other.value = temp;
+        }
+
+        void set(unsigned char other) {
+            value = other;
+        }
+
+        void set(const Byte& other) {
+            value = other.value;
+        }
+        
+        void set(const int& other) {
+            value = static_cast<unsigned char>(other);
+        }
+
+        unsigned char get() const {
+            return value;
+        }
+
+        bool isSameByte(const Byte& other) const {
+            return value == other.value;
+        }
+
+        bool equalIgnoreCase(const Byte& other) const {
+            return tolower(value) == tolower(other.value);
+        }
+
+        bool equalIgnoreCase(const unsigned char& other) const {
+            return tolower(value) == tolower(other);
+        }
+
+        bool isEmpty() const {
+            return value == '\0';
+        }
+
+        int toInt() const {
+            return value;
+        }
+        
+        short toShort() const {
+            return value;
+        }
+
+        operator unsigned char() const {
+            return value;
+        }
+
+        template<typename Type>
+        Byte& operator+=(const int& other) {
+            this->value += other;
+            return *this;
+        }
+
+        Byte& operator+=(const Byte& other) {
+            this->value += other.value;
+            return *this;
+        }
+
+
+
+        template<typename Type>
+        Byte& operator-=(const int& other) {
+            this->value -= other;
+            return *this;
+        }
+
+        Byte& operator-=(const Byte& other) {
+            this->value -= other.value;
+            return *this;
+        }
+
+
+
+        template<typename Type>
+        Byte& operator*=(const Type& other) {
+            this->value *= other;
+            return *this;
+        }
+
+        Byte& operator*=(const Byte& other) {
+            this->value *= other.value;
+            return *this;
+        }
+
+
+
+        template<typename Type>
+        Byte& operator/=(const Type& other) {
+            this->value /= other;
+            return *this;
+        }
+
+        Byte& operator/=(const Byte& other) {
+            this->value /= other.value;
+            return *this;
+        }
+
+
+
+        template<typename Type>
+        Byte& operator%=(const Type& other) {
+            this->value %= other;
+            return *this;
+        }
+
+        Byte& operator%=(const Byte& other) {
+            this->value %= other.value;
+            return *this;
+        }
+
+
+
+        Byte& operator++() {
+            this->value++;
+            return *this;
+        }
+
+        Byte& operator--() {
+            this->value--;
+            return *this;
+        }
+
+        Byte operator++(int) {
+            Byte temp = *this;
+            this->value++;
+            return temp;
+        }
+
+        Byte operator--(int) {
+            Byte temp = *this;
+            this->value--;
+            return temp;
+        }
+        
+
+
+        template<typename Type>
+        Byte operator+(const Type& other) const {
+            return this->value + other;
+        }
+
+        Byte operator+(const Byte& other) const {
+            return this->value + other.value;
+        }
+
+
+
+        template<typename Type>
+        Byte operator-(const Type& other) const {
+            return this->value - other;
+        }
+        
+        Byte operator-(const Byte& other) const {
+            return this->value - other.value;
+        }
+
+
+
+        template<typename Type>
+        Byte operator*(const Type& other) const {
+            return this->value * other;
+        }
+
+        Byte operator*(const Byte& other) const {
+            return this->value * other.value;
+        }
+
+
+
+        template<typename Type>
+        Byte operator/(const Type& other) const {
+            return this->value / other;
+        }
+
+        Byte operator/(const Byte& other) const {
+            return this->value / other.value;
+        }
+
+
+
+        template<typename Type>
+        Byte operator%(const Type& other) const {
+            return this->value % other;
+        }
+
+        Byte operator%(const Byte& other) const {
+            return this->value % other.value;
+        }
+
+
+
+        template<typename Type>
+        bool operator^(const Type& other) const {
+            return this->value ^ other;
+        }
+
+        bool operator^(const Byte& other) const {
+            return this->value ^ other.value;
+        }
+
+
+
+        template<typename Type>
+        bool operator==(const Type& other) const {
+            return this->value == other;
+        }
+
+        bool operator==(const Byte& other) const {
+            return this->value == other.value;
+        }
+
+
+
+        template<typename Type>
+        Byte operator&(const Type& other) const {
+            return this->value & other;
+        }
+
+        Byte operator&(const Byte& other) const {
+            return this->value & other.value;
+        }
+
+
+
+        template<typename Type>
+        Byte operator|(const Type& other) const {
+            return this->value | other;
+        }
+
+        Byte operator|(const Byte& other) const {
+            return this->value | other.value;
+        }
+
+
+
+        Byte operator~() const {
+            return ~this->value;
+        }
+
+        bool operator!() const {
+            return !this->value;
+        }
+
+
+
+        template<typename Type>
+        bool operator!=(const Type& other) const {
+            return this->value != other;
+        }
+
+        bool operator!=(const Byte& other) const {
+            return this->value != other.value;
+        }
+
+
+
+        template<typename Type>
+        bool operator<(const Type& other) const {
+            return this->value < other;
+        }
+
+        bool operator<(const Byte& other) const {
+            return this->value < other.value;
+        }
+
+        
+
+        template<typename Type>
+        bool operator>(const Type& other) const {
+            return this->value > other;
+        }
+
+        bool operator>(const Byte& other) const {
+            return this->value > other.value;
+        }
+
+        
+
+        template<typename Type>
+        bool operator<=(const Type& other) const {
+            return this->value <= other;
+        }
+
+        bool operator<=(const Byte& other) const {
+            return this->value <= other.value;
+        }
+
+
+
+        template<typename Type>
+        bool operator>=(const Type& other) const {
+            return this->value >= other;
+        }
+
+        bool operator>=(const Byte& other) const {
+            return this->value >= other.value;
+        }
+
+        
+
+        friend std::ostream& operator<<(std::ostream& out, const Byte& by) {
+            out << by.value;
+            return out;
+        }
+
+        friend std::istream& operator>>(std::istream& in, Byte& by) {
+            in >> by.value;
+            return in;
+        }
+    };
 
     /**
      * @brief An integer wrapper class
@@ -30,6 +428,32 @@ JAMSTL_NAMESPACE_BEGIN
         friend class Double;
         friend class Short;
         friend class Boolean;
+        static constexpr unsigned char DigitTens[] = {
+            '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+            '1', '1', '1', '1', '1', '1', '1', '1', '1', '1',
+            '2', '2', '2', '2', '2', '2', '2', '2', '2', '2',
+            '3', '3', '3', '3', '3', '3', '3', '3', '3', '3',
+            '4', '4', '4', '4', '4', '4', '4', '4', '4', '4',
+            '5', '5', '5', '5', '5', '5', '5', '5', '5', '5',
+            '6', '6', '6', '6', '6', '6', '6', '6', '6', '6',
+            '7', '7', '7', '7', '7', '7', '7', '7', '7', '7',
+            '8', '8', '8', '8', '8', '8', '8', '8', '8', '8',
+            '9', '9', '9', '9', '9', '9', '9', '9', '9', '9',
+        };
+
+        static constexpr unsigned char DigitOnes[] = {
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+        };
+
     public:
         Integer() : value(0) {}
 
@@ -58,7 +482,57 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
         
+        
 
+        static int hashCode(int value) {
+            return value;
+        }
+
+        static Integer stringSize(int value) {
+            int d = 1;
+            if(value >= 0) {
+                d = 0;
+                value = -value;
+            }
+            int p = -10;
+            for(int i = 1; i < 10; i++) {
+                if(value > p) { return i + d; }
+                p = p * 10;
+            }
+            return 10 + d;
+        }
+
+        static int getChars(int i, int index, unsigned char buf[]) {
+            int q, r;
+            int charPos = index;
+
+            bool negative = i < 0;
+            if (!negative) {
+                i = -i;
+            }
+
+            while(i <= -100) {
+                q = i / 100;
+                r = (q * 100) - i;
+                i = q;
+                buf[--charPos] = DigitOnes[r];
+                buf[--charPos] = DigitTens[r];
+            }
+
+            q = i / 10;
+            r = (q * 10) - i;
+            buf[--charPos] = (unsigned char)('0' + r);
+
+            if (q < 0) {
+                buf[--charPos] = (unsigned char)('0' - q);
+            }
+
+            if (negative) {
+                buf[--charPos] = (unsigned char)'-';
+            }
+
+            return charPos;
+        }
 
         /**
          * @brief A method that reverses the order of the digits of an Integer
@@ -137,6 +611,7 @@ JAMSTL_NAMESPACE_BEGIN
                 return 0;
             }
         }
+
 
         /**
          * @brief Absolute value of an integer
@@ -663,6 +1138,10 @@ JAMSTL_NAMESPACE_BEGIN
         Short(const char* other) : value(atoi(other)) {}
 
 
+
+        static int hashCode(short value) {
+            return static_cast<int>(value);
+        }
 
         /**
          * @brief A method that reverses the order of the digits of a Short
@@ -1405,6 +1884,8 @@ JAMSTL_NAMESPACE_BEGIN
         friend class Float;
         friend class Double;
         friend class Boolean;
+        friend class String;
+
     public:
         Long() : value(0) {}
         Long(const Long& other) : value(other.value) {}
@@ -1487,6 +1968,12 @@ JAMSTL_NAMESPACE_BEGIN
             }
             return length;
         }
+
+        static int hashCode(long long value) {
+            return (int)(value ^ (value >> 32));
+        }
+
+
 
         /**
          * @brief A method that returns the type of a Long
@@ -2336,14 +2823,6 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
 
-        // Positive Infinity
-        // static constexpr float POSITIVE_INFINITY = 1.0f / 0.0f;
-
-        // // Negative Infinity
-        // static constexpr float NEGATIVE_INFINITY = -1.0f / 0.0f;
-
-        // Not a Number
-        // static constexpr float NaN               = 0.0f / 0.0f;
 
         // Max value of a float
         static constexpr float MAX_VALUE         = 0x1.fffffeP+127f;  // 3.4028235e+38f
@@ -2353,6 +2832,80 @@ JAMSTL_NAMESPACE_BEGIN
 
         // Min value of a float
         static constexpr float MIN_VALUE         = 0x0.000002P-126f; // 1.4e-45f
+
+        static constexpr int SIGNIFICAND_WIDTH   = 24;
+        static constexpr int EXP_BIAS            = 127;
+        static constexpr int SIGNIF_BIT_MASK     = 0x007FFFFF;
+        static constexpr int SIGN_BIT_MASK       = 0x80000000;
+        static constexpr int EXP_BIT_MASK        = 0x7F800000;
+
+
+        static constexpr float intBitsToFloat(int32_t bits) {
+            int32_t sign = (bits >> 31) & 0x1;
+            int32_t exp = (bits >> 23) & 0xFF;
+            int32_t mant = bits & 0x7FFFFF;
+            if(exp == 0) {
+                if(mant == 0) {
+                    return 0;
+                }
+                else {
+                    return Math.minInfinity;
+                }
+            }
+            else if(exp == 255) {
+                if(mant == 0) {
+                    return Math.Infinity;
+                }
+                else {
+                    return Math.NaN;
+                }
+            }
+            else {
+                return Math.pow(2, exp - 127) * (1 + (mant / (1 << 23)));
+            }
+        }
+
+        static constexpr int floatToRawIntBits(float value) {
+            int32_t bits = *(int32_t*)&value;
+            int32_t sign = (bits >> 31) & 0x1;
+            int32_t exp = (bits >> 23) & 0xFF;
+            int32_t mant = bits & 0x7FFFFF;
+            if(exp == 0) {
+                if(mant == 0) {
+                    return 0;
+                }
+                else {
+                    return Math.minInfinity;
+                }
+            }
+            else if(exp == 255) {
+                if(mant == 0) {
+                    return Math.Infinity;
+                }
+                else {
+                    return Math.NaN;
+                }
+            }
+            else {
+                return (sign << 31) | ((exp + 127) << 23) | (mant & 0x7FFFFF);
+            }
+        }
+
+        static int floatToIntBits(float value) {
+            if(!isNaN(value)) {
+                return floatToRawIntBits(value);
+            }
+            return 0x7fc00000;
+        }
+
+        static bool isNaN(float value) {
+            return value != value;
+        }
+
+        static int hashCode(float value) {
+            return floatToIntBits(value);
+        }
+
 
 
         /**
@@ -3121,14 +3674,7 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        // Positive Infinity
-        // static constexpr double POSITIVE_INFINITY = 1.0 / 0.0;
-        
-        // Negative Infinity
-        // static constexpr double NEGATIVE_INFINITY = -1.0 / 0.0;
 
-        // Not a number
-        // static constexpr double NaN               = 0.0 / 0.0;
 
         // Max value of a double 1.7976931348623157e+308
         static constexpr double MAX_VALUE         = 0x1.fffffffffffffP+1023; 
@@ -3140,6 +3686,37 @@ JAMSTL_NAMESPACE_BEGIN
         // Min value of a double.
         static constexpr double MIN_VALUE         = 0x0.0000000000001P-1022; // 4.9e-324
 
+        static constexpr long long EXP_BIT_MASK               = 0x7FF0000000000000L;
+        static constexpr long long SIGNIFICAND_WIDTH          = 53;
+        static constexpr int       EXP_BIAS                   = 1023;
+        static constexpr long long SIGNIF_BIT_MASK            = 0x000FFFFFFFFFFFFFL;
+        static constexpr long long SIGN_BIT_MASK              = 0x8000000000000000L;
+
+
+        static constexpr long long doubleToRawLongBits(double bits) {
+            long long result = 0;
+            memcpy(&result, &bits, sizeof(double));
+            return result;
+        }
+
+        static constexpr double longBitsToDouble(long long bits) {
+            double result = 0;
+            memcpy(&result, &bits, sizeof(double));
+            return result;
+        }
+
+
+        static bool isNaN(const double& value) {
+            return value != value;
+        }
+
+        static bool isFinite(const double& value) {
+            return Math.abs(value) <= MAX_VALUE;
+        }
+
+        static int hashCode(double value) {
+            return Long::hashCode(doubleToRawLongBits(value));
+        }
 
 
         /**
@@ -3170,7 +3747,7 @@ JAMSTL_NAMESPACE_BEGIN
         * @return Double& 
         */
         Double& intValue() {
-            this->value = Math.Trunc(this->value);
+            this->value = Math.trunc(this->value);
             return *this;
         }
 
@@ -3180,7 +3757,7 @@ JAMSTL_NAMESPACE_BEGIN
         * @return Double& 
         */
         Double& longValue() {
-            this->value = Math.Trunc(this->value);
+            this->value = Math.trunc(this->value);
             return *this;
         }
 
@@ -3797,7 +4374,10 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
         bool operator||(const char* other) const {
-            return this->value || std::stod(other);
+            if(other == nullptr) {
+                return false;
+            }
+            return this->value || other;
         }
 
         template<typename Type>
@@ -4025,6 +4605,7 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
+        
 
         /**
         * @brief A method that makes a character in a upper case
@@ -4426,6 +5007,17 @@ JAMSTL_NAMESPACE_BEGIN
             return this->value * other.value;
         }
 
+        // Character& operator*() {
+        //     return *this;
+        // }
+        
+        // Character operator*() {
+        //     return *this;
+        // }
+
+        
+
+
 
 
         template<typename Type>
@@ -4576,6 +5168,7 @@ JAMSTL_NAMESPACE_BEGIN
     */
     class String {
     private:
+        friend class Long;
         char* value;
         size_t length = 0;
 
@@ -5121,21 +5714,21 @@ JAMSTL_NAMESPACE_BEGIN
                 return *this;
             }
 
-            double FNumber = Math.Floor(floatNumber);
+            double FNumber = Math.floor(floatNumber);
             double tempFloat = floatNumber - FNumber;
             String str = "";
 
             // To turn the integer part to string
-            long long mainDigits = Math.Log10(FNumber) + 1;
+            long long mainDigits = Math.log10(FNumber) + 1;
             for(int i = 0; i < mainDigits; i++) {
                 str += (Math.fmod(FNumber, 10)) + '0';
                 FNumber /= 10;
-                FNumber = Math.Trunc(FNumber);
+                FNumber = Math.trunc(FNumber);
             }
             str.reverse();
 
             // To check if the double value == int part
-            double checkFloat = Math.Floor(floatNumber);
+            double checkFloat = Math.floor(floatNumber);
             if(floatNumber - checkFloat == 0) {
                 str.reverse();
                 str.append(".0");
@@ -5145,7 +5738,7 @@ JAMSTL_NAMESPACE_BEGIN
 
             // To turn the decimal part to string
             str.append(".");
-            FNumber = Math.Floor(floatNumber);
+            FNumber = Math.floor(floatNumber);
             tempFloat = floatNumber - FNumber;
             long long digits = 0;
 
@@ -5155,11 +5748,11 @@ JAMSTL_NAMESPACE_BEGIN
             
             tempFloat *= 100000;
 
-            double number = Math.Round(tempFloat);
+            double number = Math.round(tempFloat);
             for(int i = 0; i < 5; i++) {
                 if(Math.fmod(number, 10) == 0) {
                     number /= 10;
-                    number = Math.Round(number);
+                    number = Math.round(number);
                 }
                 else digits++;
             }
@@ -5169,7 +5762,7 @@ JAMSTL_NAMESPACE_BEGIN
                 tempCharacter = Math.fmod(number, 10) + '0';
                 tempString += tempCharacter;
                 number /= 10;
-                number = Math.Round(number);
+                number = Math.round(number);
             }
             tempString.reverse();
             str += tempString;
@@ -5183,21 +5776,21 @@ JAMSTL_NAMESPACE_BEGIN
                 return *this;
             }
 
-            double DNumber = Math.Floor(doubleNumber);
+            double DNumber = Math.floor(doubleNumber);
             double tempDouble = doubleNumber - DNumber;
             String str = "";
 
             // To turn the integer part to string
-            long long mainDigits = Math.Log10(DNumber) + 1;
+            long long mainDigits = Math.log10(DNumber) + 1;
             for(int i = 0; i < mainDigits; i++) {
                 str += (Math.fmod(DNumber, 10)) + '0';
                 DNumber /= 10;
-                DNumber = Math.Trunc(DNumber);
+                DNumber = Math.trunc(DNumber);
             }
             str.reverse();
 
             // To check if the double value == int part
-            double checkDouble = Math.Floor(doubleNumber);
+            double checkDouble = Math.floor(doubleNumber);
             if(doubleNumber - checkDouble == 0) {
                 str.reverse();
                 str.append(".0");
@@ -5207,7 +5800,7 @@ JAMSTL_NAMESPACE_BEGIN
 
             // To turn the decimal part to string
             str.append(".");
-            DNumber = Math.Floor(doubleNumber);
+            DNumber = Math.floor(doubleNumber);
             tempDouble = doubleNumber - DNumber;
             long long digits = 0;
 
@@ -5217,11 +5810,11 @@ JAMSTL_NAMESPACE_BEGIN
             
             tempDouble *= 100000;
 
-            double number = Math.Round(tempDouble);
+            double number = Math.round(tempDouble);
             for(int i = 0; i < 5; i++) {
                 if(Math.fmod(number, 10) == 0) {
                     number /= 10;
-                    number = Math.Round(number);
+                    number = Math.round(number);
                 }
                 else digits++;
             }
@@ -5231,7 +5824,7 @@ JAMSTL_NAMESPACE_BEGIN
                 tempCharacter = Math.fmod(number, 10) + '0';
                 tempString += tempCharacter;
                 number /= 10;
-                number = Math.Round(number);
+                number = Math.round(number);
             }
             tempString.reverse();
             str += tempString;
@@ -5245,21 +5838,21 @@ JAMSTL_NAMESPACE_BEGIN
                 return *this;
             }
 
-            double LDNumber = Math.Floor(longDoubleNumber);
+            double LDNumber = Math.floor(longDoubleNumber);
             double tmepLongDouble = longDoubleNumber - LDNumber;
             String str = "";
 
             // To turn the integer part to string
-            long long mainDigits = Math.Log10(LDNumber) + 1;
+            long long mainDigits = Math.log10(LDNumber) + 1;
             for(int i = 0; i < mainDigits; i++) {
                 str += (Math.fmod(LDNumber, 10)) + '0';
                 LDNumber /= 10;
-                LDNumber = Math.Trunc(LDNumber);
+                LDNumber = Math.trunc(LDNumber);
             }
             str.reverse();
 
             // To check if the double value == int part
-            double checkLongDouble = Math.Floor(longDoubleNumber);
+            double checkLongDouble = Math.floor(longDoubleNumber);
             if(longDoubleNumber - checkLongDouble == 0) {
                 str.reverse();
                 str.append(".0");
@@ -5269,7 +5862,7 @@ JAMSTL_NAMESPACE_BEGIN
 
             // To turn the decimal part to string
             str.append(".");
-            LDNumber = Math.Floor(longDoubleNumber);
+            LDNumber = Math.floor(longDoubleNumber);
             tmepLongDouble = longDoubleNumber - LDNumber;
             long long digits = 0;
 
@@ -5279,11 +5872,11 @@ JAMSTL_NAMESPACE_BEGIN
             
             tmepLongDouble *= 100000;
 
-            double number = Math.Round(tmepLongDouble);
+            double number = Math.round(tmepLongDouble);
             for(int i = 0; i < 5; i++) {
                 if(Math.fmod(number, 10) == 0) {
                     number /= 10;
-                    number = Math.Round(number);
+                    number = Math.round(number);
                 }
                 else digits++;
             }
@@ -5293,7 +5886,7 @@ JAMSTL_NAMESPACE_BEGIN
                 tempCharacter = Math.fmod(number, 10) + '0';
                 tempString += tempCharacter;
                 number /= 10;
-                number = Math.Round(number);
+                number = Math.round(number);
             }
             tempString.reverse();
             str += tempString;
@@ -5439,21 +6032,21 @@ JAMSTL_NAMESPACE_BEGIN
                 return *this;
             }
 
-            double FNumber = Math.Floor(floatNumber);
+            double FNumber = Math.floor(floatNumber);
             double tempFloat = floatNumber - FNumber;
             String str = "";
 
             // To turn the integer part to string
-            long long mainDigits = Math.Log10(FNumber) + 1;
+            long long mainDigits = Math.log10(FNumber) + 1;
             for(int i = 0; i < mainDigits; i++) {
                 str += (Math.fmod(FNumber, 10)) + '0';
                 FNumber /= 10;
-                FNumber = Math.Trunc(FNumber);
+                FNumber = Math.trunc(FNumber);
             }
             str.reverse();
 
             // To check if the double value == int part
-            double checkFloat = Math.Floor(floatNumber);
+            double checkFloat = Math.floor(floatNumber);
             if(floatNumber - checkFloat == 0) {
                 str.reverse();
                 str.append(".0");
@@ -5463,7 +6056,7 @@ JAMSTL_NAMESPACE_BEGIN
 
             // To turn the decimal part to string
             str.append(".");
-            FNumber = Math.Floor(floatNumber);
+            FNumber = Math.floor(floatNumber);
             tempFloat = floatNumber - FNumber;
             long long digits = 0;
 
@@ -5473,11 +6066,11 @@ JAMSTL_NAMESPACE_BEGIN
             
             tempFloat *= 100000;
 
-            double number = Math.Round(tempFloat);
+            double number = Math.round(tempFloat);
             for(int i = 0; i < 5; i++) {
                 if(Math.fmod(number, 10) == 0) {
                     number /= 10;
-                    number = Math.Round(number);
+                    number = Math.round(number);
                 }
                 else digits++;
             }
@@ -5487,7 +6080,7 @@ JAMSTL_NAMESPACE_BEGIN
                 tempCharacter = Math.fmod(number, 10) + '0';
                 tempString += tempCharacter;
                 number /= 10;
-                number = Math.Round(number);
+                number = Math.round(number);
             }
             tempString.reverse();
             str += tempString;
@@ -5501,21 +6094,21 @@ JAMSTL_NAMESPACE_BEGIN
                 return *this;
             }
 
-            double DNumber = Math.Floor(doubleNumber);
+            double DNumber = Math.floor(doubleNumber);
             double tempDouble = doubleNumber - DNumber;
             String str = "";
 
             // To turn the integer part to string
-            long long mainDigits = Math.Log10(DNumber) + 1;
+            long long mainDigits = Math.log10(DNumber) + 1;
             for(int i = 0; i < mainDigits; i++) {
                 str += (Math.fmod(DNumber, 10)) + '0';
                 DNumber /= 10;
-                DNumber = Math.Trunc(DNumber);
+                DNumber = Math.trunc(DNumber);
             }
             str.reverse();
 
             // To check if the double value == int part
-            double checkDouble = Math.Floor(doubleNumber);
+            double checkDouble = Math.floor(doubleNumber);
             if(doubleNumber - checkDouble == 0) {
                 str.reverse();
                 str.append(".0");
@@ -5525,7 +6118,7 @@ JAMSTL_NAMESPACE_BEGIN
 
             // To turn the decimal part to string
             str.append(".");
-            DNumber = Math.Floor(doubleNumber);
+            DNumber = Math.floor(doubleNumber);
             tempDouble = doubleNumber - DNumber;
             long long digits = 0;
 
@@ -5535,11 +6128,11 @@ JAMSTL_NAMESPACE_BEGIN
             
             tempDouble *= 100000;
 
-            double number = Math.Round(tempDouble);
+            double number = Math.round(tempDouble);
             for(int i = 0; i < 5; i++) {
                 if(Math.fmod(number, 10) == 0) {
                     number /= 10;
-                    number = Math.Round(number);
+                    number = Math.round(number);
                 }
                 else digits++;
             }
@@ -5549,7 +6142,7 @@ JAMSTL_NAMESPACE_BEGIN
                 tempCharacter = Math.fmod(number, 10) + '0';
                 tempString += tempCharacter;
                 number /= 10;
-                number = Math.Round(number);
+                number = Math.round(number);
             }
             tempString.reverse();
             str += tempString;
@@ -5900,12 +6493,16 @@ JAMSTL_NAMESPACE_BEGIN
         * 
         * @return long long 
         */
-        Long hashCode() const {
+        static Long hashCode(const String& str) {
             long long hash = 0;
-            for(size_t i = 0; i < this->length; i++) {
-                hash = 31 * hash + this->value[i];
+            for(size_t i = 0; i < str.length; i++) {
+                hash = 31 * hash + str[i];
             }
             return hash;
+        }
+
+        static String decode() {
+
         }
 
         /**
@@ -7639,7 +8236,7 @@ JAMSTL_NAMESPACE_BEGIN
             }
             tempFloat *= 100000;
 
-            long long number = Math.Round(tempFloat);
+            long long number = Math.round(tempFloat);
             for(int i = 0; i < 5; i++) {
                 if(number % 10 == 0) {
                     number /= 10;
@@ -7684,7 +8281,7 @@ JAMSTL_NAMESPACE_BEGIN
             }
             tempDouble *= 100000;
 
-            long long number = Math.Round(tempDouble);
+            long long number = Math.round(tempDouble);
             for(int i = 0; i < 5; i++) {
                 if(number % 10 == 0) {
                     number /= 10;
@@ -7727,7 +8324,8 @@ JAMSTL_NAMESPACE_BEGIN
             }
             tempLongDouble *= 100000;
 
-            long long number = Math.Round(tempLongDouble);
+            // long long number = Math.round(tempLongDouble);
+            long long number = Math.round(tempLongDouble);
             for(int i = 0; i < 5; i++) {
                 if(number % 10 == 0) {
                     number /= 10;
@@ -7770,7 +8368,7 @@ JAMSTL_NAMESPACE_BEGIN
             }
             tempFloat *= 100000;
 
-            long long number = Math.Round(tempFloat);
+            long long number = Math.round(tempFloat);
             for(int i = 0; i < 5; i++) {
                 if(number % 10 == 0) {
                     number /= 10;
@@ -7813,7 +8411,7 @@ JAMSTL_NAMESPACE_BEGIN
             }
             tempDouble *= 100000;
 
-            long long number = Math.Round(tempDouble);
+            long long number = Math.round(tempDouble);
             for(int i = 0; i < 5; i++) {
                 if(number % 10 == 0) {
                     number /= 10;
@@ -8097,39 +8695,32 @@ JAMSTL_NAMESPACE_BEGIN
             this->length = newLength;
         }
     };
-
-    String operator""_s(const char* str, size_t len)
-    {
+ 
+    String operator""_s(const char* str, size_t len) {
         return String(str, len);
     }
 
-    Character operator""_c(const char* str, size_t len)
-    {
+    Character operator""_c(const char* str, size_t len) {
         return Character(str[0]);
     }
 
-    Double operator""_d(long double value)
-    {
+    Double operator""_d(long double value) {
         return Double(value);
     }
 
-    Long operator""_L(unsigned long long value)
-    {
+    Long operator""_L(unsigned long long value) {
         return Long(value);
     }
 
-    Float operator""_f(long double value)
-    {
+    Float operator""_f(long double value) {
         return Float(value);
     }
 
-    Integer operator""_i(unsigned long long value)
-    {
+    Integer operator""_i(unsigned long long value) {
         return Integer(value);
     }
 
-    Short operator""_si(unsigned long long value)
-    {
+    Short operator""_si(unsigned long long value) {
         return Short(value);
     }
 
@@ -8147,105 +8738,7 @@ JAMSTL_NAMESPACE_BEGIN
 
     using LongView    = const Long&;
 
-    template<typename WrapperClass>
-    String type(const WrapperClass& wrapper) {
-        using namespace jamstl::type_traits;
-        if(is_same<int, WrapperClass>::value) {
-            return "int";
-        }
-
-        if(is_same<short int, WrapperClass>::value) {
-            return "short int";
-        }
-
-        if(is_same<long, WrapperClass>::value) {
-            return "long";
-        }
-
-        if(is_same<long long, WrapperClass>::value) {
-            return "long long";
-        }
-
-        if(is_same<unsigned int, WrapperClass>::value) {
-            return "unsigned int";
-        }
-
-        if(is_same<unsigned short int, WrapperClass>::value) {
-            return "unsigned short int";
-        }
-
-        if(is_same<unsigned long, WrapperClass>::value) {
-            return "unsigned long";
-        }
-
-        if(is_same<unsigned long long, WrapperClass>::value) {
-            return "unsigned long long";
-        }
-
-        if(is_same<float, WrapperClass>::value) {
-            return "float";
-        }
-
-        if(is_same<double, WrapperClass>::value) {
-            return "double";
-        }
-
-        if(is_same<bool, WrapperClass>::value) {
-            return "bool";
-        }
-        
-        if(is_same<char, WrapperClass>::value) {
-            return "char";
-        }
-
-        if(is_same<unsigned char, WrapperClass>::value) {
-            return "unsigned char";
-        }
-
-        if(is_same<String, WrapperClass>::value) {
-            return "String";
-        }
-
-        if(is_same<Character, WrapperClass>::value) {
-            return "Character";
-        }
-
-        if(is_same<Double, WrapperClass>::value) {
-            return "Double";
-        }
-        
-        if(is_same<Float, WrapperClass>::value) {
-            return "Float";
-        }
-
-        if(is_same<Integer, WrapperClass>::value) {
-            return "Integer";
-        }
-
-        if(is_same<Short, WrapperClass>::value) {
-            return "Short";
-        }
-
-        if(is_same<Boolean, WrapperClass>::value) {
-            return "Boolean";
-        }
-
-        if(is_same<Long, WrapperClass>::value) {
-            return "Long";
-        }
-
-        if(is_array<WrapperClass>::value) {
-            return "Array";
-        }
-
-        if(is_pointer<WrapperClass>::value) {
-            return "Pointer";
-        }
-
-        return "Unknown";
-    }
-
-JAMSTL_NAMESPACE_END
+}
 
 #include "String.h"
 
