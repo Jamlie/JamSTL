@@ -4,3 +4,5 @@ JamSTL is a namespace that has many libraries in it in order to be as good as Cp
 The source code of every library in it is clear and understandable.
 
 Some things like the ArrayList have got methods from multiple languages, such as, C++, Java, JavaScript and Python.
+
+You can start using it by importing ```jamstlc++```, then, by doing ```using namespace jamstl;```
