@@ -22,25 +22,31 @@ JAMSTL_NAMESPACE_BEGIN
         Boolean(const Type& value) : value(value) {}
         Boolean(const Boolean& other) : value(other.value) {}
         Boolean(Boolean&& other) noexcept : value(other.value) {}
+        Boolean(const char* trueOfFalse) {
+            if(trueOfFalse == "false") {
+                value = false;
+            } else {
+                value = true;
+            }
+        }
 
 
         operator bool() const {
             return this->value;
         }
 
-        void setValue(const bool& value) {
-            this->value = value;
-        }
-
-        void setValue(bool&& value) {
-            this->value = value;
-        }
-
-        bool getValue() const {
-            return this->value;
+        const char* valueOf() const {
+            if(this->value) {
+                return "true";
+            }
+            return "false";
         }
 
         const char* toString() const {
+            return this->value ? "true" : "false";
+        }
+
+        const char* toCString() const {
             return this->value ? "true" : "false";
         }
 
@@ -66,6 +72,12 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
+        Boolean& operator=(const char* trueOrFalse) {
+            if(trueOrFalse == "false") this->value = false;
+            else this->value = true;
+            return *this;
+        }
+
 
 
         bool operator==(const Boolean& other) const {
@@ -75,6 +87,10 @@ JAMSTL_NAMESPACE_BEGIN
         template<typename Type>
         bool operator==(const Type& other) const {
             return this->value == other;
+        }
+
+        bool operator==(const char* other) const {
+            return this->value == (other == "true");
         }
 
 
@@ -91,11 +107,11 @@ JAMSTL_NAMESPACE_BEGIN
 
 
         friend std::ostream& operator<<(std::ostream& out, const Boolean& boolean) {
-            if(boolean.value == true) {
-                out << true;
+            if(boolean.value) {
+                out << "true";
                 return out;
             }
-            out << false;
+            out << "false";
             return out;
         }
 

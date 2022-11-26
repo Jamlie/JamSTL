@@ -41,8 +41,7 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
     public:
-        Array() 
-        {
+        Array() {
             setTempValue();
         }
 

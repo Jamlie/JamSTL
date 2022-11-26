@@ -1517,14 +1517,11 @@ JAMSTL_NAMESPACE_BEGIN
                 end = this->Length;
             }
             usize newLength = end - start;
-            char* newValue = new char[newLength + 1];
+            InnerString newValue = "";
             for(usize i = 0; i < newLength; i++) {
-                newValue[i] = this->value[i + start];
+                newValue += this->value[i + start];
             }
-            newValue[newLength] = '\0';
-            InnerString result = newValue;
-            delete[] newValue;
-            return result;
+            return newValue;
         }
 
         /**

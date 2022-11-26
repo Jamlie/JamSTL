@@ -10,7 +10,7 @@
 
 JAMSTL_NAMESPACE_BEGIN
 
-        /**
+    /**
     * @brief A wrapper char class
     * @author Omar Estietie
     * 
@@ -240,6 +240,10 @@ JAMSTL_NAMESPACE_BEGIN
             return false;
         }
         
+        char valueOf() {
+            return this->value;
+        }
+
         /**
         * @brief A method that checks if a character is equal to another
         * 

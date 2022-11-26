@@ -1273,7 +1273,7 @@ JAMSTL_NAMESPACE_BEGIN
             if(value == this->Infinity || value == this->minInfinity) return false;
             if(value == this->NaN) return false;
 
-            for(size_t i = 2; i < value / 2; i++) {
+            for(unsigned long long i = 2; i < value; i++) {
                 if(value % i == 0) return false;
             }
             return true;

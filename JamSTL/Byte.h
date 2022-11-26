@@ -221,6 +221,10 @@ JAMSTL_NAMESPACE_BEGIN
             return value;
         }
 
+        byte valueOf() {
+            return value;
+        }
+
         /**
          * @brief Checks if the unsigned char is equal to another unsigned char.
          * 

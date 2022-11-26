@@ -33,8 +33,8 @@ JAMSTL_NAMESPACE_BEGIN
     private:
         T* arrayList = nullptr;
 
-        usize SIZE = 0;
-        usize CAPACITY = 0;
+        usize Size = 0;
+        usize Capacity = 0;
 
         /**
          * @brief A method to reallocate the memory
@@ -44,16 +44,16 @@ JAMSTL_NAMESPACE_BEGIN
         void reAllocate(usize newCapacity) {
             T* newBlock = new T[newCapacity];
 
-            if (newCapacity < this->SIZE) this->SIZE = newCapacity;
+            if (newCapacity < this->Size) this->Size = newCapacity;
 
-            for (usize i = 0; i < this->SIZE; i++) 
+            for (usize i = 0; i < this->Size; i++) 
                 newBlock[i] = jamstl::type_traits::move(this->arrayList[i]);
 
-            for(usize i = 0; i < this->SIZE; i++) this->arrayList[i].~T();
+            for(usize i = 0; i < this->Size; i++) this->arrayList[i].~T();
 
             ::operator delete(this->arrayList, newCapacity * sizeof(T));
             this->arrayList = newBlock;
-            this->CAPACITY = newCapacity;
+            this->Capacity = newCapacity;
         }
 
         /**
@@ -85,6 +85,17 @@ JAMSTL_NAMESPACE_BEGIN
 
         ArrayList() { this->reAllocate(2); }
 
+        template<usize sizeOfArray>
+        ArrayList(const T(&array)[sizeOfArray]) {
+            this->reAllocate(2);
+            for (usize i = 0; i < sizeOfArray; i++) this->push(array[i]);
+        }
+
+        ArrayList(T* arr, usize sizeOfArray) {
+            this->reAllocate(2);
+            for (usize i = 0; i < sizeOfArray; i++) this->push(arr[i]);
+        }
+
         ArrayList(std::initializer_list<T> arrayList) {
             this->reAllocate(2);
             for(const auto& element : arrayList) {
@@ -92,21 +103,23 @@ JAMSTL_NAMESPACE_BEGIN
             }
         }
 
-        ~ArrayList() { ::operator delete(this->arrayList, this->CAPACITY * sizeof(T)); }
+        ArrayList(usize num) { this->reAllocate(num); }
+
+        ~ArrayList() { ::operator delete(this->arrayList, this->Capacity * sizeof(T)); }
 
         /**
          * @brief A push method to enter elements into the ArrayList to the end of it
          * 
-         * @param VALUE The value
+         * @param value The value
          */
-        usize push(const T& VALUE) {
+        usize push(const T& value) {
 
-            if (this->SIZE >= this->CAPACITY) 
-                this->reAllocate(this->CAPACITY + this->CAPACITY / 2);
+            if (this->Size >= this->Capacity) 
+                this->reAllocate(this->Capacity + this->Capacity / 2);
             
 
-            this->arrayList[this->SIZE] = VALUE;
-            this->SIZE++;
+            this->arrayList[this->Size] = value;
+            this->Size++;
 
             return this->size();
         }
@@ -114,15 +127,15 @@ JAMSTL_NAMESPACE_BEGIN
         /**
          * @brief A push method to enter elements into the ArrayList to the end of it
          * 
-         * @param VALUE The value
+         * @param value The value
          */
-        usize push(T&& VALUE) {
+        usize push(T&& value) {
 
-            if (this->SIZE >= this->CAPACITY) 
-                this->reAllocate(this->CAPACITY + this->CAPACITY / 2);
+            if (this->Size >= this->Capacity) 
+                this->reAllocate(this->Capacity + this->Capacity / 2);
 
-            this->arrayList[this->SIZE] = jamstl::type_traits::move(VALUE);
-            this->SIZE++;
+            this->arrayList[this->Size] = jamstl::type_traits::move(value);
+            this->Size++;
 
             return this->size();
         }
@@ -132,9 +145,9 @@ JAMSTL_NAMESPACE_BEGIN
          */
         T pop() {
             T value = this->arrayList[this->size() - 1];
-            if(this->SIZE > 0) {
-                this->SIZE--;
-                this->arrayList[this->SIZE].~T();
+            if(this->Size > 0) {
+                this->Size--;
+                this->arrayList[this->Size].~T();
             }
             return value;
         }
@@ -182,9 +195,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @return bool
          */
         bool empty() {
-            for (usize i = 0; i < this->SIZE; i++) this->arrayList[i].~T();
+            for (usize i = 0; i < this->Size; i++) this->arrayList[i].~T();
 
-            this->SIZE = 0;
+            this->Size = 0;
             return true;
         }
 
@@ -194,35 +207,35 @@ JAMSTL_NAMESPACE_BEGIN
          * @return bool
          */
         bool isEmpty() {
-            return this->SIZE == 0;
+            return this->Size == 0;
         }
 
         /**
          * @brief An emplace method
          * 
          * @tparam Arguments 
-         * @param ARGS 
+         * @param args 
          * @return T& 
          */
         template <typename... Arguments>
-        T& emplace(Arguments&&... ARGS) {
-            if (this->SIZE >= this->CAPACITY) this->reAllocate(this->CAPACITY + this->CAPACITY / 2);
+        T& emplace(Arguments&&... args) {
+            if (this->Size >= this->Capacity) this->reAllocate(this->Capacity + this->Capacity / 2);
 
-            new(&this->arrayList[this->SIZE]) T(jamstl::type_traits::forward<Arguments>(ARGS)...);
-            return this->arrayList[this->SIZE++];
+            new(&this->arrayList[this->Size]) T(jamstl::type_traits::forward<Arguments>(args)...);
+            return this->arrayList[this->Size++];
         }
 
-        T& operator[](int INDEX) {
-            if(INDEX >= 0) return this->arrayList[INDEX];
-            INDEX = INDEX + 1;
-            int temp = (this->size() + INDEX);
+        T& operator[](int index) {
+            if(index >= 0) return this->arrayList[index];
+            index = index + 1;
+            int temp = (this->size() + index);
             return this->arrayList[temp - 1];
         }
         
-        const T& operator[](int INDEX) const { 
-            if(INDEX >= 0) return this->arrayList[INDEX];
-            INDEX = INDEX + 1;
-            int temp = (this->size() + INDEX);
+        const T& operator[](int index) const { 
+            if(index >= 0) return this->arrayList[index];
+            index = index + 1;
+            int temp = (this->size() + index);
             return this->arrayList[temp - 1];     
         }
 
@@ -231,14 +244,14 @@ JAMSTL_NAMESPACE_BEGIN
          * 
          * @return usize 
          */
-        usize size() const { return this->SIZE; }
+        usize size() const { return this->Size; }
 
         /**
          * @brief A method to return the capacity of the list
          * 
          * @return usize 
          */
-        usize capacity() const { return this->CAPACITY; }
+        usize capacity() const { return this->Capacity; }
 
         /**
          * @brief A method that returns the value of the given index
@@ -254,14 +267,14 @@ JAMSTL_NAMESPACE_BEGIN
         /**
          * @brief A method that fills an ArrayList with a given value
          * 
-         * @param VALUE The value that you want to fill
+         * @param value The value that you want to fill
          * @param start The start
          * @param end The end
          * @return bool
          */
-        bool fill(T VALUE, usize start, usize end) {
+        bool fill(T value, usize start, usize end) {
             if (start > end) return 0;
-            for (usize i = start; i < end; i++) this->arrayList[i] = VALUE;
+            for (usize i = start; i < end; i++) this->arrayList[i] = value;
             return 1;
         }
 
@@ -272,7 +285,7 @@ JAMSTL_NAMESPACE_BEGIN
          * @return bool 
          */
         bool find(T any) {
-            for(usize i = 0; i < this->SIZE; i++) if(this->arrayList[i] == any) return true;
+            for(usize i = 0; i < this->Size; i++) if(this->arrayList[i] == any) return true;
             return false;
         }
 
@@ -284,10 +297,10 @@ JAMSTL_NAMESPACE_BEGIN
         ArrayList& reverse() {
             T temp;
 
-            for(usize i = 0; i < this->SIZE / 2; i++){
+            for(usize i = 0; i < this->Size / 2; i++){
                 temp = this->arrayList[i];
-                this->arrayList[i] = this->arrayList[this->SIZE - i - 1];
-                this->arrayList[this->SIZE - i - 1] = temp;
+                this->arrayList[i] = this->arrayList[this->Size - i - 1];
+                this->arrayList[this->Size - i - 1] = temp;
             }
             return *this;
         }
@@ -304,7 +317,7 @@ JAMSTL_NAMESPACE_BEGIN
          * 
          * @return T 
          */
-        T back() { return this->arrayList[SIZE - 1]; }
+        T back() { return this->arrayList[Size - 1]; }
 
         /**
          * @brief A method that returns the first value of the ArrayList
@@ -379,7 +392,7 @@ JAMSTL_NAMESPACE_BEGIN
             usize newSize = this->size() - 1;
             T* temp = new T[newSize];
 
-            usize SIZE = 0;
+            usize Size = 0;
             usize count = 0;
             for(usize i = 0, j = 0; i < this->size() - 1; i++, j++) {
                 if(count == 0 && this->arrayList[j] == any) {
@@ -389,11 +402,11 @@ JAMSTL_NAMESPACE_BEGIN
                 }
                 
                 temp[i] = this->arrayList[j];
-                SIZE++;
+                Size++;
             }
 
             this->empty();
-            for(usize i = 0; i <= SIZE - 1; i++) {
+            for(usize i = 0; i <= Size - 1; i++) {
                 this->push(temp[i]);
             }
 
@@ -411,7 +424,7 @@ JAMSTL_NAMESPACE_BEGIN
             usize newSize = this->size() - 1;
             T* temp = new T[newSize];
 
-            usize SIZE = 0;
+            usize Size = 0;
             usize subOfSize = 0;
             for(usize i = 0, j = 0; i < this->size() - 1; j++) {
                 if(this->arrayList[j] == any) {
@@ -419,12 +432,12 @@ JAMSTL_NAMESPACE_BEGIN
                     continue;
                 }
                 temp[i] = this->arrayList[j];
-                SIZE++;
+                Size++;
                 i++;
             }
 
             this->empty();
-            for(usize i = 0; i <= SIZE - subOfSize; i++) {
+            for(usize i = 0; i <= Size - subOfSize; i++) {
                 this->push(temp[i]);
             }
 
@@ -458,14 +471,23 @@ JAMSTL_NAMESPACE_BEGIN
                 }
             }
         }
+
+        String toString() {
+            String str = "";
+            for(usize i = 0; i < this->size(); i++) {
+                str += this->arrayList[i];
+                if(i != this->size() - 1) str += ",";
+            }
+            return str;
+        }
             
         /**
          * @brief A method that sorts an ArrayList
          */
         void sort() {
-            for (int i = this->SIZE / 2 - 1; i >= 0; i--) heapify(this->arrayList, this->SIZE, i);
+            for (int i = this->Size / 2 - 1; i >= 0; i--) heapify(this->arrayList, this->Size, i);
 
-            for (int i = this->SIZE - 1; i > 0; i--) {
+            for (int i = this->Size - 1; i > 0; i--) {
                 jamstl::swap(this->arrayList[0], this->arrayList[i]);
 
                 heapify(this->arrayList, i, 0);
@@ -532,6 +554,11 @@ JAMSTL_NAMESPACE_BEGIN
             return true;
         }
 
+        bool contains(T any) {
+            for(usize i = 0; i < this->size(); i++) if(this->arrayList[i] == any) return true;
+            return false;
+        }
+
         /**
          * @brief This method can be used to filter out values using lambda function such as:
          * list.filter([](T any) { return any > 10; }); will output the values that are greater than 10 inside that list. 
@@ -540,10 +567,11 @@ JAMSTL_NAMESPACE_BEGIN
          * @param condition 
          * @return ArrayList& 
          */
-        ArrayList& filter(const std::function<bool(const T& value)>& condition) {
-            for(int i = 0; i < this->size(); i++) {
-                if(!condition(this->arrayList[i])) {
-                    this->remove(this->arrayList[i]);
+        ArrayList filter(const std::function<bool(const T& value)>& condition) {
+            ArrayList<T> list = *this;
+            for(int i = 0; i < list.size(); i++) {
+                if(!condition(list.arrayList[i])) {
+                    list.remove(list.arrayList[i]);
                     i--;
                 }
             }
@@ -557,8 +585,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @return ArrayList& 
          */
         ArrayList& forEach(const std::function<void(T& value)>& condition) {
-            for(usize i = 0; i < this->size(); i++) {
-                condition(this->arrayList[i]);
+            ArrayList<T> list = *this;
+            for(usize i = 0; i < list.size(); i++) {
+                condition(list.arrayList[i]);
             }
             return *this;
         }
@@ -569,9 +598,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @param condition 
          * @return ArrayList& 
          */
-        ArrayList& map(const std::function<T(const T& value)>& condition) {
-            for(usize i = 0; i < this->size(); i++) {
-                this->arrayList[i] = condition(this->arrayList[i]);
+        ArrayList map(const std::function<T(const T& value)>& condition) {
+            for(usize i = 0; i < list.size(); i++) {
+                list.arrayList[i] = condition(list.arrayList[i]);
             }
             return *this;
         }
@@ -844,6 +873,16 @@ JAMSTL_NAMESPACE_BEGIN
          * @param Array 
          */
         void toArray(T Array[]) {
+            for(usize i = 0; i < size(); i++) { Array[i] = this->arrayList[i]; }
+        }
+
+        /**
+         * @brief A methods that can be used to insert an ArrayList into an array which has the same size as the arraylist
+         * 
+         * @param Array 
+         */
+        template <usize Size>
+        void toArray(const T (&Array)[Size]) {
             for(usize i = 0; i < size(); i++) { Array[i] = this->arrayList[i]; }
         }
 

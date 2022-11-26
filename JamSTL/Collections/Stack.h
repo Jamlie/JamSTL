@@ -64,7 +64,7 @@ JAMSTL_NAMESPACE_BEGIN
             if (Size >= Capacity) reAllocate(Capacity + Capacity / 2);
             
 
-            stack[Size] = move(value);
+            stack[Size] = jamstl::type_traits::move(value);
             Size++;
         }
 
@@ -104,7 +104,7 @@ JAMSTL_NAMESPACE_BEGIN
          * 
          * @return bool
          */
-        bool is_empty() {
+        bool isEmpty() {
             if(Size != 0) return 0;
             return 1;
         }

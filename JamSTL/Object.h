@@ -6,7 +6,7 @@
 #include "type_traits.h"
 #include "String/ObjectString.h"
 #include "bits/HashBytes.h"
-#include "bits/oldObject.h"
+// #include "bits/oldObject.h"
 #include <typeinfo>
 
 JAMSTL_NAMESPACE_BEGIN
@@ -21,16 +21,13 @@ JAMSTL_NAMESPACE_BEGIN
         Object(Object&& other) {}
         virtual ~Object() {}
 
-
         bool equals(const Object& other) const {
             return this == &other;
         }
 
-
         InnerString getThisClassName() {
             return typeid(*this).name();
         }
-
 
         bool operator==(const Object& other) const {
             return this == &other;
@@ -41,9 +38,9 @@ JAMSTL_NAMESPACE_BEGIN
             return this != &other;
         }
 
-        void* operator new(size_t size) {
-            return ::operator new(size);
-        }
+        // void* operator new(size_t size) {
+        //     return ::operator new(size);
+        // }
 
         void operator delete(void* ptr) {
             ::operator delete(ptr);
@@ -94,9 +91,9 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
 
-        usize hash() const {
-            return hashBytes(*this, sizeof(this), 0);
-        }
+        // usize hash() const {
+        //     return hashBytes(*this, sizeof(this), 0);
+        // }
 
         InnerString getClassName() const {
             InnerString className = typeid(*this).name();
@@ -126,14 +123,16 @@ JAMSTL_NAMESPACE_BEGIN
             return className;
         }
     
-        InnerString toString() const {
-            InnerString result;
-            result = "";
-            result += getClassName();
-            result += '#';
-            result << hash();
-            return result;
-        }
+        // InnerString toString() const {
+        //     InnerString result;
+        //     result = "";
+        //     result += getClassName();
+        //     result += '#';
+        //     result << hash();
+        //     return result;
+        // }
+
+        virtual const char* toCString() const {}
 
         friend std::ostream& operator<<(std::ostream& os, const Object& obj) {
             return os << obj.value;

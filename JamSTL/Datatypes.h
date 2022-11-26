@@ -64,6 +64,8 @@ JAMSTL_NAMESPACE_BEGIN
 
     using LongView    = const Long&;
 
+    const String _ = "";
+
 JAMSTL_NAMESPACE_END
 
 #endif

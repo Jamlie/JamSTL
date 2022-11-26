@@ -71,7 +71,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @return bool
          */
         bool equalityCompareString(const String& other) const {
-            for(usize i = 0; i <= this->Length; i++) {
+            if(this->Length != other.Length) return false;
+            
+            for(usize i = 0; i < this->Length; i++) {
                 if(this->value[i] != other.value[i]) {
                     return false;
                 }
@@ -202,14 +204,18 @@ JAMSTL_NAMESPACE_BEGIN
             this->value[this->Length] = '\0';
         }
 
-        // String(const Object& other) {
-        //     this->append(other.toString());
-        // }
-
         template<typename T>
-        String(const T& value) {
-            this->append(value);
+        String(const T& x) {
+            String temp = "";
+            temp.append(x);
+            this->Length = temp.Length;
+            this->value = temp.value;
         }
+
+        // template<typename T>
+        // String(const T& value) {
+        //     this->append(value);
+        // }
 
         ~String() {
             if(this->value != nullptr) {
@@ -234,8 +240,6 @@ JAMSTL_NAMESPACE_BEGIN
         operator char*() const {
             return this->value;
         }
-
-
 
         /**
          * @brief Get the Class Name object.
@@ -1382,13 +1386,14 @@ JAMSTL_NAMESPACE_BEGIN
         * 
         * @return String& 
         */
-        String& toLower() {
-            for(usize i = 0; i < this->Length; i++) {
-                if(this->value[i] >= 'A' && this->value[i] <= 'Z') {
-                    this->value[i] += 32;
+        String toLower() {
+            String newString = *this;
+            for(usize i = 0; i < newString.Length; i++) {
+                if(newString.value[i] >= 'A' && newString.value[i] <= 'Z') {
+                    newString.value[i] += 32;
                 }
             }
-            return *this;
+            return newString;
         }
 
         /**
@@ -1396,13 +1401,14 @@ JAMSTL_NAMESPACE_BEGIN
         * 
         * @return String& 
         */
-        String& toUpper() {
-            for(usize i = 0; i < this->Length; i++) {
-                if(this->value[i] >= 'a' && this->value[i] <= 'z') {
-                    this->value[i] -= 32;
+        String toUpper() {
+            String newString = *this;
+            for(usize i = 0; i < newString.Length; i++) {
+                if(newString.value[i] >= 'a' && newString.value[i] <= 'z') {
+                    newString.value[i] -= 32;
                 }
             }
-            return *this;
+            return newString;
         }
 
         /**
@@ -1529,7 +1535,7 @@ JAMSTL_NAMESPACE_BEGIN
         * @param other 
         * @return bool
         */
-        bool includes(const char& other) const {
+        bool contains(const char& other) const {
             for(usize i = 0; i < this->Length; i++) {
                 if(this->value[i] == other) {
                     return true;
@@ -1546,7 +1552,7 @@ JAMSTL_NAMESPACE_BEGIN
         * @param other 
         * @return bool
         */
-        bool includes(_StringView other) const {
+        bool contains(_StringView other) const {
             for(usize i = 0; i < this->Length; i++) {
                 if(this->value[i] == other.value[0]) {
                     bool found = true;
@@ -1572,7 +1578,7 @@ JAMSTL_NAMESPACE_BEGIN
         * @param other 
         * @return bool
         */
-        bool includes(const char* other) const {
+        bool contains(const char* other) const {
             usize otherLength = stringLength(other);
             for(usize i = 0; i < this->Length; i++) {
                 if(this->value[i] == other[0]) {
@@ -1590,6 +1596,7 @@ JAMSTL_NAMESPACE_BEGIN
             }
             return false;
         }
+
 
         /**
         * @brief Returns a String value that is made from count copies appended together.
@@ -1631,14 +1638,11 @@ JAMSTL_NAMESPACE_BEGIN
                 end = this->Length;
             }
             usize newLength = end - start;
-            char* newValue = new char[newLength + 1];
+            String newValue = "";
             for(usize i = 0; i < newLength; i++) {
-                newValue[i] = this->value[i + start];
+                newValue += this->value[i + start];
             }
-            newValue[newLength] = '\0';
-            String result = newValue;
-            delete[] newValue;
-            return result;
+            return newValue;
         }
 
         /**
@@ -1652,13 +1656,114 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
         /**
+         * @brief A method that splits a string at each space to separate the words
+         * 
+         * @return String* 
+         */
+        String* toArray() {
+            String* array = new String[this->Length];
+            usize index = 0;
+            for(usize i = 0; i < this->Length; i++) {
+                if(this->value[i] == ' ') {
+                    index++;
+                } else {
+                    array[index] += this->value[i];
+                }
+            }
+            
+            return array;
+        }
+
+        usize numberOfWords() {
+            usize size = 0;
+            for(usize i = 0; i < this->Length; i++) {
+                if(this->value[i] == ' ') {
+                    size++;
+                }
+            }
+            return size + 1;
+        }
+
+        /**
+         * @brief A method that joins an array of strings's elements together
+         * and save it in one String 
+         * 
+         * @tparam sizeOfArray 
+         * @return String 
+         */
+        template<usize sizeOfArray>
+        String joins(const String(&array)[sizeOfArray]) {
+            String newValue = "";
+            for(usize i = 0; i < sizeOfArray; i++) { newValue += array[i]; }
+            return newValue;
+        }
+
+        /**
+         * @brief A method that joins an array of strings's elements together
+         * and save it in one String while also specifying the value added between elements
+         * 
+         * @tparam sizeOfArray 
+         * @tparam T 
+         * @param valueAddedBewteenWords 
+         * @return String 
+         */
+        template<usize sizeOfArray, typename T>
+        String joins(const String(&array)[sizeOfArray], T valueAddedBewteenWords) {
+            String newValue = "";
+            for(usize i = 0; i < sizeOfArray; i++) {
+                newValue += array[i];
+                if(i != sizeOfArray - 1) {
+                    newValue += valueAddedBewteenWords;
+                }
+            }
+            return newValue;
+        }
+
+        /**
+        * @brief A method that replaces an exact substring in a string with another substring.
+        * 
+        * @param old 
+        * @param newString 
+        * @return String& 
+        */
+        String& replaceExactAll(_StringView old, _StringView newString) {
+            String* array = this->toArray();
+            String newValue = "";
+            for(usize i = 0; i < this->Length; i++) {
+                if(array[i].equals(old)) {
+                    newValue += newString;
+                    if(i != this->Length - 1) {
+                        newValue += " ";
+                    }
+                } else {
+                    newValue += array[i];
+                    if(i != this->Length - 1) {
+                        newValue += " ";
+                    }
+                }
+            }
+
+            delete[] this->value;
+            this->value = new char[newValue.Length + 1];
+            for(usize i = 0; i < newValue.Length; i++) {
+                this->value[i] = newValue.value[i];
+            }
+
+            this->value[newValue.Length] = '\0';
+
+            this->Length = newValue.Length;
+            delete[] array;
+            return *this;
+        }
+
+        /**
         * @brief A method that replaces a character in a string with another character.
         * 
         * @param old 
         * @param newChar 
         * @return String& 
         */
-        String& replace(const char& old, const char& newChar) {
+        String& replaceAll(const char& old, const char& newChar) {
             for(usize i = 0; i < this->Length; i++) {
                 if(this->value[i] == old) {
                     this->value[i] = newChar;
@@ -1667,34 +1772,6 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        /**
-        * @brief A method that replaces a substring in a string with another substring.
-        * 
-        * @param old 
-        * @param newString 
-        * @return String& 
-        */
-        String& replace(_StringView old, _StringView newString) {
-            for(usize i = 0; i < this->Length; i++) {
-                if(this->value[i] == old.value[0]) {
-                    bool found = true;
-                    for(usize j = 0; j < old.Length; j++) {
-                        if(this->value[i + j] != old.value[j]) {
-                            found = false;
-                            break;
-                        }
-                    }
-                    if(found) {
-                        this->value[i] = newString.value[0];
-                        for(usize j = 1; j < newString.Length; j++) {
-                            this->value[i + j] = newString.value[j];
-                        }
-                        i += newString.Length - 1;
-                    }
-                }
-            }
-            return *this;
-        }
 
         /**
         * @brief A method that replaces a substring in a string with another substring.
@@ -1703,7 +1780,7 @@ JAMSTL_NAMESPACE_BEGIN
         * @param newString 
         * @return String& 
         */
-        String& replace(const char* old, const char* newString) {
+        String& replaceAll(const char* old, const char* newString) {
             usize oldLength = stringLength(old);
             usize newLength = stringLength(newString);
             for(usize i = 0; i < this->Length; i++) {
@@ -1727,6 +1804,30 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
+        String& replaceAll(_StringView old, _StringView newValue) {
+            usize oldLength = old.Length;
+            usize newLength = newValue.Length;
+            for(usize i = 0; i < this->Length; i++) {
+                if(this->value[i] == old.value[0]) {
+                    bool found = true;
+                    for(usize j = 0; j < oldLength; j++) {
+                        if(this->value[i + j] != old.value[j]) {
+                            found = false;
+                            break;
+                        }
+                    }
+                    if(found) {
+                        this->value[i] = newValue.value[0];
+                        for(usize j = 1; j < newLength; j++) {
+                            this->value[i + j] = newValue.value[j];
+                        }
+                        i += newLength - 1;
+                    }
+                }
+            }
+            return *this;
+        }
+
         /**
          * @brief A method that replaces a substring in a string with another substring.
          * 
@@ -1735,7 +1836,7 @@ JAMSTL_NAMESPACE_BEGIN
          * @param newString 
          * @return String& 
          */
-        String& replace(usize start, usize end, _StringView newString) {
+        String& replaceAll(usize start, usize end, _StringView newString) {
             if(start > end) {
                 usize temp = start;
                 start = end;
@@ -1776,27 +1877,22 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        /**
-        * @brief A method that replaces a substring in a string with another substring.
-        * 
-        * @param old 
-        * @param newString 
-        * @return String& 
-        */
-        String& replaceFirst(_StringView old, _StringView newString) {
+        String& replaceFirst(_StringView old, _StringView newValue) {
+            usize oldLength = old.Length;
+            usize newLength = newValue.Length;
             for(usize i = 0; i < this->Length; i++) {
                 if(this->value[i] == old.value[0]) {
                     bool found = true;
-                    for(usize j = 0; j < old.Length; j++) {
+                    for(usize j = 0; j < oldLength; j++) {
                         if(this->value[i + j] != old.value[j]) {
                             found = false;
                             break;
                         }
                     }
                     if(found) {
-                        this->value[i] = newString.value[0];
-                        for(usize j = 1; j < newString.Length; j++) {
-                            this->value[i + j] = newString.value[j];
+                        this->value[i] = newValue.value[0];
+                        for(usize j = 1; j < newLength; j++) {
+                            this->value[i + j] = newValue.value[j];
                         }
                         return *this;
                     }
@@ -1812,29 +1908,72 @@ JAMSTL_NAMESPACE_BEGIN
         * @param newString 
         * @return String& 
         */
-        String& replaceFirst(const char* old, const char* newString) {
-            usize oldLength = stringLength(old);
-            usize newLength = stringLength(newString);
+        String& replaceExactFirst(_StringView old, _StringView newString) {
+            String* array = this->toArray();
+            String newValue = "";
+            usize counter = 0;
             for(usize i = 0; i < this->Length; i++) {
-                if(this->value[i] == old[0]) {
-                    bool found = true;
-                    for(usize j = 0; j < oldLength; j++) {
-                        if(this->value[i + j] != old[j]) {
-                            found = false;
-                            break;
-                        }
+                if(array[i].equals(old) && counter == 0) {
+                    newValue += newString;
+                    counter++;
+                    if(i != this->Length - 1) {
+                        newValue += " ";
                     }
-                    if(found) {
-                        this->value[i] = newString[0];
-                        for(usize j = 1; j < newLength; j++) {
-                            this->value[i + j] = newString[j];
-                        }
-                        return *this;
+                } else {
+                    newValue += array[i];
+                    if(i != this->Length - 1) {
+                        newValue += " ";
                     }
                 }
             }
+
+            delete[] this->value;
+            this->value = new char[newValue.Length + 1];
+            for(usize i = 0; i < newValue.Length; i++) {
+                this->value[i] = newValue.value[i];
+            }
+
+            this->value[newValue.Length] = '\0';
+
+            this->Length = newValue.Length;
+            delete[] array;
             return *this;
         }
+
+        String format() {
+            return *this;
+        }
+
+        template<class T, class... Y>
+        String format(const T& value, Y... values) {
+            _StringView old = "{}";
+            if(!this->contains(old.value)) return *this;
+            String newString = "";
+            newString.append(value);
+            String prefix = "";
+            String temp = *this;
+            usize size = newString.size();
+            usize oldSize = old.size();
+            if(size == 0) return *this;
+            if(oldSize == 0) return *this;
+            char ch = old[0];
+            int index = -1;
+            for(usize i = 1; i < temp.size() - 1; i++) {
+                if(temp.value[i - 1] == '$' && temp.value[i] == '{' && temp.value[i + 1] == '}')
+                    { index = i - 1; temp.pop(i - 1); break; }
+            }
+            if(index == -1) return *this;
+            usize lastIndex = old.size() + index;
+
+            prefix = temp.substring(0, index);
+            prefix.append(newString);
+            String suffix = temp.substring(lastIndex, temp.length);
+            prefix.append(suffix);
+            temp = prefix;
+            if(temp.contains(old.value)) temp = temp.format(values...);
+            return temp;
+        }
+
 
         /**
         * @brief Returns the position of the first occurrence of a substring.
@@ -2177,6 +2316,15 @@ JAMSTL_NAMESPACE_BEGIN
                 }
             }
             return false;
+        }
+
+        /**
+         * @brief A method that returns the C String of this String (const char*)
+         * 
+         * @return const char* 
+         */
+        const char* toCString() const override {
+            return this->value;
         }
 
         /**
@@ -3320,11 +3468,11 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
         bool operator==(_StringView other) const {
-            return this->equalityCompareString(other.value);
+            return this->equalityCompareString(other);
         }
 
         bool operator==(const char& other) const {
-            return this->value[0] == other;
+            return (this->length == 1) ? (this->value[0] == other) : false;
         }
 
 
@@ -3509,6 +3657,22 @@ JAMSTL_NAMESPACE_BEGIN
             result += other;
             return result;
         }
+
+        template<typename T>
+        friend String operator+(T number, _StringView other) {
+            String result = "";
+            result.append(number);
+            result += other;
+            return result;
+        }
+
+        template<typename T>
+        friend String operator+(_StringView string, T other) {
+            String result = string;
+            result.append(other);
+            return result;
+        }
+
 
         class _Iterator {
             friend class String;

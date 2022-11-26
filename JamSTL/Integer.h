@@ -395,14 +395,6 @@ JAMSTL_NAMESPACE_BEGIN
            this->value = toInt(str);
         }
 
-        // Integer(Object object) {
-        //     if(object.isInteger()) {
-        //         this->value = object.getInteger();
-        //     } else {
-        //         this->value = 0;
-        //     }
-        // }
-
         template<typename Type>
         Integer(Type value) {
             this->value = static_cast<int>(value);
@@ -489,6 +481,11 @@ JAMSTL_NAMESPACE_BEGIN
             return 10 + d;
         }
 
+        template<class T>
+        int retrieve() const {
+            return this->value;
+        }
+
         /**
          * @brief Get the Chars object
          * 
@@ -530,6 +527,52 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
         /**
+         * @brief Returns a const char* representing this Integer's value.
+         * 
+         * @return String 
+         */
+        const char* toCString() const override {
+            String str = "";
+            int number = this->value;
+            if(number > 0) {
+                int digits = 0;
+                while(number > 0) {
+                    number /= 10;
+                    digits++;
+                }
+                number = this->value;
+                for(int i = 0; i < digits; i++) {
+                    str += (number % 10) + '0';
+                    number /= 10;
+                }
+                str.reverse();
+                return str;
+            }
+            String tempString = "";
+            if(number == 0) {
+                tempString = "0";
+            } else {
+                tempString = "-";
+                number = -number;
+                int digits = 0;
+                while(number > 0) {
+                    number /= 10;
+                    digits++;
+                }
+                number = -this->value;
+                for(int i = 0; i < digits; i++) {
+                    tempString += (number % 10) + '0';
+                    number /= 10;
+                }
+                tempString.reverse();
+            }
+            str += tempString;
+            str.insert(0, '-');
+            str.pop();
+            return str.cString();
+        }
+
+        /**
          * @brief A method that reverses the order of the digits of an Integer
          * 
          * @return Integer& 
@@ -545,6 +588,10 @@ JAMSTL_NAMESPACE_BEGIN
             }
             value = temp;
             return *this;
+        }
+
+        int valueOf() const {
+            return this->value;
         }
 
         /**

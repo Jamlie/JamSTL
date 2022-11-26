@@ -239,6 +239,80 @@ JAMSTL_NAMESPACE_BEGIN
         };
 
 
+        template<typename T>
+        struct isNumber {
+            static constexpr bool value = false;
+        };
+
+        template<>
+        struct isNumber<bool> {
+            static constexpr bool value = true;
+        };
+
+        template<>
+        struct isNumber<char> {
+            static constexpr bool value = true;
+        };
+
+        template<>
+        struct isNumber<short> {
+            static constexpr bool value = true;
+        };
+
+        template<>
+        struct isNumber<int> {
+            static constexpr bool value = true;
+        };
+
+        template<>
+        struct isNumber<long> {
+            static constexpr bool value = true;
+        };
+
+        template<>
+        struct isNumber<long long> {
+            static constexpr bool value = true;
+        };
+
+        template<>
+        struct isNumber<unsigned char> {
+            static constexpr bool value = true;
+        };
+
+        template<>
+        struct isNumber<unsigned short> {
+            static constexpr bool value = true;
+        };
+
+        template<>
+        struct isNumber<unsigned int> {
+            static constexpr bool value = true;
+        };
+
+        template<>
+        struct isNumber<unsigned long> {
+            static constexpr bool value = true;
+        };
+
+        template<>
+        struct isNumber<unsigned long long> {
+            static constexpr bool value = true;
+        };
+
+        template<>
+        struct isNumber<float> {
+            static constexpr bool value = true;
+        };
+
+        template<>
+        struct isNumber<double> {
+            static constexpr bool value = true;
+        };
+
+        template<>
+        struct isNumber<long double> {
+            static constexpr bool value = true;
+        };
 
         template<typename Type, Type Value>
         struct integralConstant {

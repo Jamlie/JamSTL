@@ -51,7 +51,7 @@ JAMSTL_NAMESPACE_BEGIN
         template <typename Type>
         static void print(const LinkedList<Type>& list) {
             std::cout << "[ ";
-            for(LinkedList<int>::Iterator it = list.begin(); it != list.end(); it++) {
+            for(let it = list.begin(); it != list.end(); it++) {
                 if(it != list.begin()) {
                     std::cout << ", ";
                 }
@@ -77,6 +77,17 @@ JAMSTL_NAMESPACE_BEGIN
             }
         }
 
+        // template <typename Type>
+        // static void println(const Type& x) {
+        //     std::cout << '\n';
+        // }
+
+        template <typename Type, typename... Types>
+        static void println(StringView str, const Type& value, Types... values) {
+            String strCopy = str;
+            String string = strCopy.format(value, values...);
+            std::cout << string;
+        }
 
 
         static void println() {
@@ -116,22 +127,22 @@ JAMSTL_NAMESPACE_BEGIN
         //     }
         // }
 
-        // template <typename Type>
-        // static void println(const ArrayList<Type>& arr) {
-        //     std::cout << "[ ";
-        //     for(usize i = 0; i < arr.size(); i++) {
-        //         if(i < arr.size() - 1) {
-        //             std::cout << arr[i] << ", ";
-        //         } else {
-        //             std::cout << arr[i] << " ]";
-        //         }
-        //     }
-        // }
+        template <typename Type>
+        static void println(const ArrayList<Type>& arr) {
+            std::cout << "[ ";
+            for(usize i = 0; i < arr.size(); i++) {
+                if(i < arr.size() - 1) {
+                    std::cout << arr[i] << ", ";
+                } else {
+                    std::cout << arr[i] << " ]\n";
+                }
+            }
+        }
 
         template <typename Type>
         static void println(const LinkedList<Type>& list) {
             std::cout << "[ ";
-            for(LinkedList<int>::Iterator it = list.begin(); it != list.end(); it++) {
+            for(let it = list.begin(); it != list.end(); it++) {
                 if(it != list.begin()) {
                     std::cout << ", ";
                 }
@@ -145,16 +156,18 @@ JAMSTL_NAMESPACE_BEGIN
         static void println(const Type(&array)[size]) {
             if(jamstl::type_traits::isSame<Type, char>::value ||
              jamstl::type_traits::isSame<Type, unsigned char>::value) {
-                std::cout << array;
-            } else {std::cout << "[ ";
-                for(usize i = 0; i < size; i++) {
-                    if(i < size - 1) {
-                        std::cout << array[i] << ", ";
-                    } else {
-                        std::cout << array[i] << " ]";
-                    }
+                std::cout << array << '\n';
+                return;
+            } 
+            std::cout << "[ ";
+            for(usize i = 0; i < size; i++) {
+                if(i < size - 1) {
+                    std::cout << array[i] << ", ";
+                } else {
+                    std::cout << array[i] << " ]";
                 }
             }
+            std::cout << '\n';
         }
 
 

@@ -110,6 +110,23 @@ JAMSTL_NAMESPACE_BEGIN
             return result;
         }
 
+        bool nextBool() {
+            bool temp(false);
+            std::cin >> temp;
+            bool result = temp;
+            std::cin.ignore();
+            return result;
+        }
+
+        Boolean nextBoolean() {
+            Boolean temp(true);
+            std::cin >> temp;
+            Boolean result;
+            result = temp;
+            std::cin.ignore();
+            return result;
+        }
+
         void wait() {
             std::cin.get();
         }

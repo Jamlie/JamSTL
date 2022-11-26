@@ -8,12 +8,10 @@
 #define JAMSTL_NAMESPACE_END }
 
 #define JAM_NOEXCEPT noexcept
-#define __cplusplus 201402L
 
 
 
-
-#define pass (void)0
+#define undefined (void)0
 #define let decltype(auto)
 namespace jamstl {
 
@@ -32,6 +30,10 @@ typedef __UNSIGNED__CHAR__ byte;
 #define Private private:
 #define Protected protected:
 #define extends :public
+#define Println(x) Printer::println(x)
+#define import using namespace
+#define true true
+#define false false
 
 
 #endif

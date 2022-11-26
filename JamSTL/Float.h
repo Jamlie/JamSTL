@@ -78,6 +78,15 @@ JAMSTL_NAMESPACE_BEGIN
             this->value = static_cast<float>(other);
         }
 
+        /**
+         * @brief A method that returns the const char* of the value
+         * 
+         */
+        const char* toCString() const override {
+            String string = String::valueOf(value);
+            return string.toCString();
+        }
+
 
 
 
@@ -375,6 +384,15 @@ JAMSTL_NAMESPACE_BEGIN
             this->value = other.value;
             other.value = temp.value;
             return *this;
+        }
+
+        /**
+         * @brief A method that returns the (float) value
+         * 
+         * @return float 
+         */
+        float valueOf() const {
+            return this->value;
         }
 
         /**

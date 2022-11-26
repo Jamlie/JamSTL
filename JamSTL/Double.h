@@ -41,7 +41,7 @@ JAMSTL_NAMESPACE_BEGIN
         double toDouble(String string) {
             double ToDouble = 0, division = 1;
             usize Length = string.length;
-            int i = 0, j;
+            int i = 0;
 
             for (i = 0; string[i] != '\0'; i++) {
                 if (i == 0 && string[i] == '.') continue;
@@ -180,6 +180,25 @@ JAMSTL_NAMESPACE_BEGIN
             className.pop();
             return className;
         }
+
+        /**
+         * @brief A method that returns the const char* of the value
+         * 
+         */
+        const char* toCString() const override {
+            String string = String::valueOf(value);
+            return string.toCString();
+        }
+
+        /**
+         * @brief A method that returns the (double) value
+         * 
+         * @return double 
+         */
+        double valueOf() const {
+            return value;
+        }
+
 
         /**
         * @brief A method that returns the negative value of the double.
@@ -559,6 +578,10 @@ JAMSTL_NAMESPACE_BEGIN
         template<typename Type>
         bool operator||(const Type& other) const {
             return this->value || other;
+        }
+
+        double getValue() const {
+            return this->value;
         }
 
 
