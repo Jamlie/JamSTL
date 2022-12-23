@@ -6,94 +6,22 @@
 #include "type_traits.h"
 #include "String/ObjectString.h"
 #include "bits/HashBytes.h"
-// #include "bits/oldObject.h"
 #include <typeinfo>
 
 JAMSTL_NAMESPACE_BEGIN
 
     class Object {
-    private:
-        InnerString value = "";
-        InnerString* valuePointer;
     public:
-        Object() {}
-        Object(const Object& other) {}
-        Object(Object&& other) {}
-        virtual ~Object() {}
+        Object() = default;
+        virtual ~Object() = default;
 
-        bool equals(const Object& other) const {
-            return this == &other;
+        virtual const char* toCString() const {
+            return "Object";
         }
 
-        InnerString getThisClassName() {
-            return typeid(*this).name();
+        virtual bool equals(const Object& obj) const {
+            return this == &obj;
         }
-
-        bool operator==(const Object& other) const {
-            return this == &other;
-        }
-
-
-        bool operator!=(const Object& other) const {
-            return this != &other;
-        }
-
-        // void* operator new(size_t size) {
-        //     return ::operator new(size);
-        // }
-
-        void operator delete(void* ptr) {
-            ::operator delete(ptr);
-        }
-
-        void* operator new[](size_t size) {
-            return ::operator new[](size);
-        }
-
-        void operator delete[](void* ptr) {
-            ::operator delete[](ptr);
-        }
-
-
-        Object* operator->() {
-            return this;
-        }
-
-        const Object* operator->() const {
-            return this;
-        }
-
-        Object& operator*() {
-            return *this;
-        }
-
-        const Object& operator*() const {
-            return *this;
-        }
-
-
-
-        Object& operator=(const Object& other) {
-            this->value = other.value;
-            this->valuePointer = other.valuePointer;
-            return *this;
-        }
-        
-
-        Object& operator=(Object&& other) {
-            this->value = jamstl::type_traits::move(other.value);
-            this->valuePointer = other.valuePointer;
-            return *this;
-        }
-
-        operator void*() {
-            return this;
-        }
-
-
-        // usize hash() const {
-        //     return hashBytes(*this, sizeof(this), 0);
-        // }
 
         InnerString getClassName() const {
             InnerString className = typeid(*this).name();
@@ -106,7 +34,7 @@ JAMSTL_NAMESPACE_BEGIN
             }
             className.pop(0);
             className.pop(0);
-            for(int j = 0; j < className.length; j++) {
+            for(unsigned int j = 0; j < className.length; j++) {
                 if(className[j] >= 'A' && className[j] <= 'Z') {
                     break;
                 }
@@ -122,30 +50,49 @@ JAMSTL_NAMESPACE_BEGIN
             }
             return className;
         }
-    
-        // InnerString toString() const {
-        //     InnerString result;
-        //     result = "";
-        //     result += getClassName();
-        //     result += '#';
-        //     result << hash();
-        //     return result;
-        // }
 
-        virtual const char* toCString() const {}
+        virtual usize hashCode() const {
+            return reinterpret_cast<usize>(this);
+        }
 
-        friend std::ostream& operator<<(std::ostream& os, const Object& obj) {
-            return os << obj.value;
+        template<class T, class U>
+        static bool instanceOf(const U* value) {
+            return dynamic_cast<const T*>(value) != nullptr;
         }
-        friend std::ostream& operator<<(std::ostream& os, Object&& obj) {
-            return os << obj.value;
+
+        template<class T>
+        T* cast() {
+            return dynamic_cast<T*>(this);
         }
-        friend std::ostream& operator<<(std::ostream& os, const Object* obj) {
-            return os << *obj->value;
+
+        virtual const char* getTypeName() const {
+            return typeid(*this).name();
         }
-        friend std::ostream& operator<<(std::ostream& os, Object*&& obj) {
-            return os << obj->value;
+
+        friend bool operator==(const Object& lhs, const Object& rhs) {
+            return lhs.equals(rhs);
         }
+
+        friend bool operator!=(const Object& lhs, const Object& rhs) {
+            return !(lhs == rhs);
+        }
+
+        friend bool operator<(const Object& lhs, const Object& rhs) {
+            return lhs.hashCode() < rhs.hashCode();
+        }
+
+        friend bool operator>(const Object& lhs, const Object& rhs) {
+            return rhs < lhs;
+        }
+
+        friend bool operator<=(const Object& lhs, const Object& rhs) {
+            return !(lhs > rhs);
+        }
+
+        friend bool operator>=(const Object& lhs, const Object& rhs) {
+            return !(lhs < rhs);
+        }
+
     };
 
 

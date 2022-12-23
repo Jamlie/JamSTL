@@ -478,6 +478,26 @@ JAMSTL_NAMESPACE_BEGIN
 
 
 
+        // isString
+        template<typename T>
+        struct isString : falseType {};
+
+        template<>
+        struct isString<char*> : trueType {};
+
+        template<>
+        struct isString<const char*> : trueType {};
+
+        template<>
+        struct isString<char16_t*> : trueType {};
+
+        template<>
+        struct isString<const char16_t*> : trueType {};
+
+        
+
+
+
         template<typename...>
         struct or_;
 
@@ -528,7 +548,7 @@ JAMSTL_NAMESPACE_BEGIN
             static constexpr bool value = true;
         };
 
-        template<typename T, size_t N>
+        template<typename T, usize N>
         struct isArray<T[N]> {
             static constexpr bool value = true;
         };

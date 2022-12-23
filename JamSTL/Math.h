@@ -2,7 +2,6 @@
 #ifndef JAMSTL_MATH_H_
 #define JAMSTL_MATH_H_ 1
 #include "Macros.h"
-#include <cstring>
 #include <cassert>
 
 JAMSTL_NAMESPACE_BEGIN
@@ -10,9 +9,8 @@ JAMSTL_NAMESPACE_BEGIN
     class math {
         const double HugeNumber  = 1e+308;
         double MinimumValue      = 2147483647;
-        double MaximumValue      = -2147483647;
 
-        constexpr long double nthRoot(long double numberUnderRoot, long double root) {
+        long double nthRoot(long double numberUnderRoot, long double root) {
             if(numberUnderRoot < 0) return 0;
             if(numberUnderRoot == this->Infinity) return this->Infinity;
             if(root == 0) return 1;
@@ -27,6 +25,16 @@ JAMSTL_NAMESPACE_BEGIN
             return result;
         }
 
+
+        // implement memcpy
+        void* memoryCopy(void* dest, const void* src, usize n) {
+            char* d = (char*)dest;
+            const char* s = (const char*)src;
+            while(n--) {
+                *d++ = *s++;
+            }
+            return dest;
+        }
 
         // To find the power of any number with any exponent
         // We can use the following formula:
@@ -46,7 +54,7 @@ JAMSTL_NAMESPACE_BEGIN
          *
          * @return long double
          */
-        constexpr long double power(long double base, long long exponent) {
+        long double power(long double base, long long exponent) {
             long double result = 1;
             if(base == 0) return 0;
             if(base == 1) return 1;
@@ -73,12 +81,7 @@ JAMSTL_NAMESPACE_BEGIN
         int       EXP_BIAS                   = 1023;
         int       FLOATING_EXP_BIAS          = 127;
         long long SIGNIF_BIT_MASK            = 0x000FFFFFFFFFFFFFL;
-        int       FLOATING_SIGNIF_BIT_MASK   = 0x007FFFFF;
         long long SIGN_BIT_MASK              = 0x8000000000000000L;
-        int       FLOATING_SIGN_BIT_MASK     = 0x80000000;
-        int       FLOATING_EXP_BIT_MASK      = 0x7F800000;
-        long long MAG_BIT_MASK               = ~SIGN_BIT_MASK;
-        int       FLOATING_MAG_BIT_MASK      = ~FLOATING_SIGN_BIT_MASK;
 
     public: 
         const float Infinity        =      ((float)(this->HugeNumber * this->HugeNumber));
@@ -101,23 +104,23 @@ JAMSTL_NAMESPACE_BEGIN
          * @tparam U 
          * @param x 
          * @param mod 
-         * @return constexpr double 
+         * @return double 
          */
-        template<typename T, typename U>
-        constexpr double fmod(T x, U mod) {
-            return !mod ? x : x - mod * this->Floor(x / mod);
+        // template<typename T, typename U>
+        double fmod(double value, double mod) {
+            if(!mod) return value;            
+            return value - mod * this->Floor(value / mod);
         }
 
         /**
          * @brief Converts int bits to float
          * 
          * @param bits 
-         * @return constexpr float 
+         * @return float 
          */
-        constexpr float intBitsToFloat(int32_t bits) {
-            int32_t sign = (bits >> 31) & 0x1;
-            int32_t exp = (bits >> 23) & 0xFF;
-            int32_t mant = bits & 0x7FFFFF;
+        float intBitsToFloat(int bits) {
+            int exp = (bits >> 23) & 0xFF;
+            int mant = bits & 0x7FFFFF;
             if(exp == 0) {
                 if(mant == 0) {
                     return 0;
@@ -146,10 +149,10 @@ JAMSTL_NAMESPACE_BEGIN
          * @return int 
          */
         int floatToRawIntBits(float value) {
-            int32_t bits = *(int32_t*)&value;
-            int32_t sign = (bits >> 31) & 0x1;
-            int32_t exp = (bits >> 23) & 0xFF;
-            int32_t mant = bits & 0x7FFFFF;
+            int bits = (int)value;
+            int sign = (bits >> 31) & 0x1;
+            int exp = (bits >> 23) & 0xFF;
+            int mant = bits & 0x7FFFFF;
             if(exp == 0) {
                 if(mant == 0) {
                     return 0;
@@ -179,7 +182,7 @@ JAMSTL_NAMESPACE_BEGIN
          */
         long long doubleToRawLongBits(double bits) {
             long long result = 0;
-            memcpy(&result, &bits, sizeof(double));
+            memoryCopy(&result, &bits, sizeof(double));
             return result;
         }
 
@@ -191,7 +194,7 @@ JAMSTL_NAMESPACE_BEGIN
          */
         double longBitsToDouble(long long bits) {
             double result = 0;
-            memcpy(&result, &bits, sizeof(double));
+            memoryCopy(&result, &bits, sizeof(double));
             return result;
         }
 
@@ -236,9 +239,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the absolute value of the given value.
          * 
          * @param value 
-         * @return constexpr short 
+         * @return short 
          */
-        constexpr short abs(short value) {
+        short abs(short value) {
             return value < 0 ? -value : value;
         }
 
@@ -246,9 +249,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the absolute value of the given value.
          * 
          * @param value 
-         * @return constexpr int 
+         * @return int 
          */
-        constexpr int abs(int value) {
+        int abs(int value) {
             return value < 0 ? -value : value;
         }
 
@@ -256,9 +259,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the absolute value of the given value.
          * 
          * @param value 
-         * @return constexpr long 
+         * @return long 
          */
-        constexpr long abs(long value) {
+        long abs(long value) {
             return value < 0 ? -value : value;
         }
 
@@ -266,13 +269,13 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the absolute value of the given value.
          * 
          * @param value 
-         * @return constexpr long long 
+         * @return long long 
          */
-        constexpr long long abs(long long value) {
+        long long abs(long long value) {
             return value < 0 ? -value : value;
         }
 
-        // constexpr float abs(float value) {
+        // float abs(float value) {
         //     return this->intBitsToFloat(this->floatToRawIntBits(value) &
         //                                 this->FLOATING_MAG_BIT_MASK);
         // }
@@ -281,13 +284,13 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the absolute value of the given value.
          * 
          * @param value 
-         * @return constexpr float 
+         * @return float 
          */
-        constexpr float abs(float value) {
+        float abs(float value) {
             return (value <= 0) ? -value : value;
         }
 
-        // constexpr double abs(double value) {
+        // double abs(double value) {
         //     return this->longBitsToDouble(this->doubleToRawLongBits(value) & 
         //                                   this->MAG_BIT_MASK);
         // }
@@ -296,13 +299,13 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the absolute value of the given value.
          * 
          * @param value 
-         * @return constexpr double 
+         * @return double 
          */
-        constexpr double abs(double value) {
+        double abs(double value) {
             return (value <= 0) ? -value : value;
         }
 
-        // constexpr long double abs(long double value) {
+        // long double abs(long double value) {
         //     return this->longBitsToDouble(this->doubleToRawLongBits(value) & 
         //                                   this->MAG_BIT_MASK);
         // }
@@ -311,9 +314,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the absolute value of the given value.
          * 
          * @param value 
-         * @return constexpr long double 
+         * @return long double 
          */
-        constexpr long double abs(long double value) {
+        long double abs(long double value) {
             return (value <= 0) ? -value : value;
         }
 
@@ -402,10 +405,10 @@ JAMSTL_NAMESPACE_BEGIN
          * @param intPart 
          * @return double 
          */
-        double modf(double value, unsigned short* intPart) {
-            *intPart = this->trunc(value);
-            return value - *intPart;
-        }
+        // double modf(double value, unsigned short* intPart) {
+        //     *intPart = this->trunc(value);
+        //     return value - *intPart;
+        // }
 
         /**
          * @brief Returns the floating point remainder of the vlaue while
@@ -415,10 +418,10 @@ JAMSTL_NAMESPACE_BEGIN
          * @param intPart 
          * @return double 
          */
-        double modf(double value, short* intPart) {
-            *intPart = this->trunc(value);
-            return value - *intPart;
-        }
+        // double modf(double value, short* intPart) {
+        //     *intPart = this->trunc(value);
+        //     return value - *intPart;
+        // }
 
         /**
          * @brief Returns the floating point remainder of the vlaue while
@@ -428,10 +431,10 @@ JAMSTL_NAMESPACE_BEGIN
          * @param intPart 
          * @return double 
          */
-        double modf(double value, unsigned int* intPart) {
-            *intPart = this->trunc(value);
-            return value - *intPart;
-        }
+        // double modf(double value, unsigned int* intPart) {
+        //     *intPart = this->trunc(value);
+        //     return value - *intPart;
+        // }
 
         /**
          * @brief Returns the floating point remainder of the vlaue while
@@ -441,10 +444,10 @@ JAMSTL_NAMESPACE_BEGIN
          * @param intPart 
          * @return double 
          */
-        double modf(double value, int* intPart) {
-            *intPart = this->trunc(value);
-            return value - *intPart;
-        }
+        // double modf(double value, int* intPart) {
+        //     *intPart = this->trunc(value);
+        //     return value - *intPart;
+        // }
 
         /**
          * @brief Returns the floating point remainder of the vlaue while
@@ -454,10 +457,10 @@ JAMSTL_NAMESPACE_BEGIN
          * @param intPart 
          * @return double 
          */
-        double modf(double value, unsigned long* intPart) {
-            *intPart = this->trunc(value);
-            return value - *intPart;
-        }
+        // double modf(double value, unsigned long* intPart) {
+        //     *intPart = this->trunc(value);
+        //     return value - *intPart;
+        // }
 
         /**
          * @brief Returns the floating point remainder of the vlaue while
@@ -467,10 +470,10 @@ JAMSTL_NAMESPACE_BEGIN
          * @param intPart 
          * @return double 
          */
-        double modf(double value, long* intPart) {
-            *intPart = this->trunc(value);
-            return value - *intPart;
-        }
+        // double modf(double value, long* intPart) {
+        //     *intPart = this->trunc(value);
+        //     return value - *intPart;
+        // }
 
         /**
          * @brief Returns the floating point remainder of the vlaue while
@@ -480,10 +483,10 @@ JAMSTL_NAMESPACE_BEGIN
          * @param intPart 
          * @return double 
          */
-        double modf(double value, unsigned long long* intPart) {
-            *intPart = this->trunc(value);
-            return value - *intPart;
-        }
+        // double modf(double value, unsigned long long* intPart) {
+        //     *intPart = this->trunc(value);
+        //     return value - *intPart;
+        // }
         
         /**
          * @brief Returns the floating point remainder of the vlaue while
@@ -493,9 +496,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @param intPart 
          * @return double 
          */
-        double modf(double value, long long* intPart) {
-            *intPart = this->trunc(value);
-            return value - *intPart;
+        double modf(double value, long long& intPart) {
+            intPart = this->trunc(value);
+            return value - intPart;
         }
 
 
@@ -719,9 +722,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the square root of the given value.
          * 
          * @param value 
-         * @return constexpr long double 
+         * @return long double 
          */
-        constexpr long double sqrt(long double value) {
+        long double sqrt(long double value) {
             if(value == this->Infinity) return this->Infinity;
             if(value < 0) return 0;
             long double root = nthRoot(value, 2);
@@ -732,9 +735,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the cube root of the given value.
          * 
          * @param value 
-         * @return constexpr long double 
+         * @return long double 
          */
-        constexpr long double cbrt(long double value) {
+        long double cbrt(long double value) {
             if(value == this->Infinity) return this->Infinity;
             if(value < 0) return 0;
             long double root = nthRoot(value, 3);
@@ -747,12 +750,11 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the factorial of the given value.
          * 
          * @param value 
-         * @return constexpr long double 
+         * @return long double 
          */
-        constexpr long double fact(unsigned int value) {
+        long double fact(unsigned int value) {
             if(value == this->Infinity) return this->Infinity;
             if(value == this->minInfinity) return this->NaN;
-            if(value < 0) return this->NaN;
             if(value == 0) return 1;
             if(value == 1) return 1;
             
@@ -766,9 +768,9 @@ JAMSTL_NAMESPACE_BEGIN
          * argument.
          * 
          * @param value 
-         * @return constexpr double 
+         * @return double 
          */
-        constexpr double ln(double value) {
+        double ln(double value) {
             if(value == this->Infinity) return this->Infinity;
             if(value == this->minInfinity || value <= 0) return this->minInfinity;
             if(value == this->NaN) return this->NaN;
@@ -788,7 +790,7 @@ JAMSTL_NAMESPACE_BEGIN
             double oneMinusOne  = 1;
             double valueHandler = value;
 
-            for(size_t i = 1; i <= 20; i++) {
+            for(usize i = 1; i <= 20; i++) {
                 semiResult += valueHandler * (oneMinusOne / i);
                 oneMinusOne *= -1;
                 valueHandler *= value;
@@ -801,9 +803,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the logarithm of the given value to the base of 10.
          * 
          * @param value 
-         * @return constexpr double 
+         * @return double 
          */
-        constexpr double log10(double value) {
+        double log10(double value) {
             return this->ln(value) / this->LN10;
         }
 
@@ -811,9 +813,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the logarithm of a value to the base of 2.
          * 
          * @param value 
-         * @return constexpr double 
+         * @return double 
          */
-        constexpr double log2(double value) {
+        double log2(double value) {
             return this->ln(value) / this->LN2;
         }
 
@@ -822,9 +824,9 @@ JAMSTL_NAMESPACE_BEGIN
          * 
          * @param value 
          * @param base 
-         * @return constexpr double 
+         * @return double 
          */
-        constexpr double logn(double value, double base) {
+        double logn(double value, double base) {
             return this->ln(value) / this->ln(base);
         }
 
@@ -834,15 +836,15 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the exponential function of the given value.
          * 
          * @param value 
-         * @return constexpr double 
+         * @return double 
          */
-        constexpr double exp(double value) {
+        double exp(double value) {
             if(value == this->Infinity) return this->Infinity;
             if(value == this->minInfinity) return this->minInfinity;
             if(value == this->NaN) return this->NaN;
 
             long double result = 0;
-            for(size_t i = 0; i < 1300; i++) {
+            for(usize i = 0; i < 1300; i++) {
                 long double power = this->power(value, i);
                 long double factorial = this->fact(i);
                 result += power / factorial;
@@ -855,9 +857,9 @@ JAMSTL_NAMESPACE_BEGIN
          * 
          * @param base 
          * @param exponent 
-         * @return constexpr long double 
+         * @return long double 
          */
-        constexpr long double pow(long double base, long double exponent) {
+        long double pow(long double base, long double exponent) {
             if(base == this->Infinity) return this->Infinity;
             if(base == this->minInfinity && (long long)exponent % 2 == 0) return this->Infinity;
             if(base == this->minInfinity && (long long)exponent % 2 != 0) return this->minInfinity;
@@ -869,7 +871,7 @@ JAMSTL_NAMESPACE_BEGIN
             if(base == 0 && exponent != 0) return 0;
             if(base == 1) return 1;
 
-            if(exponent - (long long)exponent == 0) {
+            if(exponent - rint(exponent) != 0) {
                 if(base < 0) {
                     long double semiResult = exponent * this->ln(-1 * base);
                     return this->exp(semiResult); 
@@ -893,21 +895,21 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the cosine of the given angle.
          * 
          * @param value 
-         * @return constexpr double 
+         * @return double 
          */
-        constexpr double cos(double value) {
+        double cos(double value) {
             if(value == this->Infinity) return this->Infinity;
             if(value == this->minInfinity) return this->minInfinity;
             if(value == this->NaN) return this->NaN;
 
-            for(size_t i = 0; i < this->MinimumValue && value > 360; i++) {
+            for(usize i = 0; i < this->MinimumValue && value > 360; i++) {
                 value -= 360;
             }
 
             double tempValue = value * this->Pi / 180;
 
             long double semiResult = 1;
-            for(size_t i = 2; i <= 34; i += 2) {
+            for(usize i = 2; i <= 34; i += 2) {
                 if(i == 4 || i == 8 || i == 12 ||
                    i == 16 || i == 20 || i == 24 ||
                    i == 28 || i == 32) {
@@ -948,21 +950,21 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the sine of the given value.
          * 
          * @param value 
-         * @return constexpr double 
+         * @return double 
          */
-        constexpr double sin(double value) {
+        double sin(double value) {
             if(value == this->Infinity) return this->NaN;
             if(value == this->minInfinity) return this->NaN;
             if(value == this->NaN) return this->NaN;
 
-            for(size_t i = 0; i < this->MinimumValue && value > 360; i++) {
+            for(usize i = 0; i < this->MinimumValue && value > 360; i++) {
                 value -= 360;
             }
 
             double tempValue = value * this->Pi / 180;
 
             long double semiResult = tempValue;
-            for(size_t i = 3; i <= 35; i += 2) {
+            for(usize i = 3; i <= 35; i += 2) {
                 if(i == 5 || i == 9 || i == 13 ||
                    i == 17 || i == 21 || i == 25 ||
                    i == 29 || i == 33) {
@@ -996,9 +998,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the tangent of the given value.
          * 
          * @param value 
-         * @return constexpr long double 
+         * @return long double 
          */
-        constexpr long double tan(double value) {
+        long double tan(double value) {
             return this->sin(value) / this->cos(value);
         }
 
@@ -1006,9 +1008,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the cosecant of the given value.
          * 
          * @param value 
-         * @return constexpr double 
+         * @return double 
          */
-        constexpr double csc(double value) {
+        double csc(double value) {
             return 1 / this->sin(value);
         }
 
@@ -1016,9 +1018,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the secant of the given value.
          * 
          * @param value 
-         * @return constexpr double 
+         * @return double 
          */
-        constexpr double sec(double value) {
+        double sec(double value) {
             return 1 / this->cos(value);
         }
 
@@ -1026,9 +1028,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the cotangent of the given value.
          * 
          * @param value 
-         * @return constexpr long double 
+         * @return long double 
          */
-        constexpr long double cot(double value) {
+        long double cot(double value) {
             return this->cos(value) / this->sin(value);
         }
 
@@ -1038,9 +1040,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the arcsine of the value.
          * 
          * @param value 
-         * @return constexpr double 
+         * @return double 
          */
-        constexpr double asin(double value) {
+        double asin(double value) {
             if(value > 1 || value < -1) return this->NaN;
             if(value == 1) return 90;
             if(value == -1) return -90;
@@ -1048,7 +1050,7 @@ JAMSTL_NAMESPACE_BEGIN
             double semiResult = 0;
             double result = 0;
             
-            for(size_t i = 0; i < 300; i++) {
+            for(usize i = 0; i < 300; i++) {
                 long double Factorial         = this->fact(2 * i);
                 long double firstDenominator  = this->pow(4, i);
                 long double secondDenominator = this->pow(this->fact(i), 2);
@@ -1065,9 +1067,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the arccosine of the given value.
          * 
          * @param value 
-         * @return constexpr double 
+         * @return double 
          */
-        constexpr double acos(double value) {
+        double acos(double value) {
             return 90 - this->asin(value);
         }
 
@@ -1075,9 +1077,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the arctangent of the given value.
          * 
          * @param value 
-         * @return constexpr long double 
+         * @return long double 
          */
-        constexpr long double atan(double value) {
+        long double atan(double value) {
             if(value == 1) return 45;
             if(value == -1) return -45;
             if(value == this->Infinity) return 90;
@@ -1085,7 +1087,7 @@ JAMSTL_NAMESPACE_BEGIN
 
             long double semiResult = 0;
             long double result = 0;
-            for(size_t i = 0; i < 700; i++) {
+            for(usize i = 0; i < 700; i++) {
                 long double firstNumerator  = this->pow(-1, i);
                 long double secondNumerator = this->pow(value, 2 * i + 1);
                 long double denominator     = (2 * i + 1);
@@ -1101,9 +1103,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the hyperbolic sine of the given value.
          * 
          * @param value 
-         * @return constexpr long double 
+         * @return long double 
          */
-        constexpr long double sinh(double value) {
+        long double sinh(double value) {
             if(value == this->Infinity) return this->Infinity;
             if(value == this->minInfinity) return this->minInfinity;
             if(value == this->NaN) return this->NaN;
@@ -1114,9 +1116,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the hyperbolic cosine of the specified angle.
          * 
          * @param value 
-         * @return constexpr long double 
+         * @return long double 
          */
-        constexpr long double cosh(double value) {
+        long double cosh(double value) {
             if(value == this->Infinity) return this->Infinity;
             if(value == this->minInfinity) return this->minInfinity;
             if(value == this->NaN) return this->NaN;
@@ -1127,9 +1129,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the hyperbolic tangent of the specified angle.
          * 
          * @param value 
-         * @return constexpr long double 
+         * @return long double 
          */
-        constexpr long double tanh(double value) {
+        long double tanh(double value) {
             return this->sinh(value) / this->cosh(value);
         }
 
@@ -1137,9 +1139,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the hyperbolic cosecant of the given value.
          * 
          * @param value 
-         * @return constexpr long double 
+         * @return long double 
          */
-        constexpr long double csch(double value) {
+        long double csch(double value) {
             return 1 / this->sinh(value);
         }
 
@@ -1147,9 +1149,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the hyperbolic secant of a number.
          * 
          * @param value 
-         * @return constexpr long double 
+         * @return long double 
          */
-        constexpr long double sech(double value) {
+        long double sech(double value) {
             return 1 / this->cosh(value);
         }
 
@@ -1157,9 +1159,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the hyperbolic cotangent of the given value.
          * 
          * @param value 
-         * @return constexpr long double 
+         * @return long double 
          */
-        constexpr long double coth(double value) {
+        long double coth(double value) {
             return this->cosh(value) / this->sinh(value);
         }
 
@@ -1169,9 +1171,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the hyperbolic arcsine of the given value.
          * 
          * @param value 
-         * @return constexpr long double 
+         * @return long double 
          */
-        constexpr long double asinh(double value) {
+        long double asinh(double value) {
             return this->ln(value + this->sqrt(value * value + 1));
         }
 
@@ -1179,9 +1181,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the hyperbolic arccosine of the specified value.
          * 
          * @param value 
-         * @return constexpr long double 
+         * @return long double 
          */
-        constexpr long double acosh(double value) {
+        long double acosh(double value) {
             return this->ln(value + this->sqrt(value * value - 1));
         }
 
@@ -1189,9 +1191,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Returns the hyperbolic arctangent of the value.
          * 
          * @param value 
-         * @return constexpr long double 
+         * @return long double 
          */
-        constexpr long double atanh(double value) {
+        long double atanh(double value) {
             if(value == 1) return this->Infinity;
             if(value == -1) return this->minInfinity;
             if(value > 1 && value < -1) return this->NaN;
@@ -1206,10 +1208,10 @@ JAMSTL_NAMESPACE_BEGIN
          * @tparam Type 
          * @param value1 
          * @param value2 
-         * @return constexpr Type 
+         * @return Type 
          */
         template<typename Type>
-        constexpr Type min(const Type& value1, const Type& value2) {
+        Type min(const Type& value1, const Type& value2) {
             return value1 < value2 ? value1 : value2;
         }
 
@@ -1219,10 +1221,10 @@ JAMSTL_NAMESPACE_BEGIN
          * @tparam Type 
          * @param value1 
          * @param value2 
-         * @return constexpr Type 
+         * @return Type 
          */
         template<typename Type>
-        constexpr Type max(const Type& value1, const Type& value2) {
+        Type max(const Type& value1, const Type& value2) {
             return value1 > value2 ? value1 : value2;
         }
 
@@ -1232,12 +1234,12 @@ JAMSTL_NAMESPACE_BEGIN
          * 
          * @tparam Type 
          * @tparam size 
-         * @return constexpr Type 
+         * @return Type 
          */
-        template<typename Type, size_t size>
-        constexpr Type min(Type (&value)[size]) {
+        template<typename Type, usize size>
+        Type min(Type (&value)[size]) {
             Type result = value[0];
-            for(size_t i = 1; i < size; i++) {
+            for(usize i = 1; i < size; i++) {
                 result = this->min(result, value[i]);
             }
             return result;
@@ -1248,12 +1250,12 @@ JAMSTL_NAMESPACE_BEGIN
          * 
          * @tparam Type 
          * @tparam size 
-         * @return constexpr Type 
+         * @return Type 
          */
-        template<typename Type, size_t size>
-        constexpr Type max(Type (&value)[size]) {
+        template<typename Type, usize size>
+        Type max(Type (&value)[size]) {
             Type result = value[0];
-            for(size_t i = 1; i < size; i++) {
+            for(usize i = 1; i < size; i++) {
                 result = this->max(result, value[i]);
             }
             return result;
@@ -1268,7 +1270,7 @@ JAMSTL_NAMESPACE_BEGIN
          * @return true 
          * @return false 
          */
-        constexpr bool isPrime(unsigned long long value) {
+        bool isPrime(unsigned long long value) {
             if(value == 0 || value == 1) return false;
             if(value == this->Infinity || value == this->minInfinity) return false;
             if(value == this->NaN) return false;
@@ -1287,7 +1289,7 @@ JAMSTL_NAMESPACE_BEGIN
          * @param value 
          * @return bool
          */
-        constexpr bool isEven(long long value) {
+        bool isEven(long long value) {
             return value % 2 == 0;
         }
 
@@ -1297,7 +1299,7 @@ JAMSTL_NAMESPACE_BEGIN
          * @param value 
          * @return bool
          */
-        constexpr bool isOdd(long long value) {
+        bool isOdd(long long value) {
             return value % 2 == 1;
         }
 
@@ -1307,9 +1309,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief Counts the digits of a number.
          * 
          * @param value 
-         * @return constexpr unsigned 
+         * @return unsigned 
          */
-        constexpr unsigned digits(long long value) {
+        unsigned digits(long long value) {
             if(value == 0) return 1;
             unsigned result = 0;
             while(value != 0) {
@@ -1317,6 +1319,17 @@ JAMSTL_NAMESPACE_BEGIN
                 result++;
             }
             return result;
+        }
+
+        // isInfinity
+        static bool isInfinity(long double value) {
+            math mathInstance;
+            return value == mathInstance.Infinity || value == mathInstance.minInfinity;
+        }
+
+        static bool isNaN(long double value) {
+            math mathInstance;
+            return value == mathInstance.NaN;
         }
 
     } Math;

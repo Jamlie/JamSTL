@@ -5,11 +5,12 @@
 
 #include "Macros.h"
 #include "Collections/ArrayList.h"
+#include "Exception/Exception.h"
 #include "Datatypes.h"
 #include "Math.h"
 #include "Printer.h"
 #include "Scanner.h"
-#include "String/String.h"
+#include "String/StringHelper.h"
 #include "Collections/Array.h"
 #include "Collections/LinkedList.h"
 #include "type_traits.h"
@@ -17,6 +18,10 @@
 #include "String/StringStream.h"
 #include "Collections/Stack.h"
 #include "Collections/Queue.h"
+#include "Collections/HashMap.h"
+#include "Arrays.h"
+#include "GarbageCollector/GarbageCollector.h"
+#include "Random.h"
 
 JAMSTL_NAMESPACE_BEGIN
 
@@ -67,7 +72,8 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
         if(isSame<Integer, WrapperClass>::value ||
-            isSame<int, WrapperClass>::value) {
+            isSame<int, WrapperClass>::value ||
+            isSame<long, WrapperClass>::value) {
             return "Integer";
         }
 
@@ -124,6 +130,12 @@ JAMSTL_NAMESPACE_BEGIN
 
         return "Unknown";
     }
+
+    template<class T, class U>
+    bool instanceof(U object) {
+        return dynamic_cast<T*>(object) != nullptr;
+    } 
+
 
 JAMSTL_NAMESPACE_END
 

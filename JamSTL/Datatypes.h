@@ -2,7 +2,6 @@
 
 #ifndef JAMSTL_DATATYPES_H
 #define JAMSTL_DATATYPES_H 1
-#include <iostream>
 #include "Macros.h"
 #include "Byte.h"
 #include "Short.h"
@@ -12,9 +11,10 @@
 #include "Float.h"
 #include "Double.h"
 #include "Boolean.h"
-#include "BasicString.h"
+#include "String.h"
 
 JAMSTL_NAMESPACE_BEGIN
+
 
     String operator""_s(const char* str, size_t len) {
         return String(str, len);

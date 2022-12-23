@@ -3,12 +3,10 @@
 #ifndef JAMSTL_INTEGER_H
 #define JAMSTL_INTEGER_H 1
 #include "Macros.h"
-#include "BasicString.h"
+#include "String.h"
 #include "Math.h"
 #include "type_traits.h"
 #include "Object.h"
-#include <ostream>
-#include <istream>
 
 JAMSTL_NAMESPACE_BEGIN
         
@@ -336,50 +334,7 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
 
-        static constexpr usize SIZE = 32;
-
     public:
-
-        String toString() {
-            String str = "";
-            int number = this->value;
-            if(number > 0) {
-                int digits = 0;
-                while(number > 0) {
-                    number /= 10;
-                    digits++;
-                }
-                number = this->value;
-                for(int i = 0; i < digits; i++) {
-                    str += (number % 10) + '0';
-                    number /= 10;
-                }
-                str.reverse();
-                return str;
-            }
-            String tempString = "";
-            if(number == 0) {
-                tempString = "0";
-            } else {
-                tempString = "-";
-                number = -number;
-                int digits = 0;
-                while(number > 0) {
-                    number /= 10;
-                    digits++;
-                }
-                number = -this->value;
-                for(int i = 0; i < digits; i++) {
-                    tempString += (number % 10) + '0';
-                    number /= 10;
-                }
-                tempString.reverse();
-            }
-            str += tempString;
-            str.insert(0, '-');
-            str.pop();
-            return str;
-        }
 
         Integer() : value(0) {}
 
@@ -399,7 +354,6 @@ JAMSTL_NAMESPACE_BEGIN
         Integer(Type value) {
             this->value = static_cast<int>(value);
         }
-
 
 
         Integer& operator=(const Integer& other) {
@@ -569,7 +523,7 @@ JAMSTL_NAMESPACE_BEGIN
             str += tempString;
             str.insert(0, '-');
             str.pop();
-            return str.cString();
+            return str.constCharString();
         }
 
         /**
@@ -592,6 +546,47 @@ JAMSTL_NAMESPACE_BEGIN
 
         int valueOf() const {
             return this->value;
+        }
+
+        String toString() {
+            String str = "";
+            int number = this->value;
+            if(number > 0) {
+                int digits = 0;
+                while(number > 0) {
+                    number /= 10;
+                    digits++;
+                }
+                number = this->value;
+                for(int i = 0; i < digits; i++) {
+                    str += (number % 10) + '0';
+                    number /= 10;
+                }
+                str.reverse();
+                return str;
+            }
+            String tempString = "";
+            if(number == 0) {
+                tempString = "0";
+            } else {
+                tempString = "-";
+                number = -number;
+                int digits = 0;
+                while(number > 0) {
+                    number /= 10;
+                    digits++;
+                }
+                number = -this->value;
+                for(int i = 0; i < digits; i++) {
+                    tempString += (number % 10) + '0';
+                    number /= 10;
+                }
+                tempString.reverse();
+            }
+            str += tempString;
+            str.insert(0, '-');
+            str.pop();
+            return str;
         }
 
         /**
@@ -883,8 +878,8 @@ JAMSTL_NAMESPACE_BEGIN
         }
         
         template<typename Type>
-        double operator+(const Type& other) const {
-            return Integer(this->value + other);
+        Type operator+(const Type& other) const {
+            return this->value + other;
         }
 
 
@@ -895,8 +890,8 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
         template<typename Type>
-        Integer operator-(const Type& other) const {
-            return Integer(this->value - other);
+        Type operator-(const Type& other) const {
+            return this->value - other;
         }
 
         Integer operator-(const char* other) const {
@@ -910,8 +905,8 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
         template<typename Type>
-        Integer operator*(const Type& other) const {
-            return Integer(this->value * other);
+        Type operator*(const Type& other) const {
+            return this->value * other;
         }
 
         Integer operator*(const char* other) const {
@@ -925,8 +920,8 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
         template<typename Type>
-        Integer operator/(const Type& other) const {
-            return Integer(this->value / other);
+        Type operator/(const Type& other) const {
+            return this->value / other;
         }
 
         Integer operator/(const char* other) const {
@@ -1155,17 +1150,6 @@ JAMSTL_NAMESPACE_BEGIN
             return Integer(this->value >> atoi(other));
         }
 
-
-
-        friend std::ostream& operator<<(std::ostream& out, const Integer& integer) {
-            out << integer.value;
-            return out;
-        }
-
-        friend std::istream& operator>>(std::istream& in, Integer& integer) {
-            in >> integer.value;
-            return in;
-        }
     };
 
 

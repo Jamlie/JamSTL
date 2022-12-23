@@ -2,10 +2,8 @@
 
 #ifndef JAMSTL_CHARACTER_H
 #define JAMSTL_CHARACTER_H 1
-#include <ostream>
-#include <istream>
 #include "Macros.h"
-#include "BasicString.h"
+#include "String.h"
 #include "Object.h"
 
 JAMSTL_NAMESPACE_BEGIN
@@ -240,7 +238,7 @@ JAMSTL_NAMESPACE_BEGIN
             return false;
         }
         
-        char valueOf() {
+        char valueOf() const {
             return this->value;
         }
 
@@ -608,17 +606,6 @@ JAMSTL_NAMESPACE_BEGIN
             return this->value >= other.value;
         }
 
-        
-
-        friend std::ostream& operator<<(std::ostream& out, const Character& character) {
-            out << character.value;
-            return out;
-        }
-
-        friend std::istream& operator>>(std::istream& in, Character& character) {
-            in >> character.value;
-            return in;
-        }
     };
 
 

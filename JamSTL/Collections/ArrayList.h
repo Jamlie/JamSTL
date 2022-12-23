@@ -17,19 +17,20 @@
 
 #ifndef JAMSTL_ArrayList_H
 #define JAMSTL_ArrayList_H 1
-#include <ostream>
 #include <initializer_list>
 #include <functional>
-#include <ctime>
 #include "../Iterator.h"
 #include "../type_traits.h"
 #include "../Macros.h"
 #include "../Math.h"
 #include "../Object.h"
+#include "../Exception/IndexOutOfBoundsException.h"
+#include "../PrintStream.h"
+#include "../Random.h"
 
 JAMSTL_NAMESPACE_BEGIN
     template<typename T>
-    class ArrayList {
+    class ArrayList extends Object {
     private:
         T* arrayList = nullptr;
 
@@ -43,7 +44,7 @@ JAMSTL_NAMESPACE_BEGIN
          */
         void reAllocate(usize newCapacity) {
             T* newBlock = new T[newCapacity];
-
+            
             if (newCapacity < this->Size) this->Size = newCapacity;
 
             for (usize i = 0; i < this->Size; i++) 
@@ -103,9 +104,24 @@ JAMSTL_NAMESPACE_BEGIN
             }
         }
 
+        ArrayList(const ArrayList<T>& arrayList) {
+            this->reAllocate(2);
+            for (usize i = 0; i < arrayList.Size; i++) this->push(arrayList[i]);
+        }
+
+        ArrayList(ArrayList<T>&& arrayList) {
+            this->reAllocate(2);
+            for (usize i = 0; i < arrayList.Size; i++) this->push(arrayList[i]);
+        }
+
         ArrayList(usize num) { this->reAllocate(num); }
 
         ~ArrayList() { ::operator delete(this->arrayList, this->Capacity * sizeof(T)); }
+
+        // reserve
+        void reserve(usize number) {
+            if (number > this->Capacity) this->reAllocate(number);
+        }
 
         /**
          * @brief A push method to enter elements into the ArrayList to the end of it
@@ -159,8 +175,6 @@ JAMSTL_NAMESPACE_BEGIN
          * @return bool
          */
         T pop(usize index) {
-            if(index == 0) return this->arrayList[this->size()];
-            index = index - 1;
             if(index > this->size() || (index + 1) > this->size()) 
                 return this->arrayList[this->size()];
             if(index == this->size()) {
@@ -217,13 +231,29 @@ JAMSTL_NAMESPACE_BEGIN
          * @param args 
          * @return T& 
          */
-        template <typename... Arguments>
+        template<typename... Arguments>
         T& emplace(Arguments&&... args) {
-            if (this->Size >= this->Capacity) this->reAllocate(this->Capacity + this->Capacity / 2);
+            if (this->Size >= this->Capacity) 
+                this->reAllocate(this->Capacity + this->Capacity / 2);
 
-            new(&this->arrayList[this->Size]) T(jamstl::type_traits::forward<Arguments>(args)...);
-            return this->arrayList[this->Size++];
+            this->arrayList[this->Size] = T(jamstl::type_traits::forward<Arguments>(args)...);
+            this->Size++;
+
+            return this->arrayList[this->Size - 1];
         }
+
+        
+        template<typename... Arguments>
+        T& emplace(std::initializer_list<T> list, Arguments&&... args) {
+            if (this->Size >= this->Capacity) 
+                this->reAllocate(this->Capacity + this->Capacity / 2);
+
+            this->arrayList[this->Size] = T(list, jamstl::type_traits::forward<Arguments>(args)...);
+            this->Size++;
+
+            return this->arrayList[this->Size - 1];         
+        }
+
 
         T& operator[](int index) {
             if(index >= 0) return this->arrayList[index];
@@ -256,12 +286,11 @@ JAMSTL_NAMESPACE_BEGIN
         /**
          * @brief A method that returns the value of the given index
          * 
-         * @param IN The index
+         * @param index The index
          * @return T 
          */
-        T at(usize IN) const {
-            IN = IN - 1;
-            return this->arrayList[IN];
+        T at(usize index) const {
+            return this->arrayList[index];
         }
 
         /**
@@ -305,6 +334,11 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
         
+        ArrayList& addAll(std::initializer_list<T> list) {
+            for(auto& i : list) this->push(i);
+            return *this;
+        }
+
         /**
          * @brief A method that returns the first value of the ArrayList
          * 
@@ -353,8 +387,6 @@ JAMSTL_NAMESPACE_BEGIN
          * @return bool 
          */
         bool insert(usize index, T any) {
-            if(index == 0) return false;
-            index = index - 1;
             if(index == this->size()) {
                 push(any);
                 return true;
@@ -463,8 +495,7 @@ JAMSTL_NAMESPACE_BEGIN
          * @param old_value The old value
          */
         void quickReplace(T new_value, T old_value) {
-            for (usize i = 0; i < this->size(); i++)
-            {
+            for (usize i = 0; i < this->size(); i++) {
                 if (this->arrayList[i] == old_value) {
                     this->arrayList[i] = new_value;
                     break;
@@ -472,15 +503,27 @@ JAMSTL_NAMESPACE_BEGIN
             }
         }
 
-        String toString() {
-            String str = "";
+        String toString() const {
+            String str = "[";
             for(usize i = 0; i < this->size(); i++) {
                 str += this->arrayList[i];
-                if(i != this->size() - 1) str += ",";
+                if(i != this->size() - 1) str += ", ";
             }
+            str += "]";
             return str;
         }
-            
+
+        String valueOf() const {
+            String str = "[";
+            for(usize i = 0; i < this->size(); i++) {
+                str.append(this->arrayList[i]);
+                if(i != this->size() - 1) str += ", ";
+            }
+            str += "]";
+            return str;
+        }
+
+
         /**
          * @brief A method that sorts an ArrayList
          */
@@ -568,10 +611,9 @@ JAMSTL_NAMESPACE_BEGIN
          * @return ArrayList& 
          */
         ArrayList filter(const std::function<bool(const T& value)>& condition) {
-            ArrayList<T> list = *this;
-            for(int i = 0; i < list.size(); i++) {
-                if(!condition(list.arrayList[i])) {
-                    list.remove(list.arrayList[i]);
+            for(usize i = 0; i < this->size(); i++) {
+                if(!condition(this->arrayList[i])) {
+                    this->remove(this->arrayList[i]);
                     i--;
                 }
             }
@@ -585,9 +627,8 @@ JAMSTL_NAMESPACE_BEGIN
          * @return ArrayList& 
          */
         ArrayList& forEach(const std::function<void(T& value)>& condition) {
-            ArrayList<T> list = *this;
-            for(usize i = 0; i < list.size(); i++) {
-                condition(list.arrayList[i]);
+            for(usize i = 0; i < this->size(); i++) {
+                condition(this->arrayList[i]);
             }
             return *this;
         }
@@ -599,8 +640,8 @@ JAMSTL_NAMESPACE_BEGIN
          * @return ArrayList& 
          */
         ArrayList map(const std::function<T(const T& value)>& condition) {
-            for(usize i = 0; i < list.size(); i++) {
-                list.arrayList[i] = condition(list.arrayList[i]);
+            for(usize i = 0; i < this->size(); i++) {
+                this->arrayList[i] = condition(this->arrayList[i]);
             }
             return *this;
         }
@@ -828,8 +869,6 @@ JAMSTL_NAMESPACE_BEGIN
          * @param secondIndex 
          */
         void swap(usize firstIndex, usize secondIndex) {
-            firstIndex = firstIndex - 1;
-            secondIndex = secondIndex - 1;
             T temp = arrayList[firstIndex];
             arrayList[firstIndex] = arrayList[secondIndex];
             arrayList[secondIndex] = temp;
@@ -903,10 +942,9 @@ JAMSTL_NAMESPACE_BEGIN
          * 
          */
         void shuffle() {
-            srand(time(null));
-
+            Random random;
             for(usize i = this->size() - 1; i > 0; i--) {
-                usize j = rand() % (i + 1);
+                usize j = random.nextInt(0, i);
                 jamstl::swap(this->arrayList[i], this->arrayList[j]);
             }
             return;
@@ -1052,24 +1090,7 @@ JAMSTL_NAMESPACE_BEGIN
         iterator rend() const {
             return iterator(this->arrayList, -1);
         }
-
-
-
-        friend std::ostream& operator<<(std::ostream& out, const ArrayList<T>& Object) {
-            if(Object.size() == 1) {
-                out << "[ " << Object.arrayList[0] << " ]\n";
-                return out;
-            }
-            out << "[";
-            for(usize i = 0; i < Object.size(); i++) {
-                if(i == 0) out << ' ' << Object.arrayList[0] << ", ";
-                else if(i != Object.size() - 1) out << Object.arrayList[i] << ", ";
-                if(i == Object.size() - 1) out << Object.arrayList[i] << ' ';
-            }
-            out << "]\n";
-            
-            return out;
-        }
+        
     };
 
     namespace type_traits {

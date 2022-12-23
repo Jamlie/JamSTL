@@ -4,8 +4,6 @@
 #define JAMSTL_SHORT_H 1
 #include "Macros.h"
 #include "Object.h"
-#include <ostream>
-#include <istream>
 
 JAMSTL_NAMESPACE_BEGIN
 
@@ -236,6 +234,10 @@ JAMSTL_NAMESPACE_BEGIN
             this->value = other;
             other = temp.value;
             return *this;
+        }
+
+        short valueOf() const {
+            return this->value;
         }
 
         operator short() const {
@@ -697,17 +699,6 @@ JAMSTL_NAMESPACE_BEGIN
             return Short(!this->value);
         }
         
-
-        
-        friend std::ostream& operator<<(std::ostream& os, const Short& shrt) {
-            os << shrt.value;
-            return os;
-        }
-
-        friend std::istream& operator>>(std::istream& is, Short& shrt) {
-            is >> shrt.value;
-            return is;
-        }
     };
 
 

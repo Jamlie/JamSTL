@@ -5,8 +5,6 @@
 #include "Macros.h"
 #include "Math.h"
 #include "Object.h"
-#include <ostream>
-#include <istream>
 
 JAMSTL_NAMESPACE_BEGIN
 
@@ -19,7 +17,7 @@ JAMSTL_NAMESPACE_BEGIN
         float value;
         float readFractions(String string, int start, int end, float &division) {
             float fractions = 0;
-            int j, Count = 0;
+            int Count = 0;
 
             for (int k = start; string[k] != '\0'; k++) {
                 if (string[start] == '0' && string[k] == '0') Count++;
@@ -39,7 +37,7 @@ JAMSTL_NAMESPACE_BEGIN
         float toFloat(String string) {
             float ToFloat = 0, division = 1;
             int i;
-            usize Length = string.Length;
+            usize Length = string.length();
             for (i = 0; string[i] != '\0'; i++) {
                 if (i == 0 && string[i] == '.') continue;
                 if (i != 0 && string[i] == '.') break;
@@ -82,10 +80,10 @@ JAMSTL_NAMESPACE_BEGIN
          * @brief A method that returns the const char* of the value
          * 
          */
-        const char* toCString() const override {
-            String string = String::valueOf(value);
-            return string.toCString();
-        }
+        // const char* toCString() const override {
+        //     String string = String::valueOf(value);
+        //     return string.toCString();
+        // }
 
 
 
@@ -131,7 +129,6 @@ JAMSTL_NAMESPACE_BEGIN
          * @return constexpr float 
          */
         static constexpr float intBitsToFloat(int32_t bits) {
-            int32_t sign = (bits >> 31) & 0x1;
             int32_t exp = (bits >> 23) & 0xFF;
             int32_t mant = bits & 0x7FFFFF;
             if(exp == 0) {
@@ -162,7 +159,7 @@ JAMSTL_NAMESPACE_BEGIN
          * @return int 
          */
         static int floatToRawIntBits(float value) {
-            int bits = *(int*)&value;
+            int bits = (int)value;
             int sign = (bits >> 31) & 0x1;
             int exp = (bits >> 23) & 0xFF;
             int mant = bits & 0x7FFFFF;
@@ -712,17 +709,6 @@ JAMSTL_NAMESPACE_BEGIN
             return this->value || other;
         }
         
-
-
-        friend std::ostream& operator<<(std::ostream& out, const Float& floatNum) {
-            out << floatNum.value;
-            return out;
-        }
-
-        friend std::istream& operator>>(std::istream& in, Float& floatNum) {
-            in >> floatNum.value;
-            return in;
-        }
     };
 
 

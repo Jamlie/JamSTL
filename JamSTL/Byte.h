@@ -2,10 +2,8 @@
 
 #ifndef JAMSTL_BYTE_H
 #define JAMSTL_BYTE_H 1
-#include <ostream>
-#include <istream>
 #include "Macros.h"
-#include "BasicString.h"
+#include "String.h"
 #include "Object.h"
 
 JAMSTL_NAMESPACE_BEGIN
@@ -221,7 +219,7 @@ JAMSTL_NAMESPACE_BEGIN
             return value;
         }
 
-        byte valueOf() {
+        byte valueOf() const {
             return value;
         }
 
@@ -558,18 +556,7 @@ JAMSTL_NAMESPACE_BEGIN
         bool operator>=(const Byte& other) const {
             return this->value >= other.value;
         }
-
         
-
-        friend std::ostream& operator<<(std::ostream& out, const Byte& by) {
-            out << by.value;
-            return out;
-        }
-
-        friend std::istream& operator>>(std::istream& in, Byte& by) {
-            in >> by.value;
-            return in;
-        }
     };
 
 

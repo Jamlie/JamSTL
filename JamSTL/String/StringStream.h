@@ -4,7 +4,7 @@
 #define JAMSTL_STRINGSTREAM_H 1
 
 #include "../Datatypes.h"
-#include "String.h"
+#include "StringHelper.h"
 #include "../Macros.h"
 #include "../Object.h"
 
@@ -159,7 +159,7 @@ JAMSTL_NAMESPACE_BEGIN
         float toFloat() {
             float ToFloat = 0, Division = 1;
             int i;
-            int lengthOfString = _str.length;
+            usize lengthOfString = _str.length();
             for(i = 0; _str[i] != '\0'; i++) {
                 if(i == 0 && (_str[i] == '.' || _str[i] == '-')) continue;
                 if(i != 0 && _str[i] == '.') break;
@@ -169,7 +169,7 @@ JAMSTL_NAMESPACE_BEGIN
 
             float floatTempNumber = 0;
             if(_str[i] == '.') {
-                floatTempNumber = readFractions(i + 1, _str.length, Division);
+                floatTempNumber = readFractions(i + 1, lengthOfString, Division);
             }
 
             if(_str[0] == '-') {
@@ -192,7 +192,7 @@ JAMSTL_NAMESPACE_BEGIN
         double toDouble() {
             double ToDouble = 0, Division = 1;
             int i;
-            int lengthOfString = _str.length;
+            int lengthOfString = _str.length();
             for(i = 0; _str[i] != '\0'; i++) {
                 if(i == 0 && (_str[i] == '.' || _str[i] == '-')) continue;
                 if(i != 0 && _str[i] == '.') break;
@@ -202,7 +202,7 @@ JAMSTL_NAMESPACE_BEGIN
 
             double doubleTempNumber = 0;
             if(_str[i] == '.') {
-                doubleTempNumber = readFractions(i + 1, _str.length, Division);
+                doubleTempNumber = readFractions(i + 1, lengthOfString, Division);
             }
 
             if(_str[0] == '-') {
@@ -225,7 +225,7 @@ JAMSTL_NAMESPACE_BEGIN
         long double toLDouble() {
             double ToLongDouble = 0, Division = 1;
             int i;
-            int lengthOfString = _str.length;
+            int lengthOfString = _str.length();
             for(i = 0; _str[i] != '\0'; i++) {
                 if(i == 0 && (_str[i] == '.' || _str[i] == '-')) continue;
                 if(i != 0 && _str[i] == '.') break;
@@ -235,7 +235,7 @@ JAMSTL_NAMESPACE_BEGIN
 
             double LongDoubleTempNumber = 0;
             if(_str[i] == '.') {
-                LongDoubleTempNumber = readFractions(i + 1, _str.length, Division);
+                LongDoubleTempNumber = readFractions(i + 1, lengthOfString, Division);
             }
 
             if(_str[0] == '-') {
@@ -374,7 +374,7 @@ JAMSTL_NAMESPACE_BEGIN
         shortNum(0), longNum(0), floatNum(0),
         doubleNum(0), _str("") {}
 
-        StringStream(const StringStream& _strStream) {
+        explicit StringStream(const StringStream& _strStream) {
             _str = _strStream._str;
             Int = _strStream.Int;
             UInt = _strStream.UInt;
@@ -507,7 +507,7 @@ JAMSTL_NAMESPACE_BEGIN
          * @return StringStream& 
          */
         StringStream& operator>>(char* str) {
-            str = _str.c_string();
+            str = _str.charString();
             return *this;
         }
 

@@ -5,29 +5,35 @@
 #include "../Datatypes.h"
 #include "../Macros.h"
 #include "../Math.h"
+#include "../bits/type_traits.h"
 
 JAMSTL_NAMESPACE_BEGIN
 
-    usize length(const char* str) {
-        usize len = 0;
-        while(str[len] != '\0') {
-            len++;
+    usize strlen(const char* str) {
+        usize lenOfArray = 0;
+        while(str[lenOfArray] != '\0') {
+            lenOfArray++;
         }
-        return len;
+        return lenOfArray;
+    }
+
+    template<typename T, usize size>
+    usize len(const T(&array)[size]) {
+        return size;
     }
 
     char* copy(char* dest, const char* src) {
-        usize len = length(src);
-        for(usize i = 0; i < len; i++) {
+        usize lenOfArray = strlen(src);
+        for(usize i = 0; i < lenOfArray; i++) {
             dest[i] = src[i];
         }
-        dest[len] = '\0';
+        dest[lenOfArray] = '\0';
         return dest;
     }
 
     int compare(const char* str1, const char* str2) {
-        usize len1 = length(str1);
-        usize len2 = length(str2);
+        usize len1 = strlen(str1);
+        usize len2 = strlen(str2);
         if(len1 > len2) {
             return 1;
         } else if(len1 < len2) {
@@ -45,20 +51,20 @@ JAMSTL_NAMESPACE_BEGIN
     }
 
     char* concat(char* dest, const char* src) {
-        usize len = length(dest);
-        usize len2 = length(src);
+        usize lenOfArray = strlen(dest);
+        usize len2 = strlen(src);
         for(usize i = 0; i < len2; i++) {
-            dest[len + i] = src[i];
+            dest[lenOfArray + i] = src[i];
         }
-        dest[len + len2] = '\0';
+        dest[lenOfArray + len2] = '\0';
         return dest;
     }
 
-    char* concat(char* dest, const char* src, usize len) {
-        for(usize i = 0; i < len; i++) {
-            dest[length(dest) + i] = src[i];
+    char* concat(char* dest, const char* src, usize lenOfArray) {
+        for(usize i = 0; i < lenOfArray; i++) {
+            dest[strlen(dest) + i] = src[i];
         }
-        dest[length(dest) + len] = '\0';
+        dest[strlen(dest) + lenOfArray] = '\0';
         return dest;
     }
 
@@ -77,8 +83,8 @@ JAMSTL_NAMESPACE_BEGIN
     }
 
     char* toUpper(char* str) {
-        usize len = length(str);
-        for(usize i = 0; i < len; i++) {
+        usize lenOfArray = strlen(str);
+        for(usize i = 0; i < lenOfArray; i++) {
             if(str[i] >= 'a' && str[i] <= 'z') {
                 str[i] = str[i] - 32;
             }
@@ -87,26 +93,26 @@ JAMSTL_NAMESPACE_BEGIN
     }
 
     char* toUpper(String str) {
-        return toUpper(str.c_string());
+        return toUpper(str.charString());
     }
 
     char* toUpper(const char* str) {
-        usize len = length(str);
-        char* newStr = new char[len + 1];
-        for(usize i = 0; i < len; i++) {
+        usize lenOfArray = strlen(str);
+        char* newStr = new char[lenOfArray + 1];
+        for(usize i = 0; i < lenOfArray; i++) {
             if(str[i] >= 'a' && str[i] <= 'z') {
                 newStr[i] = str[i] - 32;
             } else {
                 newStr[i] = str[i];
             }
         }
-        newStr[len] = '\0';
+        newStr[lenOfArray] = '\0';
         return newStr;
     }
 
     char* toLower(char* str) {
-        usize len = length(str);
-        for(usize i = 0; i < len; i++) {
+        usize lenOfArray = strlen(str);
+        for(usize i = 0; i < lenOfArray; i++) {
             if(str[i] >= 'A' && str[i] <= 'Z') {
                 str[i] = str[i] + 32;
             }
@@ -115,34 +121,34 @@ JAMSTL_NAMESPACE_BEGIN
     }
 
     char* toLower(String str) {
-        return toLower(str.c_string());
+        return toLower(str.charString());
     }
 
     char* toLower(const char* str) {
-        usize len = length(str);
-        char* newStr = new char[len + 1];
-        for(usize i = 0; i < len; i++) {
+        usize lenOfArray = strlen(str);
+        char* newStr = new char[lenOfArray + 1];
+        for(usize i = 0; i < lenOfArray; i++) {
             if(str[i] >= 'A' && str[i] <= 'Z') {
                 newStr[i] = str[i] + 32;
             } else {
                 newStr[i] = str[i];
             }
         }
-        newStr[len] = '\0';
+        newStr[lenOfArray] = '\0';
         return newStr;
     }
 
     bool isNull(const char* str) {
-        return str[0] == null;
+        return str == null;
     }
 
     bool isNull(String str) {
-        return isNull(str.c_string());
+        return isNull(str.charString());
     }
 
     bool isAscii(const char* str) {
-        usize len = length(str);
-        for(usize i = 0; i < len; i++) {
+        usize lenOfArray = strlen(str);
+        for(usize i = 0; i < lenOfArray; i++) {
             if(str[i] < 0) {
                 return false;
             }
@@ -640,6 +646,7 @@ JAMSTL_NAMESPACE_BEGIN
         str += tempString;
         return str;
     }
+
 
     String toString(Float floatNumber) {
         if(floatNumber == 0) {

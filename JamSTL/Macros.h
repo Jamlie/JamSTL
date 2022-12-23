@@ -11,11 +11,10 @@
 
 
 
-#define undefined (void)0
-#define let decltype(auto)
 namespace jamstl {
 
-#define __SIZE__TYPE__ long unsigned int
+#define let decltype(auto)
+#define __SIZE__TYPE__ unsigned long long
 // Used to define a type that is the size of the type passed in
 typedef __SIZE__TYPE__ usize;
 #define __UNSIGNED__CHAR__ unsigned char
@@ -24,16 +23,13 @@ typedef __UNSIGNED__CHAR__ byte;
 }
 
 #define Main() int main()
-#define null '\0'
+#define null nullptr
 #define fun decltype(auto)
-#define Public public:
-#define Private private:
-#define Protected protected:
+#define pub private:public:
+#define priv public:private:
+#define prot private:protected:
 #define extends :public
-#define Println(x) Printer::println(x)
 #define import using namespace
-#define true true
-#define false false
-
+#define abstract
 
 #endif

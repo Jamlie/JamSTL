@@ -2,12 +2,14 @@
 
 #ifndef JAMSTL_BASICSTRING_H
 #define JAMSTL_BASICSTRING_H 1
+
 #include "Macros.h"
 #include "Math.h"
 #include "Object.h"
 #include "Iterator.h"
-#include <ostream>
-#include <istream>
+#include "Exception/NullPointerException.h"
+#include "Exception/StringIndexOutOfBoundsException.h"
+#include <cmath>
 #include <functional>
 
 JAMSTL_NAMESPACE_BEGIN
@@ -22,7 +24,7 @@ JAMSTL_NAMESPACE_BEGIN
         usize Length = 0;
 
         /**
-         * @brief Gets the length of a C style string.
+         * @brief Gets the length() of a C style string.
          *
          * @param str
          * @return usize
@@ -159,7 +161,7 @@ JAMSTL_NAMESPACE_BEGIN
          * @return char* 
          */
         char* stringCopy(char* Destination, String Source, usize Length) {
-            for(int i = 0; i < Length; i++) {
+            for(unsigned int i = 0; i < Length; i++) {
                 Destination[i] = Source[i];
             }
 
@@ -168,7 +170,6 @@ JAMSTL_NAMESPACE_BEGIN
 
 
         using _StringView = const String&;
-        friend class Float;
 
     public:
     
@@ -195,7 +196,14 @@ JAMSTL_NAMESPACE_BEGIN
             this->value[1] = '\0';
         }
 
-        String(const char* value, usize Length) {
+        String(String&& str) {
+            this->Length = str.Length;
+            this->value = str.value;
+            str.value = nullptr;
+            str.Length = 0;
+        } 
+
+        explicit String(const char* value, usize Length) {
             this->Length = Length;
             this->value = new char[this->Length + 1];
             for(usize i = 0; i < this->Length; i++) {
@@ -205,17 +213,12 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
         template<typename T>
-        String(const T& x) {
+        explicit String(const T& x) {
             String temp = "";
             temp.append(x);
             this->Length = temp.Length;
             this->value = temp.value;
         }
-
-        // template<typename T>
-        // String(const T& value) {
-        //     this->append(value);
-        // }
 
         ~String() {
             if(this->value != nullptr) {
@@ -229,29 +232,16 @@ JAMSTL_NAMESPACE_BEGIN
         * @brief The largest possible string
         * 
         */
-        static const usize LargeValue = -1;
+        static const unsigned LargeValue = -1;
 
         /**
         * @brief The Length of the string
         * 
         */
-        const usize& length = this->Length;
 
         operator char*() const {
             return this->value;
         }
-
-        /**
-         * @brief Get the Class Name object.
-         * 
-         * @return String 
-         */
-        // String getClassName() const {
-        //     String className = typeid(this).name();
-        //     className.erase(0, 11);
-        //     className.pop();
-        //     return className;
-        // }
 
         /**
          * @brief Copies characters from this string into the destination character
@@ -269,7 +259,7 @@ JAMSTL_NAMESPACE_BEGIN
             if(srcBegin < 0) {
                 srcBegin = 0;
             }
-            if(srcEnd > this->Length) {
+            if((unsigned int)srcEnd > this->Length) {
                 srcEnd = this->Length;
             }
             if(dstBegin < 0) {
@@ -279,6 +269,18 @@ JAMSTL_NAMESPACE_BEGIN
                 dst[j] = this->value[i];
             }
             dst[srcEnd - srcBegin] = '\0';
+        }
+        
+        /**
+         * @brief Returns the value of the string
+         * 
+         * @param beginIndex 
+         * @param endIndex 
+         * @return String 
+         */
+        String valueOf() const {
+            if(this->value == nullptr) throw NullPointerException();
+            return *this;
         }
 
         /**
@@ -318,6 +320,199 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
         /**
+         * @brief Returns the string representation of the {@code char} array
+         * argument or a const unsigned char. The contents of the character array are copied; 
+         * subsequent modification of the character array does not affect the returned
+         * string.
+         * 
+         * @param value 
+         * @return String 
+         */
+        static String valueOf(const unsigned char& value) {
+            return String(value);
+        }
+
+        /**
+         * @brief Returns the string representation of the {@code char} array
+         * argument or a unsigned short. The contents of the character array are copied; 
+         * subsequent modification of the character array does not affect the returned
+         * string.
+         * 
+         * @param value 
+         * @return String 
+         */
+        static String valueOf(const unsigned short& value) {
+            String str = "";
+            str.append(value);
+            return str;
+        }
+
+        /**
+         * @brief Returns the string representation of the {@code char} array
+         * argument or a unsigned int. The contents of the character array are copied; 
+         * subsequent modification of the character array does not affect the returned
+         * string.
+         * 
+         * @param value 
+         * @return String 
+         */
+        static String valueOf(const unsigned int& value) {
+            String str = "";
+            str.append(value);
+            return str;
+        }
+
+        /**
+         * @brief Returns the string representation of the {@code char} array
+         * argument or a unsigned long. The contents of the character array are copied; 
+         * subsequent modification of the character array does not affect the returned
+         * string.
+         * 
+         * @param value 
+         * @return String 
+         */
+        static String valueOf(const unsigned long& value) {
+            String str = "";
+            str.append(value);
+            return str;
+        }
+
+        /**
+         * @brief Returns the string representation of the {@code char} array
+         * argument or a unsigned long long. The contents of the character array are copied; 
+         * subsequent modification of the character array does not affect the returned
+         * string.
+         * 
+         * @param value 
+         * @return String 
+         */
+        static String valueOf(const unsigned long long& value) {
+            String str = "";
+            str.append(value);
+            return str;
+        }
+
+        /**
+         * @brief Returns the string representation of the {@code char} array
+         * argument or a short. The contents of the character array are copied; 
+         * subsequent modification of the character array does not affect the returned
+         * string.
+         * 
+         * @param value 
+         * @return String 
+         */
+        static String valueOf(const short& value) {
+            String str = "";
+            str.append(value);
+            return str;
+        }
+
+        /**
+         * @brief Returns the string representation of the {@code char} array
+         * argument or a int. The contents of the character array are copied; 
+         * subsequent modification of the character array does not affect the returned
+         * string.
+         * 
+         * @param value 
+         * @return String 
+         */
+        static String valueOf(const int& value) {
+            String str = "";
+            str.append(value);
+            return str;
+        }
+
+        /**
+         * @brief Returns the string representation of the {@code char} array
+         * argument or a long. The contents of the character array are copied; 
+         * subsequent modification of the character array does not affect the returned
+         * string.
+         * 
+         * @param value 
+         * @return String 
+         */
+        static String valueOf(const long& value) {
+            String str = "";
+            str.append(value);
+            return str;
+        }
+
+        /**
+         * @brief Returns the string representation of the {@code char} array
+         * argument or a long long. The contents of the character array are copied; 
+         * subsequent modification of the character array does not affect the returned
+         * string.
+         * 
+         * @param value 
+         * @return String 
+         */
+        static String valueOf(const long long& value) {
+            String str = "";
+            str.append(value);
+            return str;
+        }
+
+        /**
+         * @brief Returns the string representation of the {@code char} array
+         * argument or a float. The contents of the character array are copied; 
+         * subsequent modification of the character array does not affect the returned
+         * string.
+         * 
+         * @param value 
+         * @return String 
+         */
+        static String valueOf(const float& value) {
+            String str = "";
+            str.append(value);
+            return str;
+        }
+
+        /**
+         * @brief Returns the string representation of the {@code char} array
+         * argument or a double. The contents of the character array are copied; 
+         * subsequent modification of the character array does not affect the returned
+         * string.
+         * 
+         * @param value 
+         * @return String 
+         */
+        static String valueOf(const double& value) {
+            String str = "";
+            str.append(value);
+            return str;
+        }
+
+        /**
+         * @brief Returns the string representation of the {@code char} array
+         * argument or a long double. The contents of the character array are copied; 
+         * subsequent modification of the character array does not affect the returned
+         * string.
+         * 
+         * @param value 
+         * @return String 
+         */
+        static String valueOf(const long double& value) {
+            String str = "";
+            str.append(value);
+            return str;
+        }
+
+        /**
+         * @brief Returns the string representation of the {@code char} array
+         * argument or a bool. The contents of the character array are copied; 
+         * subsequent modification of the character array does not affect the returned
+         * string.
+         * 
+         * @param value 
+         * @return String 
+         */
+        static String valueOf(const bool& value) {
+            String str = "";
+            str.append(value);
+            return str;
+        }
+
+        /**
          * @brief Returns the string representation of any type, the contents of the
          * character array are copied; subsequent modification of the type does not affect
          * the returned string.
@@ -326,10 +521,10 @@ JAMSTL_NAMESPACE_BEGIN
          * @tparam Type
          * @return String 
          */
-        template<typename Type>
-        static String valueOf(Type value) {
+        template<class Type>
+        static String valueOf(const Type& value) {
             String str = "";
-            str = str + value;
+            str.append(value);
             return str;
         }
 
@@ -338,7 +533,7 @@ JAMSTL_NAMESPACE_BEGIN
         * 
         * @return usize 
         */
-        usize size() const {
+        usize length() const {
             return this->Length;
         }
 
@@ -376,6 +571,50 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
 
+        /**
+        * @brief A method that appends a string to the end of the string
+        * 
+        * @param other 
+        * @return String&
+        */
+        String& append(const unsigned char& other) {
+            usize newLength = this->Length + 1;
+            char* newValue = new char[newLength + 1];
+            for(usize i = 0; i <= this->Length; i++) {
+                newValue[i] = this->value[i];
+            }
+            for(usize i = this->Length; i <= newLength; i++) {
+                newValue[i] = other;
+            }
+            newValue[newLength] = '\0';
+            delete[] this->value;
+            this->value = newValue;
+            this->Length = newLength;
+            return *this;
+        }
+
+        /**
+        * @brief A method that appends a string to the end of the string
+        * 
+        * @param other 
+        * @return String&
+        */
+        String& append(const char& other) {
+            usize newLength = this->Length + 1;
+            char* newValue = new char[newLength + 1];
+            for(usize i = 0; i <= this->Length; i++) {
+                newValue[i] = this->value[i];
+            }
+            for(usize i = this->Length; i <= newLength; i++) {
+                newValue[i] = other;
+            }
+            newValue[newLength] = '\0';
+            delete[] this->value;
+            this->value = newValue;
+            this->Length = newLength;
+            return *this;
+        }
+
 
         /**
         * @brief A method that appends a string to the end of the string
@@ -384,6 +623,28 @@ JAMSTL_NAMESPACE_BEGIN
         * @return String&
         */
         String& append(const char* other) {
+            usize newLength = this->Length + stringLength(other);
+            char* newValue = new char[newLength + 1];
+            for(usize i = 0; i <= this->Length; i++) {
+                newValue[i] = this->value[i];
+            }
+            for(usize i = this->Length; i <= newLength; i++) {
+                newValue[i] = other[i - this->Length];
+            }
+            newValue[newLength] = '\0';
+            delete[] this->value;
+            this->value = newValue;
+            this->Length = newLength;
+            return *this;
+        }
+
+        /**
+        * @brief A method that appends a string to the end of the string
+        * 
+        * @param other 
+        * @return String&
+        */
+        String& append(char* other) {
             usize newLength = this->Length + stringLength(other);
             char* newValue = new char[newLength + 1];
             for(usize i = 0; i <= this->Length; i++) {
@@ -764,10 +1025,9 @@ JAMSTL_NAMESPACE_BEGIN
                 FNumber /= 10;
                 FNumber = Math.trunc(FNumber);
             }
-            str.reverse();
 
             // To check if the double value == int part
-            double checkFloat = Math.floor(floatNumber);
+            float checkFloat = Math.floor(floatNumber);
             if(floatNumber - checkFloat == 0) {
                 str.reverse();
                 str.append(".0");
@@ -775,6 +1035,7 @@ JAMSTL_NAMESPACE_BEGIN
                 return *this;
             }
 
+            str.reverse();
             // To turn the decimal part to string
             str.append(".");
             FNumber = Math.floor(floatNumber);
@@ -828,21 +1089,22 @@ JAMSTL_NAMESPACE_BEGIN
             // To turn the integer part to string
             long long mainDigits = Math.log10(DNumber) + 1;
             for(int i = 0; i < mainDigits; i++) {
-                str += (Math.fmod(DNumber, 10)) + '0';
+                str += (fmod(DNumber, 10)) + '0';
                 DNumber /= 10;
-                DNumber = Math.trunc(DNumber);
+                DNumber = Math.floor(DNumber);
             }
-            str.reverse();
 
             // To check if the double value == int part
             double checkDouble = Math.floor(doubleNumber);
             if(doubleNumber - checkDouble == 0) {
                 str.reverse();
                 str.append(".0");
+                if(this->value[0] == '0') { this->value[0] = '1'; this->append('0'); }
                 this->append(str);
                 return *this;
             }
 
+            str.reverse();
             // To turn the decimal part to string
             str.append(".");
             DNumber = Math.floor(doubleNumber);
@@ -857,7 +1119,7 @@ JAMSTL_NAMESPACE_BEGIN
 
             double number = Math.round(tempDouble);
             for(int i = 0; i < 5; i++) {
-                if(Math.fmod(number, 10) == 0) {
+                if(fmod(number, 10) == 0) {
                     number /= 10;
                     number = Math.round(number);
                 }
@@ -866,13 +1128,14 @@ JAMSTL_NAMESPACE_BEGIN
             String tempString = "";
             char tempCharacter;
             for(int i = 0; i < digits; i++) {
-                tempCharacter = Math.fmod(number, 10) + '0';
+                tempCharacter = fmod(number, 10) + '0';
                 tempString += tempCharacter;
                 number /= 10;
                 number = Math.round(number);
             }
             tempString.reverse();
             str += tempString;
+            if(this->value[0] == '0') { this->value[0] = '1'; this->append("0"); }
             this->append(str);
             return *this;
         }
@@ -945,7 +1208,36 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        
+        /**
+         * @brief A method that appends a bool to the end of the string
+         * 
+         * @param str
+         * @return String& 
+         */
+        String& append(const bool& boolean) {
+            if(boolean) {
+                this->append("true");
+                return *this;
+            }
+            this->append("false");
+            return *this;
+        }
+
+        /**
+         * @brief A method that appends an object to the end of the string
+         * 
+         * @tparam T 
+         * @param value 
+         * @return String& 
+         */
+        template<class T>
+        String& append(const T& value) {
+            String str = "";
+            str.append(value.valueOf());
+            this->append(str);
+            return *this;
+        }
+
 
         /**
         * @brief A method that makes a string empty
@@ -1244,7 +1536,7 @@ JAMSTL_NAMESPACE_BEGIN
         */
         char charAt(const usize& index) const {
             if(index > this->Length) {
-                throw;
+                throw StringIndexOutOfBoundsException();
             }
             return this->value[index];
         }
@@ -1553,10 +1845,11 @@ JAMSTL_NAMESPACE_BEGIN
         * @return bool
         */
         bool contains(_StringView other) const {
+            usize otherLength = other.Length;
             for(usize i = 0; i < this->Length; i++) {
                 if(this->value[i] == other.value[0]) {
                     bool found = true;
-                    for(usize j = 0; j < other.Length; j++) {
+                    for(usize j = 0; j < otherLength; j++) {
                         if(this->value[i + j] != other.value[j]) {
                             found = false;
                             break;
@@ -1664,7 +1957,7 @@ JAMSTL_NAMESPACE_BEGIN
             String* array = new String[this->Length];
             usize index = 0;
             for(usize i = 0; i < this->Length; i++) {
-                if(this->value[i] == ' ') {
+                if(this->value[i] == ' ' && this->value[i + 1] != ' ') {
                     index++;
                 } else {
                     array[index] += this->value[i];
@@ -1677,7 +1970,7 @@ JAMSTL_NAMESPACE_BEGIN
         usize numberOfWords() {
             usize size = 0;
             for(usize i = 0; i < this->Length; i++) {
-                if(this->value[i] == ' ') {
+                if(this->value[i] == ' ' && this->value[i + 1] != ' ') {
                     size++;
                 }
             }
@@ -1804,6 +2097,13 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
+        /**
+         * @brief A method that replaces a substring in a string with another substring.
+         * 
+         * @param old 
+         * @param newValue 
+         * @return String& 
+         */
         String& replaceAll(_StringView old, _StringView newValue) {
             usize oldLength = old.Length;
             usize newLength = newValue.Length;
@@ -1877,6 +2177,13 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
+        /**
+         * @brief A method that replaces the first substring with another string.
+         * 
+         * @param old 
+         * @param newValue 
+         * @return String& 
+         */
         String& replaceFirst(_StringView old, _StringView newValue) {
             usize oldLength = old.Length;
             usize newLength = newValue.Length;
@@ -1902,7 +2209,8 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
         /**
-        * @brief A method that replaces a substring in a string with another substring.
+        * @brief A method that replaces an exact string - by converting the string to an
+        * array wherever a space is with - another string
         * 
         * @param old 
         * @param newString 
@@ -1940,34 +2248,601 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
+
+        /**
+         * @brief default format method
+         * 
+         * @return String 
+         */
         String format() {
             return *this;
         }
 
-        template<class T, class... Y>
-        String format(const T& value, Y... values) {
+        /**
+         * @brief A method that formats a string wherever '${}' is located with a short
+         * 
+         * @tparam Y 
+         * @param value 
+         * @param values 
+         * @return String 
+         */
+        template<class... Y>
+        String format(const short& value, Y... values) {
             _StringView old = "{}";
             if(!this->contains(old.value)) return *this;
             String newString = "";
             newString.append(value);
             String prefix = "";
             String temp = *this;
-            usize size = newString.size();
-            usize oldSize = old.size();
+            usize size = newString.length();
+            usize oldSize = old.length();
             if(size == 0) return *this;
             if(oldSize == 0) return *this;
-            char ch = old[0];
             int index = -1;
-            for(usize i = 1; i < temp.size() - 1; i++) {
+            for(usize i = 1; i < temp.length() - 1; i++) {
                 if(temp.value[i - 1] == '$' && temp.value[i] == '{' && temp.value[i + 1] == '}')
                     { index = i - 1; temp.pop(i - 1); break; }
             }
             if(index == -1) return *this;
-            usize lastIndex = old.size() + index;
+            usize lastIndex = old.length() + index;
 
             prefix = temp.substring(0, index);
             prefix.append(newString);
-            String suffix = temp.substring(lastIndex, temp.length);
+            String suffix = temp.substring(lastIndex, temp.length());
+            prefix.append(suffix);
+            temp = prefix;
+            if(temp.contains(old.value)) temp = temp.format(values...);
+            return temp;
+        }
+        
+        /**
+         * @brief A method that formats a string wherever '${}' is located with an
+         * unsigned short
+         * 
+         * @tparam Y 
+         * @param value 
+         * @param values 
+         * @return String 
+         */
+        template<class... Y>
+        String format(const unsigned short& value, Y... values) {
+            _StringView old = "{}";
+            if(!this->contains(old.value)) return *this;
+            String newString = "";
+            newString.append(value);
+            String prefix = "";
+            String temp = *this;
+            usize size = newString.length();
+            usize oldSize = old.length();
+            if(size == 0) return *this;
+            if(oldSize == 0) return *this;
+            int index = -1;
+            for(usize i = 1; i < temp.length() - 1; i++) {
+                if(temp.value[i - 1] == '$' && temp.value[i] == '{' && temp.value[i + 1] == '}')
+                    { index = i - 1; temp.pop(i - 1); break; }
+            }
+            if(index == -1) return *this;
+            usize lastIndex = old.length() + index;
+
+            prefix = temp.substring(0, index);
+            prefix.append(newString);
+            String suffix = temp.substring(lastIndex, temp.length());
+            prefix.append(suffix);
+            temp = prefix;
+            if(temp.contains(old.value)) temp = temp.format(values...);
+            return temp;
+        }
+        
+        /**
+         * @brief A method that formats a string wherever '${}' is located with a char
+         * 
+         * @tparam Y 
+         * @param value 
+         * @param values 
+         * @return String 
+         */
+        template<class... Y>
+        String format(const char& value, Y... values) {
+            _StringView old = "{}";
+            if(!this->contains(old.value)) return *this;
+            String newString = "";
+            newString.append(value);
+            String prefix = "";
+            String temp = *this;
+            usize size = newString.length();
+            usize oldSize = old.length();
+            if(size == 0) return *this;
+            if(oldSize == 0) return *this;
+            int index = -1;
+            for(usize i = 1; i < temp.length() - 1; i++) {
+                if(temp.value[i - 1] == '$' && temp.value[i] == '{' && temp.value[i + 1] == '}')
+                    { index = i - 1; temp.pop(i - 1); break; }
+            }
+            if(index == -1) return *this;
+            usize lastIndex = old.length() + index;
+
+            prefix = temp.substring(0, index);
+            prefix.append(newString);
+            String suffix = temp.substring(lastIndex, temp.length());
+            prefix.append(suffix);
+            temp = prefix;
+            if(temp.contains(old.value)) temp = temp.format(values...);
+            return temp;
+        }
+        
+        /**
+         * @brief A method that formats a string wherever '${}' is located with a byte
+         * 
+         * @tparam Y 
+         * @param value 
+         * @param values 
+         * @return String 
+         */
+        template<class... Y>
+        String format(const unsigned char& value, Y... values) {
+            _StringView old = "{}";
+            if(!this->contains(old.value)) return *this;
+            String newString = "";
+            newString.append(value);
+            String prefix = "";
+            String temp = *this;
+            usize size = newString.length();
+            usize oldSize = old.length();
+            if(size == 0) return *this;
+            if(oldSize == 0) return *this;
+            int index = -1;
+            for(usize i = 1; i < temp.length() - 1; i++) {
+                if(temp.value[i - 1] == '$' && temp.value[i] == '{' && temp.value[i + 1] == '}')
+                    { index = i - 1; temp.pop(i - 1); break; }
+            }
+            if(index == -1) return *this;
+            usize lastIndex = old.length() + index;
+
+            prefix = temp.substring(0, index);
+            prefix.append(newString);
+            String suffix = temp.substring(lastIndex, temp.length());
+            prefix.append(suffix);
+            temp = prefix;
+            if(temp.contains(old.value)) temp = temp.format(values...);
+            return temp;
+        }
+        
+        /**
+         * @brief A method that formats a string wherever '${}' is located with a const char*
+         * 
+         * @tparam Y 
+         * @param value 
+         * @param values 
+         * @return String 
+         */
+        template<class... Y>
+        String format(const char* value, Y... values) {
+            _StringView old = "{}";
+            if(!this->contains(old.value)) return *this;
+            String newString = "";
+            newString.append(value);
+            String prefix = "";
+            String temp = *this;
+            usize size = newString.length();
+            usize oldSize = old.length();
+            if(size == 0) return *this;
+            if(oldSize == 0) return *this;
+            int index = -1;
+            for(usize i = 1; i < temp.length() - 1; i++) {
+                if(temp.value[i - 1] == '$' && temp.value[i] == '{' && temp.value[i + 1] == '}')
+                    { index = i - 1; temp.pop(i - 1); break; }
+            }
+            if(index == -1) return *this;
+            usize lastIndex = old.length() + index;
+
+            prefix = temp.substring(0, index);
+            prefix.append(newString);
+            String suffix = temp.substring(lastIndex, temp.length());
+            prefix.append(suffix);
+            temp = prefix;
+            if(temp.contains(old.value)) temp = temp.format(values...);
+            return temp;
+        }
+        
+        /**
+         * @brief A method that formats a string wherever '${}' is located with an int
+         * 
+         * @tparam Y 
+         * @param value 
+         * @param values 
+         * @return String 
+         */
+        template<class... Y>
+        String format(const int& value, Y... values) {
+            _StringView old = "{}";
+            if(!this->contains(old.value)) return *this;
+            String newString = "";
+            newString.append(value);
+            String prefix = "";
+            String temp = *this;
+            usize size = newString.length();
+            usize oldSize = old.length();
+            if(size == 0) return *this;
+            if(oldSize == 0) return *this;
+            int index = -1;
+            for(usize i = 1; i < temp.length() - 1; i++) {
+                if(temp.value[i - 1] == '$' && temp.value[i] == '{' && temp.value[i + 1] == '}')
+                    { index = i - 1; temp.pop(i - 1); break; }
+            }
+            if(index == -1) return *this;
+            usize lastIndex = old.length() + index;
+
+            prefix = temp.substring(0, index);
+            prefix.append(newString);
+            String suffix = temp.substring(lastIndex, temp.length());
+            prefix.append(suffix);
+            temp = prefix;
+            if(temp.contains(old.value)) temp = temp.format(values...);
+            return temp;
+        }
+        
+        /**
+         * @brief A method that formats a string wherever '${}' is located with 
+         * an unsigned int
+         * 
+         * @tparam Y 
+         * @param value 
+         * @param values 
+         * @return String 
+         */
+        template<class... Y>
+        String format(const unsigned& value, Y... values) {
+            _StringView old = "{}";
+            if(!this->contains(old.value)) return *this;
+            String newString = "";
+            newString.append(value);
+            String prefix = "";
+            String temp = *this;
+            usize size = newString.length();
+            usize oldSize = old.length();
+            if(size == 0) return *this;
+            if(oldSize == 0) return *this;
+            int index = -1;
+            for(usize i = 1; i < temp.length() - 1; i++) {
+                if(temp.value[i - 1] == '$' && temp.value[i] == '{' && temp.value[i + 1] == '}')
+                    { index = i - 1; temp.pop(i - 1); break; }
+            }
+            if(index == -1) return *this;
+            usize lastIndex = old.length() + index;
+
+            prefix = temp.substring(0, index);
+            prefix.append(newString);
+            String suffix = temp.substring(lastIndex, temp.length());
+            prefix.append(suffix);
+            temp = prefix;
+            if(temp.contains(old.value)) temp = temp.format(values...);
+            return temp;
+        }
+
+        /**
+         * @brief A method that formats a string wherever '${}' is located with a long
+         * 
+         * @tparam Y 
+         * @param value 
+         * @param values 
+         * @return String 
+         */
+        template<class... Y>
+        String format(const long& value, Y... values) {
+            _StringView old = "{}";
+            if(!this->contains(old.value)) return *this;
+            String newString = "";
+            newString.append(value);
+            String prefix = "";
+            String temp = *this;
+            usize size = newString.length();
+            usize oldSize = old.length();
+            if(size == 0) return *this;
+            if(oldSize == 0) return *this;
+            int index = -1;
+            for(usize i = 1; i < temp.length() - 1; i++) {
+                if(temp.value[i - 1] == '$' && temp.value[i] == '{' && temp.value[i + 1] == '}')
+                    { index = i - 1; temp.pop(i - 1); break; }
+            }
+            if(index == -1) return *this;
+            usize lastIndex = old.length() + index;
+
+            prefix = temp.substring(0, index);
+            prefix.append(newString);
+            String suffix = temp.substring(lastIndex, temp.length());
+            prefix.append(suffix);
+            temp = prefix;
+            if(temp.contains(old.value)) temp = temp.format(values...);
+            return temp;
+        }
+
+        /**
+         * @brief A method that formats a string wherever '${}' is located with an
+         * unsigned long
+         * 
+         * @tparam Y 
+         * @param value 
+         * @param values 
+         * @return String 
+         */
+        template<class... Y>
+        String format(const unsigned long& value, Y... values) {
+            _StringView old = "{}";
+            if(!this->contains(old.value)) return *this;
+            String newString = "";
+            newString.append(value);
+            String prefix = "";
+            String temp = *this;
+            usize size = newString.length();
+            usize oldSize = old.length();
+            if(size == 0) return *this;
+            if(oldSize == 0) return *this;
+            int index = -1;
+            for(usize i = 1; i < temp.length() - 1; i++) {
+                if(temp.value[i - 1] == '$' && temp.value[i] == '{' && temp.value[i + 1] == '}')
+                    { index = i - 1; temp.pop(i - 1); break; }
+            }
+            if(index == -1) return *this;
+            usize lastIndex = old.length() + index;
+
+            prefix = temp.substring(0, index);
+            prefix.append(newString);
+            String suffix = temp.substring(lastIndex, temp.length());
+            prefix.append(suffix);
+            temp = prefix;
+            if(temp.contains(old.value)) temp = temp.format(values...);
+            return temp;
+        }
+
+        /**
+         * @brief A method that formats a string wherever '${}' is located with a long long
+         * 
+         * @tparam Y 
+         * @param value 
+         * @param values 
+         * @return String 
+         */
+        template<class... Y>
+        String format(const long long& value, Y... values) {
+            _StringView old = "{}";
+            if(!this->contains(old.value)) return *this;
+            String newString = "";
+            newString.append(value);
+            String prefix = "";
+            String temp = *this;
+            usize size = newString.length();
+            usize oldSize = old.length();
+            if(size == 0) return *this;
+            if(oldSize == 0) return *this;
+            int index = -1;
+            for(usize i = 1; i < temp.length() - 1; i++) {
+                if(temp.value[i - 1] == '$' && temp.value[i] == '{' && temp.value[i + 1] == '}')
+                    { index = i - 1; temp.pop(i - 1); break; }
+            }
+            if(index == -1) return *this;
+            usize lastIndex = old.length() + index;
+
+            prefix = temp.substring(0, index);
+            prefix.append(newString);
+            String suffix = temp.substring(lastIndex, temp.length());
+            prefix.append(suffix);
+            temp = prefix;
+            if(temp.contains(old.value)) temp = temp.format(values...);
+            return temp;
+        }
+   
+        /**
+         * @brief A method that formats a string wherever '${}' is located with an
+         * unsigned long long
+         * 
+         * @tparam Y 
+         * @param value 
+         * @param values 
+         * @return String 
+         */
+        template<class... Y>
+        String format(const unsigned long long& value, Y... values) {
+            _StringView old = "{}";
+            if(!this->contains(old.value)) return *this;
+            String newString = "";
+            newString.append(value);
+            String prefix = "";
+            String temp = *this;
+            usize size = newString.length();
+            usize oldSize = old.length();
+            if(size == 0) return *this;
+            if(oldSize == 0) return *this;
+            int index = -1;
+            for(usize i = 1; i < temp.length() - 1; i++) {
+                if(temp.value[i - 1] == '$' && temp.value[i] == '{' && temp.value[i + 1] == '}')
+                    { index = i - 1; temp.pop(i - 1); break; }
+            }
+            if(index == -1) return *this;
+            usize lastIndex = old.length() + index;
+
+            prefix = temp.substring(0, index);
+            prefix.append(newString);
+            String suffix = temp.substring(lastIndex, temp.length());
+            prefix.append(suffix);
+            temp = prefix;
+            if(temp.contains(old.value)) temp = temp.format(values...);
+            return temp;
+        }
+
+        /**
+         * @brief A method that formats a string wherever '${}' is located with a float
+         * 
+         * @tparam Y 
+         * @param value 
+         * @param values 
+         * @return String 
+         */
+        template<class... Y>
+        String format(const float& value, Y... values) {
+            _StringView old = "{}";
+            if(!this->contains(old.value)) return *this;
+            String newString = "";
+            newString.append(value);
+            String prefix = "";
+            String temp = *this;
+            usize size = newString.length();
+            usize oldSize = old.length();
+            if(size == 0) return *this;
+            if(oldSize == 0) return *this;
+            int index = -1;
+            for(usize i = 1; i < temp.length() - 1; i++) {
+                if(temp.value[i - 1] == '$' && temp.value[i] == '{' && temp.value[i + 1] == '}')
+                    { index = i - 1; temp.pop(i - 1); break; }
+            }
+            if(index == -1) return *this;
+            usize lastIndex = old.length() + index;
+
+            prefix = temp.substring(0, index);
+            prefix.append(newString);
+            String suffix = temp.substring(lastIndex, temp.length());
+            prefix.append(suffix);
+            temp = prefix;
+            if(temp.contains(old.value)) temp = temp.format(values...);
+            return temp;
+        }
+ 
+        /**
+         * @brief A method that formats a string wherever '${}' is located with a double
+         * 
+         * @tparam Y 
+         * @param value 
+         * @param values 
+         * @return String 
+         */
+        template<class... Y>
+        String format(const double& value, Y... values) {
+            _StringView old = "{}";
+            if(!this->contains(old.value)) return *this;
+            String newString = "";
+            newString.append(value);
+            String prefix = "";
+            String temp = *this;
+            usize size = newString.length();
+            usize oldSize = old.length();
+            if(size == 0) return *this;
+            if(oldSize == 0) return *this;
+            int index = -1;
+            for(usize i = 1; i < temp.length() - 1; i++) {
+                if(temp.value[i - 1] == '$' && temp.value[i] == '{' && temp.value[i + 1] == '}')
+                    { index = i - 1; temp.pop(i - 1); break; }
+            }
+            if(index == -1) return *this;
+            usize lastIndex = old.length() + index;
+
+            prefix = temp.substring(0, index);
+            prefix.append(newString);
+            String suffix = temp.substring(lastIndex, temp.length());
+            prefix.append(suffix);
+            temp = prefix;
+            if(temp.contains(old.value)) temp = temp.format(values...);
+            return temp;
+        }
+ 
+        /**
+         * @brief A method that formats a string wherever '${}' is located with a
+         * long double
+         * 
+         * @tparam Y 
+         * @param value 
+         * @param values 
+         * @return String 
+         */
+        template<class... Y>
+        String format(const long double& value, Y... values) {
+            _StringView old = "{}";
+            if(!this->contains(old.value)) return *this;
+            String newString = "";
+            newString.append(value);
+            String prefix = "";
+            String temp = *this;
+            usize size = newString.length();
+            usize oldSize = old.length();
+            if(size == 0) return *this;
+            if(oldSize == 0) return *this;
+            int index = -1;
+            for(usize i = 1; i < temp.length() - 1; i++) {
+                if(temp.value[i - 1] == '$' && temp.value[i] == '{' && temp.value[i + 1] == '}')
+                    { index = i - 1; temp.pop(i - 1); break; }
+            }
+            if(index == -1) return *this;
+            usize lastIndex = old.length() + index;
+
+            prefix = temp.substring(0, index);
+            prefix.append(newString);
+            String suffix = temp.substring(lastIndex, temp.length());
+            prefix.append(suffix);
+            temp = prefix;
+            if(temp.contains(old.value)) temp = temp.format(values...);
+            return temp;
+        }
+ 
+        template<class... Y>
+        String format(const bool& value, Y...values) {
+            _StringView old = "{}";
+            if(!this->contains(old.value)) return *this;
+            String newString = "";
+            newString.append(value);
+            String prefix = "";
+            String temp = *this;
+            usize size = newString.length();
+            usize oldSize = old.length();
+            if(size == 0) return *this;
+            if(oldSize == 0) return *this;
+            int index = -1;
+            for(usize i = 1; i < temp.length() - 1; i++) {
+                if(temp.value[i - 1] == '$' && temp.value[i] == '{' && temp.value[i + 1] == '}')
+                    { index = i - 1; temp.pop(i - 1); break; }
+            }
+            if(index == -1) return *this;
+            usize lastIndex = old.length() + index;
+
+            prefix = temp.substring(0, index);
+            prefix.append(newString);
+            String suffix = temp.substring(lastIndex, temp.length());
+            prefix.append(suffix);
+            temp = prefix;
+            if(temp.contains(old.value)) temp = temp.format(values...);
+            return temp;
+        }
+
+        /**
+         * @brief A method that formats a string wherever '${}' is located with any object
+         * that has a 'valueOf()' method
+         * 
+         * @tparam T 
+         * @tparam Y 
+         * @param value 
+         * @param values 
+         * @return String 
+         */
+        template<class T, class... Y>
+        String format(const T& value, Y... values) {
+            _StringView old = "{}";
+            if(!this->contains(old.value)) return *this;
+            String newString = "";
+            newString.append(value.valueOf());
+            String prefix = "";
+            String temp = *this;
+            usize size = newString.length();
+            usize oldSize = old.length();
+            if(size == 0) return *this;
+            if(oldSize == 0) return *this;
+            int index = -1;
+            for(usize i = 1; i < temp.length() - 1; i++) {
+                if(temp.value[i - 1] == '$' && temp.value[i] == '{' && temp.value[i + 1] == '}')
+                    { index = i - 1; temp.pop(i - 1); break; }
+            }
+            if(index == -1) return *this;
+            usize lastIndex = old.length() + index;
+
+            prefix = temp.substring(0, index);
+            prefix.append(newString);
+            String suffix = temp.substring(lastIndex, temp.length());
             prefix.append(suffix);
             temp = prefix;
             if(temp.contains(old.value)) temp = temp.format(values...);
@@ -2094,6 +2969,13 @@ JAMSTL_NAMESPACE_BEGIN
                 }
             }
             return true;
+        }
+
+        bool equals(const Object& other) const override {
+            if(Object::instanceOf<String>(&other)) {
+                return this->equals(*((String*)&other));
+            }
+            return false;
         }
 
         /**
@@ -2349,6 +3231,21 @@ JAMSTL_NAMESPACE_BEGIN
         */
         bool isNumeric() const {
             for(usize i = 0; i < this->Length; i++) {
+                if(!isdigit(this->value[i])) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /**
+         * @brief A method that checks if all the characters in a string are alphabet or numeric
+         * 
+         * @return true 
+         * @return false 
+         */
+        bool isAlphabetOrNumeric() const {
+            for(usize i = 0; i < this->Length; i++) {
                 if(!isalnum(this->value[i])) {
                     return false;
                 }
@@ -2468,7 +3365,7 @@ JAMSTL_NAMESPACE_BEGIN
         * 
         * @return const char* 
         */
-        const char* cString() {
+        const char* constCharString() {
             char* cString = new char[this->Length + 1];
             for(usize i = 0; i < this->Length; i++) {
                 cString[i] = this->value[i];
@@ -2485,7 +3382,7 @@ JAMSTL_NAMESPACE_BEGIN
         * 
         * @return char* 
         */
-        char* c_string() {
+        char* charString() {
             char* cString = new char[this->Length + 1];
             for(usize i = 0; i < this->Length; i++) {
                 cString[i] = this->value[i];
@@ -2680,6 +3577,20 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
+        String& operator=(String&& other) {
+            this->Length = other.Length;
+            this->value = other.value;
+            other.value = nullptr;
+            return *this;
+        }
+
+        // operator= nullptr
+        String& operator=(std::nullptr_t) {
+            this->Length = 0;
+            this->value = new char[1];
+            this->value[0] = '\0';
+            return *this;
+        }
 
 
         String& operator+=(const char* value) {
@@ -2700,17 +3611,14 @@ JAMSTL_NAMESPACE_BEGIN
 
         String& operator+=(_StringView other) {
             usize newLength = this->Length + other.Length;
-            char* newValue = new char[newLength + 1];
+            String newValue = "";
             for(usize i = 0; i < this->Length; i++) {
-                newValue[i] = this->value[i];
+                newValue += this->value[i];
             }
             for(usize i = this->Length; i < newLength; i++) {
-                newValue[i] = other.value[i - this->Length];
+                newValue += other.value[i - this->Length];
             }
-            newValue[newLength] = '\0';
-            delete[] this->value;
-            this->value = newValue;
-            this->Length = newLength;
+            *this = newValue;
             return *this;
         }
 
@@ -3012,6 +3920,8 @@ JAMSTL_NAMESPACE_BEGIN
             this->append(str);
             return *this;
         }
+
+
 
 
 
@@ -3451,7 +4361,12 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-
+        template<typename T>
+        String operator+(const T& other) {
+            String str = *this;
+            str = str + other.valueOf();
+            return str;
+        }
 
         String operator*(usize times) const {
             String result = *this;
@@ -3472,7 +4387,7 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
         bool operator==(const char& other) const {
-            return (this->length == 1) ? (this->value[0] == other) : false;
+            return (this->length() == 1) ? (this->value[0] == other) : false;
         }
 
 
@@ -3614,25 +4529,8 @@ JAMSTL_NAMESPACE_BEGIN
             this->value = newValue;
             return result;
         }
+        
 
-
-
-        friend std::ostream& operator<<(std::ostream& out, _StringView string) {
-            out << string.value;
-            return out;
-        }
-
-        friend std::istream& operator>>(std::istream& in, String& string) {
-            string.reAllocate(0);
-            char c;
-            while (in.get(c)) {
-                if(c == '\n') {
-                    break;
-                }
-                string += c;
-            }
-            return in;
-        }
 
         friend String operator+(const char* string, _StringView other) {
             String result = string;

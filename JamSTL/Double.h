@@ -3,12 +3,9 @@
 #ifndef JAMSTL_DOUBLE_H
 #define JAMSTL_DOUBLE_H 1
 #include "Macros.h"
-#include "BasicString.h"
+#include "String.h"
 #include "Math.h"
 #include "Object.h"
-#include <ostream>
-#include <istream>
-#include <cstring>
 
 JAMSTL_NAMESPACE_BEGIN
 
@@ -22,7 +19,6 @@ JAMSTL_NAMESPACE_BEGIN
 
         double readFractions(String string, int start, int end, double &division) {
             double fractions = 0;
-            int j;
             int Count = 0;
             for (int k = start; string[k] != '\0'; k++) {
                 if (string[start] == '0' && string[k] == '0') Count++;
@@ -40,7 +36,7 @@ JAMSTL_NAMESPACE_BEGIN
 
         double toDouble(String string) {
             double ToDouble = 0, division = 1;
-            usize Length = string.length;
+            usize Length = string.length();
             int i = 0;
 
             for (i = 0; string[i] != '\0'; i++) {
@@ -63,6 +59,14 @@ JAMSTL_NAMESPACE_BEGIN
             if (ToDouble - (long long)ToDouble == 0) return ToDouble - 1;
             return ToDouble;
         }
+
+        static void* memoryCopy(void* dest, const void* src, usize n) {
+            char* d = (char*)dest;
+            const char* s = (const char*)src;
+            while (n--) *d++ = *s++;
+            return dest;
+        }
+
 
     public:
         Double() : value(0) {}
@@ -123,7 +127,7 @@ JAMSTL_NAMESPACE_BEGIN
          */
         static long long doubleToRawLongBits(double bits) {
             long long result = 0;
-            memcpy(&result, &bits, sizeof(double));
+            memoryCopy(&result, &bits, sizeof(double));
             return result;
         }
 
@@ -135,7 +139,7 @@ JAMSTL_NAMESPACE_BEGIN
          */
         static double longBitsToDouble(long long bits) {
             double result = 0;
-            memcpy(&result, &bits, sizeof(double));
+            memoryCopy(&result, &bits, sizeof(double));
             return result;
         }
 
@@ -582,19 +586,6 @@ JAMSTL_NAMESPACE_BEGIN
 
         double getValue() const {
             return this->value;
-        }
-
-
-
-
-        friend std::ostream& operator<<(std::ostream& out, const Double& floatNum) {
-            out << floatNum.value;
-            return out;
-        }
-
-        friend std::istream& operator>>(std::istream& in, Double& floatNum) {
-            in >> floatNum.value;
-            return in;
         }
 
     };

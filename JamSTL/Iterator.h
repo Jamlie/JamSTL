@@ -28,28 +28,6 @@ JAMSTL_NAMESPACE_BEGIN
         typedef _Reference_ reference;
     };
 
-#if __cplusplus >= 201103L
-    template<typename _Iterator, typename = type_traits::voidT<>>
-    struct iteratorTraits {};
-
-    template<typename _Iterator>
-    struct iteratorTraits<_Iterator,
-            type_traits::voidT<typename _Iterator::iteratorCategory,
-                    typename _Iterator::valueType,
-                    typename _Iterator::differenceType,
-                    typename _Iterator::pointer,
-                    typename _Iterator::reference>> {
-        typedef typename _Iterator::iteratorCategory    iteratorCategory;
-        typedef typename _Iterator::valueType           valueType;
-        typedef typename _Iterator::differenceType      differenceType;
-        typedef typename _Iterator::pointer             pointer;
-        typedef typename _Iterator::reference           reference;
-    };
-
-    template<typename _Iterator>
-    struct IteratorTraits extends iteratorTraits<_Iterator> {};
-
-#else
     template<typename _Iterator>
     struct IteratorTraits {
         typedef typename _Iterator::iteratorCategory    iteratorCategory;
@@ -58,10 +36,9 @@ JAMSTL_NAMESPACE_BEGIN
         typedef typename _Iterator::pointer             pointer;
         typedef typename _Iterator::reference           reference;
     };
-#endif
 
     template<typename _Tp_>
-    struct iteratorTraits<_Tp_*> {
+    struct iteratorTraits {
         typedef RandomAccessIteratorTag     iteratorCategory;
         typedef _Tp_                        valueType;
         typedef long                        differenceType;
@@ -84,7 +61,6 @@ JAMSTL_NAMESPACE_BEGIN
         return typename IteratorTraits<_Iter>::iteratorCategory();
     }
 
-#if __cplusplus < 201103L
     template<typename _Iterator, bool _HasBase>
     struct _Iter_base {
         typedef _Iterator iteratorType;
@@ -96,14 +72,6 @@ JAMSTL_NAMESPACE_BEGIN
         typedef typename _Iterator::iteratorType iteratorType;
         static iteratorType _S_base(_Iterator __it) { return __it.base(); }
     };
-#endif
-
-#if __cplusplus >= 201103L
-    template<typename _InIter>
-    using RequireInputIterator = typename type_traits::enableIf<
-            type_traits::isConvertible<typename 
-                IteratorTraits<_InIter>::iteratorCategory, InputIteratorTag>::value>::type;
-#endif
 
 
 JAMSTL_NAMESPACE_END

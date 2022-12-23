@@ -2,10 +2,9 @@
 
 #ifndef JAMSTL_BOOLEAN_H
 #define JAMSTL_BOOLEAN_H 1
-#include <ostream>
-#include <istream>
 #include "Macros.h"
 #include "Object.h"
+#include "String.h"
 
 JAMSTL_NAMESPACE_BEGIN
 
@@ -23,7 +22,7 @@ JAMSTL_NAMESPACE_BEGIN
         Boolean(const Boolean& other) : value(other.value) {}
         Boolean(Boolean&& other) noexcept : value(other.value) {}
         Boolean(const char* trueOfFalse) {
-            if(trueOfFalse == "false") {
+            if(String(trueOfFalse) == String("false")) {
                 value = false;
             } else {
                 value = true;
@@ -73,7 +72,7 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
         Boolean& operator=(const char* trueOrFalse) {
-            if(trueOrFalse == "false") this->value = false;
+            if(String(trueOrFalse) == String("false")) this->value = false;
             else this->value = true;
             return *this;
         }
@@ -90,7 +89,7 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
         bool operator==(const char* other) const {
-            return this->value == (other == "true");
+            return this->value == (String(other) == String("true"));
         }
 
 
@@ -104,21 +103,6 @@ JAMSTL_NAMESPACE_BEGIN
             return this->value != other;
         }
 
-
-
-        friend std::ostream& operator<<(std::ostream& out, const Boolean& boolean) {
-            if(boolean.value) {
-                out << "true";
-                return out;
-            }
-            out << "false";
-            return out;
-        }
-
-        friend std::istream& operator>>(std::istream& in, Boolean& boolean) {
-            in >> boolean.value;
-            return in;
-        }
     };
 
 

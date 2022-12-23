@@ -3,9 +3,8 @@
 #ifndef JAMSTL_LONG_H
 #define JAMSTL_LONG_H 1
 #include "Macros.h"
-#include "BasicString.h"
-#include <ostream>
-#include <istream>
+#include "String.h"
+#include "Object.h"
 
 JAMSTL_NAMESPACE_BEGIN
 
@@ -104,6 +103,8 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
+
+
         /**
          * @brief A method that returns the number of digits of a given Long
          * 
@@ -119,8 +120,23 @@ JAMSTL_NAMESPACE_BEGIN
             return length;
         }
 
+        /**
+         * @brief Gets the hash code of a Long
+         * 
+         * @param value 
+         * @return int 
+         */
         static int hashCode(long long value) {
             return (int)(value ^ (value >> 32));
+        }
+
+        /**
+         * @brief Gets the long long value
+         * 
+         * @return long long 
+         */
+        long long valueOf() const {
+            return value;
         }
 
 
@@ -684,17 +700,6 @@ JAMSTL_NAMESPACE_BEGIN
             return this->value;
         }
 
-
-
-        friend std::ostream& operator<<(std::ostream& os, const Long& longLong) {
-            os << longLong.value;
-            return os;
-        }
-
-        friend std::istream& operator>>(std::istream& is, Long& longLong) {
-            is >> longLong.value;
-            return is;
-        }
     };
 
 

@@ -133,7 +133,7 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
         char* stringCopy(char* Destination, InnerString Source, usize Length) {
-            for(int i = 0; i < Length; i++) {
+            for(unsigned int i = 0; i < Length; i++) {
                 Destination[i] = Source[i];
             }
 
@@ -249,7 +249,7 @@ JAMSTL_NAMESPACE_BEGIN
             if(srcBegin < 0) {
                 srcBegin = 0;
             }
-            if(srcEnd > this->Length) {
+            if((usize)srcEnd > this->Length) {
                 srcEnd = this->Length;
             }
             if(dstBegin < 0) {
@@ -279,6 +279,10 @@ JAMSTL_NAMESPACE_BEGIN
             InnerString str = "";
             str = str + value;
             return str;
+        }
+
+        const char* valueOf() const {
+            return this->value;
         }
 
         /**
@@ -1610,7 +1614,7 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        InnerString& replace(usize start, usize end, const InnerString& newString) {
+        InnerString& replace(usize start, usize end) {
             if(start > end) {
                 usize temp = start;
                 start = end;

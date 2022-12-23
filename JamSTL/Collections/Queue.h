@@ -78,7 +78,7 @@ JAMSTL_NAMESPACE_BEGIN
         void push(T&& value) {
             if(Size > capacity) reAllocate(capacity + capacity / 2);
 
-            queue[Size] = move(value);
+            queue[Size] = jamstl::type_traits::move(value);
             Size++;       
         }
 
