@@ -5,6 +5,7 @@
 #include "../Macros.h"
 #include "../Object.h"
 #include "../String.h"
+#include "../Collections/Pair.h"
 #include "../Collections/HashMap.h"
 
 JAMSTL_NAMESPACE_BEGIN
@@ -202,6 +203,10 @@ JAMSTL_NAMESPACE_BEGIN
             }
 
 
+            T& operator*() {
+                return *ptr;
+            }
+
             const T& operator*() const {
                 return *ptr;
             }
@@ -214,10 +219,32 @@ JAMSTL_NAMESPACE_BEGIN
                 return ptr[index];
             }
 
+            void printRefCount() const {
+                for(int i = 0; i < refCount.size(); i++) {
+                    std::cout << refCount.getKey(i) << " : " << refCount.getValue(i) << std::endl;
+                }
+            }
 
+            bool equals(const Object& obj) const override {
+                if(Object::instanceof<Reference<T>>(&obj)) {
+                    return ptr == ((Reference<T>&)obj).ptr;
+                }
+                return false;
+            }
 
-            T useType() const {
-                return *ptr;
+            bool equals(Object* obj) const override {
+                if(obj == nullptr) {
+                    return false;
+                }
+                if(Object::instanceof<Reference<T>>(obj)) {
+                    Reference<T>* ref = dynamic_cast<Reference<T>*>(obj);
+                    return ptr == ref->ptr;
+                }
+                return false;
+            }
+
+            T* get() const {
+                return ptr;
             }
 
             bool operator==(const Reference<T>& ref) const {
@@ -271,13 +298,14 @@ JAMSTL_NAMESPACE_BEGIN
             usize getSizeOfRefCount() const {
                 return refCount.size();
             }
+            
     };
 
     template <class T>
-    HashMap<int, int> Reference<T>::refCount = HashMap<int, int>();
+    HashMap<int, int> Reference<T>::refCount;
 
     template <class T>
-    HashMap<T, T*> Reference<T>::map = HashMap<T, T*>();
+    HashMap<T, T*> Reference<T>::map;
 
 
 JAMSTL_NAMESPACE_END

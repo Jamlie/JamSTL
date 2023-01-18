@@ -1,9 +1,9 @@
 #pragma once
 
 #ifndef JAMSTL_OBJECT_H
-#define JAMSTL_OBJECT_H 1
+#define JAMSTL_OBJECT_H
 #include "Macros.h"
-#include "type_traits.h"
+#include "TypeTraits.h"
 #include "String/ObjectString.h"
 #include "bits/HashBytes.h"
 #include <typeinfo>
@@ -15,16 +15,17 @@ JAMSTL_NAMESPACE_BEGIN
         Object() = default;
         virtual ~Object() = default;
 
-        virtual const char* toCString() const {
-            return "Object";
-        }
-
         virtual bool equals(const Object& obj) const {
             return this == &obj;
         }
 
-        InnerString getClassName() const {
-            InnerString className = typeid(*this).name();
+        virtual bool equals(Object* obj) const {
+            return this == obj;
+        }
+
+
+        ObjectString getClassName() const {
+            ObjectString className = typeid(*this).name();
             int i = 0;
             if((className[i] >= '0' || className[i] <= '9') 
                 && className[className.length - 1] != 'E') {
@@ -48,6 +49,13 @@ JAMSTL_NAMESPACE_BEGIN
             if(className[0] >= '0' && className[0] <= '9') {
                 className.pop(0);
             }
+
+            if(!className.contains("INS")) {
+                return className;
+            }
+            
+            int index = className.indexOf("INS");
+            className = className.substring(0, index);
             return className;
         }
 
@@ -56,7 +64,7 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
         template<class T, class U>
-        static bool instanceOf(const U* value) {
+        static bool instanceof(const U* value) {
             return dynamic_cast<const T*>(value) != nullptr;
         }
 
@@ -69,11 +77,11 @@ JAMSTL_NAMESPACE_BEGIN
             return typeid(*this).name();
         }
 
-        friend bool operator==(const Object& lhs, const Object& rhs) {
+        friend bool operator==(Object& lhs, Object& rhs) {
             return lhs.equals(rhs);
         }
 
-        friend bool operator!=(const Object& lhs, const Object& rhs) {
+        friend bool operator!=(Object& lhs, Object& rhs) {
             return !(lhs == rhs);
         }
 
@@ -94,7 +102,6 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
     };
-
 
 JAMSTL_NAMESPACE_END
 

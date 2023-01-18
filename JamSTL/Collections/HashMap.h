@@ -1,7 +1,7 @@
 #pragma once
 
 #ifndef JAMSTL_HASHMAP_H
-#define JASMTL_HASHMAP_H
+#define JAMSTL_HASHMAP_H
 #include "../Macros.h"
 #include "../Object.h"
 #include "../String.h"

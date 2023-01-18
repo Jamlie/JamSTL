@@ -5,7 +5,8 @@
 #include "../Datatypes.h"
 #include "../Macros.h"
 #include "../Math.h"
-#include "../bits/type_traits.h"
+#include "../bits/TypeTraits.h"
+#include <cstdio>
 
 JAMSTL_NAMESPACE_BEGIN
 
@@ -542,179 +543,30 @@ JAMSTL_NAMESPACE_BEGIN
         return str;
     }
 
-    String toString(float floatNumber) {
-        if(floatNumber == 0) {
-            return "0.0";
-        }
-        if(floatNumber == (long long)floatNumber) {
-            return toString((long long)floatNumber) + ".0";
-        }
-        long long LLNumber = floatNumber;
-        float tempFloat = floatNumber - LLNumber;
-        String str = toString(LLNumber);
-        str += ".";
-        int digits = 0;
-
-        tempFloat = floatNumber - LLNumber;
-        if(tempFloat < 0) {
-            tempFloat *= -1;
-        }
-        tempFloat *= 100000;
-
-        long long number = Math.round(tempFloat);
-        for(int i = 0; i < 5; i++) {
-            if(number % 10 == 0) number /= 10;
-            else digits++;
-        }
-        String tempString = "";
-        for(int i = 0; i < digits; i++) {
-            tempString += (number % 10) + '0';
-            number /= 10;
-        }
-        tempString.reverse();
-        str += tempString;
+    String toString(double doubleNumber) {
+        const auto len = static_cast<usize>(snprintf(nullptr, 0, "%f", doubleNumber));
+        auto buf = new char[len + 1];
+        snprintf(buf, len + 1, "%f", doubleNumber);
+        String str = buf;
+        delete[] buf;
         return str;
     }
 
-    String toString(double doubleNumber) {
-        if(doubleNumber == 0) {
-            return "0";
-        }
-        if(doubleNumber == (long long)doubleNumber) {
-            return toString((long long)doubleNumber) + ".0";
-        }
-        long long LLNumber = doubleNumber;
-        double tempDouble = doubleNumber - LLNumber;
-        String str = toString(LLNumber);
-        str += ".";
-        int digits = 0;
-
-        tempDouble = doubleNumber - LLNumber;
-        if(tempDouble < 0) {
-            tempDouble *= -1;
-        }
-        tempDouble *= 100000;
-
-        long long number = Math.round(tempDouble);
-        for(int i = 0; i < 5; i++) {
-            if(number % 10 == 0) number /= 10;
-            else digits++;
-        }
-        String tempString = "";
-        for(int i = 0; i < digits; i++) {
-            tempString += (number % 10) + '0';
-            number /= 10;
-        }
-        tempString.reverse();
-        str += tempString;
-        return str;
+    String toString(float floatNumber) {
+        return toString(static_cast<double>(floatNumber));
     }
 
     String toString(long double longDoubleNumber) {
-        if(longDoubleNumber == 0) {
-            return "0";
-        }
-        if(longDoubleNumber == (long long)longDoubleNumber) {
-            return toString((long long)longDoubleNumber) + ".0";
-        }
-        long long LLNumber = longDoubleNumber;
-        long double tempLongDouble = longDoubleNumber - LLNumber;
-        String str = toString(LLNumber);
-        str += ".";
-        int digits = 0;
-
-        tempLongDouble = longDoubleNumber - LLNumber;
-        if(tempLongDouble < 0) {
-            tempLongDouble *= -1;
-        }
-        tempLongDouble *= 100000;
-
-        long long number = Math.round(tempLongDouble);
-        for(int i = 0; i < 5; i++) {
-            if(number % 10 == 0) {
-                digits++;
-            }
-            number /= 10;
-        }
-        String tempString = "";
-        for(int i = 0; i < digits; i++) {
-            tempString += (number % 10) + '0';
-            number /= 10;
-        }
-        tempString.reverse();
-
-        str += tempString;
-        return str;
+        return toString(static_cast<double>(longDoubleNumber));
     }
 
 
     String toString(Float floatNumber) {
-        if(floatNumber == 0) {
-            return "0";
-        }
-        if(floatNumber == (long long)floatNumber) {
-            return toString((long long)floatNumber) + ".0";
-        }
-        long long LLNumber = floatNumber;
-        float tempFloat = floatNumber - LLNumber;
-        String str = toString(LLNumber);
-        str += ".";
-        int digits = 0;
-
-        tempFloat = floatNumber - LLNumber;
-        if(tempFloat < 0) {
-            tempFloat *= -1;
-        }
-        tempFloat *= 100000;
-
-        long long number = Math.round(tempFloat);
-        for(int i = 0; i < 5; i++) {
-            if(number % 10 == 0) number /= 10;
-            else digits++;
-        }
-
-        String tempString = "";
-        for(int i = 0; i < digits; i++) {
-            tempString += (number % 10) + '0';
-            number /= 10;
-        }
-        tempString.reverse();
-        str += tempString;
-        return str;
+        return toString(static_cast<double>(floatNumber.valueOf()));
     }
 
     String toString(Double doubleNumber) {
-        if(doubleNumber == 0) {
-            return "0";
-        }
-        if(doubleNumber == (long long)doubleNumber) {
-            return toString((long long)doubleNumber) + ".0";
-        }
-        long long LLNumber = doubleNumber;
-        double tempDouble = doubleNumber - LLNumber;
-        String str = toString(LLNumber);
-        str += ".";
-        int digits = 0;
-
-        tempDouble = doubleNumber - LLNumber;
-        if(tempDouble < 0) {
-            tempDouble *= -1;
-        }
-        tempDouble *= 100000;
-
-        long long number = Math.round(tempDouble);
-        for(int i = 0; i < 5; i++) {
-            if(number % 10 == 0) number /= 10;
-            else digits++;
-        }
-        String tempString = "";
-        for(int i = 0; i < digits; i++) {
-            tempString += (number % 10) + '0';
-            number /= 10;
-        }
-        tempString.reverse();
-        str += tempString;
-        return str;
+        return toString(doubleNumber.valueOf());
     }
 
 

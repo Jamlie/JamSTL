@@ -15,7 +15,7 @@
 JAMSTL_NAMESPACE_BEGIN
 
     /**
-    * @brief A const char* wrapper class
+    * @brief {@code String}
     * 
     */
     class String extends Object {
@@ -288,7 +288,7 @@ JAMSTL_NAMESPACE_BEGIN
          * 
          * @return const String& 
          */
-        static const String& Empty() {
+        static const String& emptyString() {
             static String EmptyString;
             return EmptyString;
         }
@@ -1009,65 +1009,7 @@ JAMSTL_NAMESPACE_BEGIN
          * @return String& 
          */
         String& append(const float& floatNumber) {
-            if(floatNumber == 0.0) {
-                this->append("0.0");
-                return *this;
-            }
-
-            double FNumber = Math.floor(floatNumber);
-            double tempFloat = floatNumber - FNumber;
-            String str = "";
-
-            // To turn the integer part to string
-            long long mainDigits = Math.log10(FNumber) + 1;
-            for(int i = 0; i < mainDigits; i++) {
-                str += (Math.fmod(FNumber, 10)) + '0';
-                FNumber /= 10;
-                FNumber = Math.trunc(FNumber);
-            }
-
-            // To check if the double value == int part
-            float checkFloat = Math.floor(floatNumber);
-            if(floatNumber - checkFloat == 0) {
-                str.reverse();
-                str.append(".0");
-                this->append(str);
-                return *this;
-            }
-
-            str.reverse();
-            // To turn the decimal part to string
-            str.append(".");
-            FNumber = Math.floor(floatNumber);
-            tempFloat = floatNumber - FNumber;
-            long long digits = 0;
-
-            if(tempFloat < 0) {
-                tempFloat *= -1;
-            }
-            
-            tempFloat *= 100000;
-
-            double number = Math.round(tempFloat);
-            for(int i = 0; i < 5; i++) {
-                if(Math.fmod(number, 10) == 0) {
-                    number /= 10;
-                    number = Math.round(number);
-                }
-                else digits++;
-            }
-            String tempString = "";
-            char tempCharacter;
-            for(int i = 0; i < digits; i++) {
-                tempCharacter = Math.fmod(number, 10) + '0';
-                tempString += tempCharacter;
-                number /= 10;
-                number = Math.round(number);
-            }
-            tempString.reverse();
-            str += tempString;
-            this->append(str);
-            return *this;
+            return this->append(static_cast<double>(floatNumber));
         }
 
         /**
@@ -1077,66 +1019,17 @@ JAMSTL_NAMESPACE_BEGIN
          * @return String& 
          */
         String& append(const double& doubleNumber) {
-            if(doubleNumber == 0.0) {
-                this->append("0.0");
-                return *this;
+            const auto len = static_cast<usize>(snprintf(nullptr, 0, "%f", doubleNumber));
+            char* buffer = new char[len + 1];
+            snprintf(buffer, len + 1, "%f", doubleNumber);
+            this->append(buffer);
+            while(this->value[this->length() - 1] == '0') {
+                this->pop();
             }
-
-            double DNumber = Math.floor(doubleNumber);
-            double tempDouble = doubleNumber - DNumber;
-            String str = "";
-
-            // To turn the integer part to string
-            long long mainDigits = Math.log10(DNumber) + 1;
-            for(int i = 0; i < mainDigits; i++) {
-                str += (fmod(DNumber, 10)) + '0';
-                DNumber /= 10;
-                DNumber = Math.floor(DNumber);
+            if(this->value[this->length() - 1] == '.') {
+                this->pop();
             }
-
-            // To check if the double value == int part
-            double checkDouble = Math.floor(doubleNumber);
-            if(doubleNumber - checkDouble == 0) {
-                str.reverse();
-                str.append(".0");
-                if(this->value[0] == '0') { this->value[0] = '1'; this->append('0'); }
-                this->append(str);
-                return *this;
-            }
-
-            str.reverse();
-            // To turn the decimal part to string
-            str.append(".");
-            DNumber = Math.floor(doubleNumber);
-            tempDouble = doubleNumber - DNumber;
-            long long digits = 0;
-
-            if(tempDouble < 0) {
-                tempDouble *= -1;
-            }
-            
-            tempDouble *= 100000;
-
-            double number = Math.round(tempDouble);
-            for(int i = 0; i < 5; i++) {
-                if(fmod(number, 10) == 0) {
-                    number /= 10;
-                    number = Math.round(number);
-                }
-                else digits++;
-            }
-            String tempString = "";
-            char tempCharacter;
-            for(int i = 0; i < digits; i++) {
-                tempCharacter = fmod(number, 10) + '0';
-                tempString += tempCharacter;
-                number /= 10;
-                number = Math.round(number);
-            }
-            tempString.reverse();
-            str += tempString;
-            if(this->value[0] == '0') { this->value[0] = '1'; this->append("0"); }
-            this->append(str);
+            delete[] buffer;
             return *this;
         }
 
@@ -1147,65 +1040,7 @@ JAMSTL_NAMESPACE_BEGIN
          * @return String& 
          */
         String& append(const long double& longDoubleNumber) {
-            if(longDoubleNumber == 0.0) {
-                this->append("0.0");
-                return *this;
-            }
-
-            double LDNumber = Math.floor(longDoubleNumber);
-            double tmepLongDouble = longDoubleNumber - LDNumber;
-            String str = "";
-
-            // To turn the integer part to string
-            long long mainDigits = Math.log10(LDNumber) + 1;
-            for(int i = 0; i < mainDigits; i++) {
-                str += (Math.fmod(LDNumber, 10)) + '0';
-                LDNumber /= 10;
-                LDNumber = Math.trunc(LDNumber);
-            }
-            str.reverse();
-
-            // To check if the double value == int part
-            double checkLongDouble = Math.floor(longDoubleNumber);
-            if(longDoubleNumber - checkLongDouble == 0) {
-                str.reverse();
-                str.append(".0");
-                this->append(str);
-                return *this;
-            }
-
-            // To turn the decimal part to string
-            str.append(".");
-            LDNumber = Math.floor(longDoubleNumber);
-            tmepLongDouble = longDoubleNumber - LDNumber;
-            long long digits = 0;
-
-            if(tmepLongDouble < 0) {
-                tmepLongDouble *= -1;
-            }
-            
-            tmepLongDouble *= 100000;
-
-            double number = Math.round(tmepLongDouble);
-            for(int i = 0; i < 5; i++) {
-                if(Math.fmod(number, 10) == 0) {
-                    number /= 10;
-                    number = Math.round(number);
-                }
-                else digits++;
-            }
-            String tempString = "";
-            char tempCharacter;
-            for(int i = 0; i < digits; i++) {
-                tempCharacter = Math.fmod(number, 10) + '0';
-                tempString += tempCharacter;
-                number /= 10;
-                number = Math.round(number);
-            }
-            tempString.reverse();
-            str += tempString;
-            this->append(str);
-            return *this;
+            return this->append(static_cast<double>(longDoubleNumber));
         }
 
         /**
@@ -2866,6 +2701,29 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
         /**
+         * @brief Returns the position of the first occurrence of a substring.
+         * 
+         * @param other 
+         * @return int 
+         */
+        int indexOf(_StringView other) const {
+            if(other.length() > this->Length) return -1;
+            for(usize i = 0; i < this->Length; i++) {
+                if(this->value[i] == other.value[0]) {
+                    bool found = true;
+                    for(usize j = 1; j < other.length(); j++) {
+                        if(this->value[i + j] != other.value[j]) {
+                            found = false;
+                            break;
+                        }
+                    }
+                    if(found) return i;
+                }
+            }
+            return -1;
+        }
+
+        /**
         * @brief A method that swaps a string with another string
         * 
         * @param other 
@@ -2972,8 +2830,16 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
         bool equals(const Object& other) const override {
-            if(Object::instanceOf<String>(&other)) {
+            if(Object::instanceof<String>(&other)) {
                 return this->equals(*((String*)&other));
+            }
+            return false;
+        }
+
+        bool equals(Object* obj) const override {
+            if(obj == nullptr) return false;
+            if(Object::instanceof<String>(obj)) {
+                return this->equals(*((String*)obj));
             }
             return false;
         }
@@ -3201,15 +3067,6 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
         /**
-         * @brief A method that returns the C String of this String (const char*)
-         * 
-         * @return const char* 
-         */
-        const char* toCString() const override {
-            return this->value;
-        }
-
-        /**
         * @brief A method that checks if all the characters in a string are alphabet
         * 
         * @return bool
@@ -3231,7 +3088,7 @@ JAMSTL_NAMESPACE_BEGIN
         */
         bool isNumeric() const {
             for(usize i = 0; i < this->Length; i++) {
-                if(!isdigit(this->value[i])) {
+                if(!(isdigit(this->value[i]) || this->value[i] == '.' || this->value[0] == '-')) {
                     return false;
                 }
             }
@@ -3247,6 +3104,21 @@ JAMSTL_NAMESPACE_BEGIN
         bool isAlphabetOrNumeric() const {
             for(usize i = 0; i < this->Length; i++) {
                 if(!isalnum(this->value[i])) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /**
+         * @brief A method that checks if all the characters in a string are space
+         * 
+         * @return true 
+         * @return false 
+         */
+        bool isSpace() {
+            for(usize i = 0; i < this->Length; i++) {
+                if(!isspace(this->value[i])) {
                     return false;
                 }
             }
@@ -4685,7 +4557,9 @@ JAMSTL_NAMESPACE_BEGIN
             this->value = newValue;
             this->Length = newLength;
         }
+
     };
+
 
 JAMSTL_NAMESPACE_END
 

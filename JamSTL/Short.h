@@ -1,9 +1,8 @@
 #pragma once 
 
 #ifndef JAMSTL_SHORT_H
-#define JAMSTL_SHORT_H 1
-#include "Macros.h"
-#include "Object.h"
+#define JAMSTL_SHORT_H 
+#include "Number.h"
 
 JAMSTL_NAMESPACE_BEGIN
 
@@ -11,7 +10,7 @@ JAMSTL_NAMESPACE_BEGIN
      * @brief A short wrapper class
      * 
      */
-    class Short extends Object {
+    class Short extends Number {
     private:
         short value;
         short toSInt(String string) {
@@ -60,6 +59,30 @@ JAMSTL_NAMESPACE_BEGIN
             className.erase(0, 11);
             className.pop();
             return className;
+        }
+
+
+        int intValue() const override {
+            return static_cast<int>(value);
+        }
+
+        long long longValue() const override {
+            return static_cast<long long>(value);
+        }
+
+        float floatValue() const override {
+            return static_cast<float>(value);
+        }
+
+        double doubleValue() const override {
+            return static_cast<double>(value);
+        }
+
+        bool equals(const Object& other) const override {
+            if(Object::instanceof<Number>(&other)) {
+                return value == static_cast<const Number&>(other).intValue();
+            }
+            return false;
         }
 
 
@@ -265,6 +288,43 @@ JAMSTL_NAMESPACE_BEGIN
             this->value = static_cast<short int>(other);
             return *this;
         }
+
+        Number& operator=(const int& other) override {
+            this->value = other;
+            return *this;
+        }
+
+        Number& operator=(const float& other) override {
+            this->value = other;
+            return *this;
+        }
+
+        Number& operator=(const double& other) override {
+            this->value = other;
+            return *this;
+        }
+
+        Number& operator=(const long& other) override {
+            this->value = other;
+            return *this;
+        }
+
+        Number& operator=(const long long& other) override {
+            this->value = other;
+            return *this;
+        }
+
+        Number& operator=(const short& other) override {
+            this->value = other;
+            return *this;
+        }
+
+        Number& operator=(const Number& number) override {
+            this->value = static_cast<short>(number.intValue());
+            return *this;
+        }
+
+
 
 
         
@@ -696,7 +756,7 @@ JAMSTL_NAMESPACE_BEGIN
 
 
         bool operator!() const {
-            return Short(!this->value);
+            return short(!this->value);
         }
         
     };

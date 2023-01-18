@@ -23,7 +23,7 @@ typedef __UNSIGNED__CHAR__ byte;
 }
 
 #define Main() int main()
-#define null nullptr
+constexpr auto null = nullptr;
 #define fun decltype(auto)
 #define pub private:public:
 #define priv public:private:

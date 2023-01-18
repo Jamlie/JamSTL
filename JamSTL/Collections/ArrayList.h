@@ -16,17 +16,18 @@
 // ! Omar Estietie
 
 #ifndef JAMSTL_ArrayList_H
-#define JAMSTL_ArrayList_H 1
+#define JAMSTL_ArrayList_H
 #include <initializer_list>
 #include <functional>
 #include "../Iterator.h"
-#include "../type_traits.h"
+#include "../TypeTraits.h"
 #include "../Macros.h"
 #include "../Math.h"
 #include "../Object.h"
 #include "../Exception/IndexOutOfBoundsException.h"
-#include "../PrintStream.h"
+#include "../IO/PrintStream.h"
 #include "../Random.h"
+#include "Array.h"
 
 JAMSTL_NAMESPACE_BEGIN
     template<typename T>
@@ -43,18 +44,32 @@ JAMSTL_NAMESPACE_BEGIN
          * @param newCapacity 
          */
         void reAllocate(usize newCapacity) {
+            #ifdef _WIN32
+
             T* newBlock = new T[newCapacity];
             
             if (newCapacity < this->Size) this->Size = newCapacity;
 
             for (usize i = 0; i < this->Size; i++) 
-                newBlock[i] = jamstl::type_traits::move(this->arrayList[i]);
+                newBlock[i] = jamstl::TypeTraits::move(this->arrayList[i]);
 
             for(usize i = 0; i < this->Size; i++) this->arrayList[i].~T();
 
             ::operator delete(this->arrayList, newCapacity * sizeof(T));
             this->arrayList = newBlock;
             this->Capacity = newCapacity;
+            
+            #else
+
+            T* newArray = new T[newCapacity];
+            for (usize i = 0; i < this->size(); i++) {
+                newArray[i] = arrayList[i];
+            }
+            delete[] arrayList;
+            arrayList = newArray;
+            Capacity = newCapacity;
+            
+            #endif
         }
 
         /**
@@ -97,6 +112,12 @@ JAMSTL_NAMESPACE_BEGIN
             for (usize i = 0; i < sizeOfArray; i++) this->push(arr[i]);
         }
 
+        template<usize sizeOfArray>
+        ArrayList(const Array<T, sizeOfArray>& array) {
+            this->reserve(sizeOfArray);
+            for (usize i = 0; i < sizeOfArray; i++) this->push(array[i]);
+        }
+
         ArrayList(std::initializer_list<T> arrayList) {
             this->reAllocate(2);
             for(const auto& element : arrayList) {
@@ -116,7 +137,13 @@ JAMSTL_NAMESPACE_BEGIN
 
         ArrayList(usize num) { this->reAllocate(num); }
 
-        ~ArrayList() { ::operator delete(this->arrayList, this->Capacity * sizeof(T)); }
+        ~ArrayList() { 
+            #ifdef _WIN32 
+            ::operator delete(this->arrayList, this->Capacity * sizeof(T)); 
+            #else
+            delete[] this->arrayList;
+            #endif
+        }
 
         // reserve
         void reserve(usize number) {
@@ -129,7 +156,6 @@ JAMSTL_NAMESPACE_BEGIN
          * @param value The value
          */
         usize push(const T& value) {
-
             if (this->Size >= this->Capacity) 
                 this->reAllocate(this->Capacity + this->Capacity / 2);
             
@@ -150,7 +176,7 @@ JAMSTL_NAMESPACE_BEGIN
             if (this->Size >= this->Capacity) 
                 this->reAllocate(this->Capacity + this->Capacity / 2);
 
-            this->arrayList[this->Size] = jamstl::type_traits::move(value);
+            this->arrayList[this->Size] = jamstl::TypeTraits::move(value);
             this->Size++;
 
             return this->size();
@@ -236,7 +262,7 @@ JAMSTL_NAMESPACE_BEGIN
             if (this->Size >= this->Capacity) 
                 this->reAllocate(this->Capacity + this->Capacity / 2);
 
-            this->arrayList[this->Size] = T(jamstl::type_traits::forward<Arguments>(args)...);
+            this->arrayList[this->Size] = T(jamstl::TypeTraits::forward<Arguments>(args)...);
             this->Size++;
 
             return this->arrayList[this->Size - 1];
@@ -248,7 +274,7 @@ JAMSTL_NAMESPACE_BEGIN
             if (this->Size >= this->Capacity) 
                 this->reAllocate(this->Capacity + this->Capacity / 2);
 
-            this->arrayList[this->Size] = T(list, jamstl::type_traits::forward<Arguments>(args)...);
+            this->arrayList[this->Size] = T(list, jamstl::TypeTraits::forward<Arguments>(args)...);
             this->Size++;
 
             return this->arrayList[this->Size - 1];         
@@ -906,6 +932,17 @@ JAMSTL_NAMESPACE_BEGIN
             for(usize i = 0; i < Size; i++) { Array[i] = this->arrayList[i]; }
         }
 
+        template<usize sizeOfArray>
+        void toArray(T (&Array)[sizeOfArray]) {
+            for(usize i = 0; i < sizeOfArray; i++) { Array[i] = this->arrayList[i]; }
+        }
+
+        template<usize sizeOfArray>
+        void toArray(Array<T, sizeOfArray>& arr) {
+            for(usize i = 0; i < sizeOfArray; i++) { arr[i] = this->arrayList[i]; }
+        }
+
+
         /**
          * @brief A methods that can be used to insert an ArrayList into an array which has the same size as the arraylist
          * 
@@ -1093,7 +1130,7 @@ JAMSTL_NAMESPACE_BEGIN
         
     };
 
-    namespace type_traits {
+    namespace TypeTraits {
         template<typename T>
         struct isArrayList {
             static const bool value = false;

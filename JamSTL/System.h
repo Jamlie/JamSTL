@@ -4,11 +4,13 @@
 #define JAMSTL_SYSTEM_H
 
 #include "Macros.h"
-#include "PrintStream.h"
-#include "ScanStream.h"
+#include "IO/PrintStream.h"
+#include "IO/InputStream.h"
 #include "Datatypes.h"
 #include "Collections/Array.h"
+#include "Collections/JArray.h"
 #include "Math.h"
+
 
 JAMSTL_NAMESPACE_BEGIN
 
@@ -31,11 +33,18 @@ class System final {
 public:
     System() = delete;
     static PrintStream out;
+    static PrintStream err;
+    static InputStream in;
+
+    static void exit(int code) {
+        ::exit(code);
+    }
 
 };
 
-ScanStream scanner(stdin);
 PrintStream System::out(stdout);
+PrintStream System::err(stderr);
+InputStream System::in(stdin);
 
 
 

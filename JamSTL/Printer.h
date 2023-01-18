@@ -65,8 +65,8 @@ JAMSTL_NAMESPACE_BEGIN
 
         template <typename Type, usize size>
         static void print(const Type (&array)[size]) {
-            if(jamstl::type_traits::isSame<Type, char>::value ||
-             jamstl::type_traits::isSame<Type, unsigned char>::value) {
+            if(jamstl::TypeTraits::isSame<Type, char>::value ||
+             jamstl::TypeTraits::isSame<Type, unsigned char>::value) {
                 std::cout << array;
             } else {std::cout << "[";
                 for(usize i = 0; i < size; i++) {

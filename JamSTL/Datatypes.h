@@ -44,7 +44,7 @@ JAMSTL_NAMESPACE_BEGIN
         return Float(d);
     }
 
-    Double operator""_D(long double d) {
+    Double operator""_d(long double d) {
         return Double(d);
     }
 
@@ -65,6 +65,7 @@ JAMSTL_NAMESPACE_BEGIN
     using LongView    = const Long&;
 
     const String _ = "";
+
 
 JAMSTL_NAMESPACE_END
 

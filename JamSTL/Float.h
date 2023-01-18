@@ -1,10 +1,8 @@
 #pragma once
 
 #ifndef JAMSTL_FLOAT_H
-#define JAMSTL_FLOAT_H 1
-#include "Macros.h"
-#include "Math.h"
-#include "Object.h"
+#define JAMSTL_FLOAT_H 
+#include "Number.h"
 
 JAMSTL_NAMESPACE_BEGIN
 
@@ -12,7 +10,7 @@ JAMSTL_NAMESPACE_BEGIN
      * @brief A float wrapper class
      * 
      */
-    class Float extends Object {
+    class Float extends Number {
     private:
         float value;
         float readFractions(String string, int start, int end, float &division) {
@@ -76,15 +74,6 @@ JAMSTL_NAMESPACE_BEGIN
             this->value = static_cast<float>(other);
         }
 
-        /**
-         * @brief A method that returns the const char* of the value
-         * 
-         */
-        // const char* toCString() const override {
-        //     String string = String::valueOf(value);
-        //     return string.toCString();
-        // }
-
 
 
 
@@ -102,6 +91,66 @@ JAMSTL_NAMESPACE_BEGIN
         Float& operator=(const char* other) {
             this->value = atof(other);
             return *this;
+        }
+
+        Number& operator=(const int& number) override {
+            this->value = static_cast<float>(number);
+            return *this;
+        }
+
+        Number& operator=(const long long& number) override {
+            this->value = static_cast<float>(number);
+            return *this;
+        }
+
+        Number& operator=(const float& number) override {
+            this->value = number;
+            return *this;
+        }
+
+        Number& operator=(const double& number) override {
+            this->value = static_cast<float>(number);
+            return *this;
+        }
+
+        Number& operator=(const short& number) override {
+            this->value = static_cast<float>(number);
+            return *this;
+        }
+
+        Number& operator=(const long& number) override {
+            this->value = static_cast<float>(number);
+            return *this;
+        }
+
+        Number& operator=(const Number& number) override {
+            this->value = static_cast<float>(number.doubleValue());
+            return *this;
+        }
+
+
+
+        int intValue() const override {
+            return static_cast<int>(this->value);
+        }
+
+        long long longValue() const override {
+            return static_cast<long long>(this->value);
+        }
+
+        float floatValue() const override {
+            return this->value;
+        }
+
+        double doubleValue() const override {
+            return static_cast<double>(this->value);
+        }
+        
+        bool equals(const Object& other) const override {
+            if(Object::instanceof<Number>(&other)) {
+                return this->value == static_cast<const Number&>(other).floatValue();
+            }
+            return false;
         }
 
 

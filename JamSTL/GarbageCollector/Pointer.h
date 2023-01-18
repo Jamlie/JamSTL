@@ -5,7 +5,8 @@
 #include "../Macros.h"
 #include "../Object.h"
 #include "../String.h"
-#include "../PrintStream.h"
+#include "../IO/PrintStream.h"
+#include "../Exception/NullPointerException.h"
 
 JAMSTL_NAMESPACE_BEGIN
 
@@ -32,41 +33,54 @@ JAMSTL_NAMESPACE_BEGIN
                 count++;
             }
 
-            Pointer(Pointer* other) {
-                this->ptr = other->ptr;
-                count++;
-            }
-
             Pointer(Pointer&& other) {
                 this->ptr = other.ptr;
                 other.ptr = nullptr;
             }
 
             ~Pointer() {
-                if(count != 0) {
-                    count--;
-                    this->ptr = nullptr;
-                } else {
-                    destroy();
+                if(this->ptr) {
+                    if(count == 0) {
+                        this->destroy();
+                    } else {
+                        count--;
+                    }
                 }
             }
 
 
             void destroyArray() {
-                if(this->ptr != nullptr) {
-                    ::operator delete[](this->ptr);
+                if(this->ptr) {
+                    if(count == 0) {
+                        ::operator delete[](this->ptr);
+                    } else {
+                        count--;
+                    }
                 }
-                this->ptr = nullptr;
             }
 
             void destroy() {
-                if(this->ptr != nullptr) {
-                    delete this->ptr;
+                if(this->ptr) {
+                    if(count == 0) {
+                        ::operator delete(this->ptr);
+                    } else {
+                        count--;
+                    }
                 }
-                this->ptr = nullptr;
             }
 
-            // operator+
+            void reset() {
+                if(this->ptr) {
+                    if(count == 0) {
+                        this->destroy();
+                    } else {
+                        count--;
+                    }
+                    this->ptr = nullptr;
+                }
+            }
+
+
             Pointer operator+(int num) {
                 return Pointer(this->ptr + num);
             }
@@ -156,18 +170,22 @@ JAMSTL_NAMESPACE_BEGIN
                 return Pointer<U>((U*)ptr);
             }
 
-
-            T* operator&() {
-                return ptr;
+            template<class U>
+            Pointer<U> cast() const {
+                return Pointer<U>((U*)ptr);
             }
 
-            T* operator&() const {
-                return ptr;
+            
+            const int operator&() const {
+                return (int)ptr;
             }
 
 
 
             T* operator->() {
+                if(!ptr) {
+                    throw NullPointerException("Null pointer exception");
+                }
                 return ptr;
             }
 
@@ -176,6 +194,9 @@ JAMSTL_NAMESPACE_BEGIN
             }
 
             T& operator*() {
+                if(!ptr) {
+                    throw NullPointerException("Null pointer exception");
+                }
                 return *ptr;
             }
 

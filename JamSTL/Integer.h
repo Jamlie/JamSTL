@@ -1,20 +1,18 @@
 #pragma once
 
 #ifndef JAMSTL_INTEGER_H
-#define JAMSTL_INTEGER_H 1
+#define JAMSTL_INTEGER_H
 #include "Macros.h"
-#include "String.h"
-#include "Math.h"
-#include "type_traits.h"
-#include "Object.h"
+#include "Number.h"
 
 JAMSTL_NAMESPACE_BEGIN
+        
         
     /**
      * @brief An integer wrapper class
      * 
      */
-    class Integer extends Object {
+    class Integer extends Number {
     private:
         class BasicString {
             char* value;
@@ -234,9 +232,8 @@ JAMSTL_NAMESPACE_BEGIN
                 return *this;
             }
 
-            friend std::ostream& operator<<(std::ostream& os, const BasicString& str) {
-                os << str.value;
-                return os;
+            String valueOf() const {
+                return String(this->value, this->length);
             }
         };
 
@@ -371,8 +368,71 @@ JAMSTL_NAMESPACE_BEGIN
             this->value = static_cast<int>(other);
             return *this;
         }
+
+        Number& operator=(const int& other) override {
+            this->value = other;
+            return *this;
+        }
+
+        Number& operator=(const long long& other) override {
+            this->value = static_cast<int>(other);
+            return *this;
+        }
+
+        Number& operator=(const float& other) override {
+            this->value = static_cast<int>(other);
+            return *this;
+        }
+
+        Number& operator=(const double& other) override {
+            this->value = static_cast<int>(other);
+            return *this;
+        }
+
+        Number& operator=(const short& other) override {
+            this->value = static_cast<int>(other);
+            return *this;
+        }
+
+        Number& operator=(const long& other) override {
+            this->value = static_cast<int>(other);
+            return *this;
+        }
+
+        Number& operator=(const Number& other) override {
+            this->value = other.intValue();
+            return *this;
+        }
+
+
+
+
+        int intValue() const override {
+            return this->value;
+        }
+
+        long long longValue() const override {
+            return static_cast<long long>(this->value);
+        }
+
+        float floatValue() const override {
+            return static_cast<float>(this->value);
+        }
+
+        double doubleValue() const override {
+            return static_cast<double>(this->value);
+        }
         
+        bool equals(const Object& other) const override {
+            if(Object::instanceof<Number>(&other)) {
+                return this->value == static_cast<const Number&>(other).intValue();
+            }
+            return false;
+        }
+
+
         
+
         
         /**
          * @brief Get the Class Name object.
@@ -478,52 +538,6 @@ JAMSTL_NAMESPACE_BEGIN
             }
 
             return charPos;
-        }
-
-        /**
-         * @brief Returns a const char* representing this Integer's value.
-         * 
-         * @return String 
-         */
-        const char* toCString() const override {
-            String str = "";
-            int number = this->value;
-            if(number > 0) {
-                int digits = 0;
-                while(number > 0) {
-                    number /= 10;
-                    digits++;
-                }
-                number = this->value;
-                for(int i = 0; i < digits; i++) {
-                    str += (number % 10) + '0';
-                    number /= 10;
-                }
-                str.reverse();
-                return str;
-            }
-            String tempString = "";
-            if(number == 0) {
-                tempString = "0";
-            } else {
-                tempString = "-";
-                number = -number;
-                int digits = 0;
-                while(number > 0) {
-                    number /= 10;
-                    digits++;
-                }
-                number = -this->value;
-                for(int i = 0; i < digits; i++) {
-                    tempString += (number % 10) + '0';
-                    number /= 10;
-                }
-                tempString.reverse();
-            }
-            str += tempString;
-            str.insert(0, '-');
-            str.pop();
-            return str.constCharString();
         }
 
         /**

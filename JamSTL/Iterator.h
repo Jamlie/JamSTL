@@ -3,8 +3,8 @@
 #ifndef JAMSTL_ITERATOR_H
 #define JAMSTL_ITERATOR_H 1
 #include "Macros.h"
-#include "type_traits.h"
-#include "bits/type_traits.h"
+#include "TypeTraits.h"
+#include "bits/TypeTraits.h"
 
 JAMSTL_NAMESPACE_BEGIN
 

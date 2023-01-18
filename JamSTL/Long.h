@@ -1,10 +1,8 @@
 #pragma once
 
 #ifndef JAMSTL_LONG_H
-#define JAMSTL_LONG_H 1
-#include "Macros.h"
-#include "String.h"
-#include "Object.h"
+#define JAMSTL_LONG_H
+#include "Number.h"
 
 JAMSTL_NAMESPACE_BEGIN
 
@@ -12,7 +10,7 @@ JAMSTL_NAMESPACE_BEGIN
      * @brief A long long wrapper class
      * 
      */
-    class Long extends Object {
+    class Long extends Number {
     private:
         long long value;
         long long toLInt(String string) {
@@ -60,6 +58,68 @@ JAMSTL_NAMESPACE_BEGIN
             this->value = static_cast<long long>(other);
             return *this;
         }
+
+        Number& operator=(const int& other) override {
+            this->value = static_cast<long long>(other);
+            return *this;
+        }
+
+        Number& operator=(const long long& other) override {
+            this->value = static_cast<long long>(other);
+            return *this;
+        }
+
+        Number& operator=(const float& other) override {
+            this->value = static_cast<long long>(other);
+            return *this;
+        }
+
+        Number& operator=(const double& other) override {
+            this->value = static_cast<long long>(other);
+            return *this;
+        }
+
+        Number& operator=(const short& other) override {
+            this->value = static_cast<long long>(other);
+            return *this;
+        }
+        
+        Number& operator=(const long& other) override {
+            this->value = static_cast<long long>(other);
+            return *this;
+        }
+
+        Number& operator=(const Number& other) override {
+            this->value = static_cast<long long>(other.longValue());
+            return *this;
+        }
+
+
+        
+        int intValue() const override {
+            return static_cast<int>(value);
+        }
+
+        long long longValue() const override {
+            return value;
+        }
+
+        float floatValue() const override {
+            return static_cast<float>(value);
+        }
+
+        double doubleValue() const override {
+            return static_cast<double>(value);
+        }
+
+        bool equals(const Object& other) const override {
+            if(Object::instanceof<Number>(&other)) {
+                return value == static_cast<const Number&>(other).longValue();
+            }
+            return false;
+        }
+
+
 
 
         /**

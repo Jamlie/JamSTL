@@ -4,8 +4,9 @@
 #define JAMSTL_PAIR_H
 #include "../Macros.h"
 #include "../Object.h"
-#include "../bits/type_traits.h"
+#include "../bits/TypeTraits.h"
 #include "../String.h"
+#include "../IO/PrintStream.h"
 #include <initializer_list>
 
 JAMSTL_NAMESPACE_BEGIN
@@ -21,7 +22,7 @@ struct Pair extends Object {
     Pair(const Pair<K, V>& pair) : first(pair.first), second(pair.second) {}
 
     Pair(Pair<K, V>&& pair) : 
-    first(jamstl::type_traits::move(pair.first)), second(jamstl::type_traits::move(pair.second)) {}
+    first(jamstl::TypeTraits::move(pair.first)), second(jamstl::TypeTraits::move(pair.second)) {}
 
 
     Pair& operator=(const Pair<K, V>& pair) {
@@ -31,8 +32,8 @@ struct Pair extends Object {
     }
 
     Pair& operator=(Pair<K, V>&& pair) {
-        first = jamstl::type_traits::move(pair.first);
-        second = jamstl::type_traits::move(pair.second);
+        first = jamstl::TypeTraits::move(pair.first);
+        second = jamstl::TypeTraits::move(pair.second);
         return *this;
     }
 
@@ -73,16 +74,19 @@ struct Pair extends Object {
         return !(*this < pair);
     }
 
-    friend std::ostream& operator<<(std::ostream& os, const Pair<K, V>& pair) {
-        os << pair.valueOf();
-        return os;
+    friend PrintStream& operator<<(PrintStream& stream, const Pair<K, V>& pair) {
+        return stream << pair.valueOf();
+    }
+
+    friend PrintStream& operator<<(PrintStream& stream, Pair<K, V>&& pair) {
+        return stream << pair.valueOf();
     }
 
 };
 
 template<typename K, typename V>
 Pair<K, V> makePair(K&& u1, V&& u2) {
-    return Pair<K, V>(jamstl::type_traits::forward<K>(u1), jamstl::type_traits::forward<V>(u2));
+    return Pair<K, V>(jamstl::TypeTraits::forward<K>(u1), jamstl::TypeTraits::forward<V>(u2));
 }
 
 JAMSTL_NAMESPACE_END

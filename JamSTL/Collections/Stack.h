@@ -6,7 +6,7 @@
 #define JAMSTL_STACK_H 1
 #include <iostream>
 #include "../Datatypes.h"
-#include "../type_traits.h"
+#include "../TypeTraits.h"
 #include "../Macros.h"
 
 JAMSTL_NAMESPACE_BEGIN
@@ -28,7 +28,7 @@ JAMSTL_NAMESPACE_BEGIN
             if (newCapacity < Size) Size = newCapacity;
 
             for (size_t i = 0; i < Size; i++) newBlock[i] = 
-                                        jamstl::type_traits::move(stack[i]);
+                                        jamstl::TypeTraits::move(stack[i]);
 
             ::operator delete(stack, newCapacity * sizeof(T));
             stack = newBlock;
@@ -64,7 +64,7 @@ JAMSTL_NAMESPACE_BEGIN
             if (Size >= Capacity) reAllocate(Capacity + Capacity / 2);
             
 
-            stack[Size] = jamstl::type_traits::move(value);
+            stack[Size] = jamstl::TypeTraits::move(value);
             Size++;
         }
 

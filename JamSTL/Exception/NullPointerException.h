@@ -6,6 +6,7 @@
 
 JAMSTL_NAMESPACE_BEGIN
 
+
     class NullPointerException extends Exception {
         public:
             NullPointerException() noexcept : Exception("NullPointerException") {}
@@ -28,6 +29,7 @@ JAMSTL_NAMESPACE_BEGIN
                 return "NullPointerException";
             }
     };
+
 
 JAMSTL_NAMESPACE_END
 

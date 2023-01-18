@@ -1,7 +1,7 @@
 #pragma once
 
 #ifndef JAMSTL_OBJECTSTRING_H
-#define JAMSTL_OBJECTSTRING_H 1
+#define JAMSTL_OBJECTSTRING_H
 #include "../Macros.h"
 #include "../Math.h"
 #include "../Iterator.h"
@@ -12,7 +12,7 @@ JAMSTL_NAMESPACE_BEGIN
     * @brief A const char* wrapper class
     * 
     */
-    class InnerString {
+    class ObjectString {
     private:
         char* value;
         usize Length = 0;
@@ -54,7 +54,7 @@ JAMSTL_NAMESPACE_BEGIN
             return true;
         }
 
-        bool equalityCompareString(const InnerString& other) const {
+        bool equalityCompareString(const ObjectString& other) const {
             for(usize i = 0; i <= this->Length; i++) {
                 if(this->value[i] != other.value[i]) {
                     return false;
@@ -132,7 +132,7 @@ JAMSTL_NAMESPACE_BEGIN
             this->Length = newLength;
         }
 
-        char* stringCopy(char* Destination, InnerString Source, usize Length) {
+        char* stringCopy(char* Destination, ObjectString Source, usize Length) {
             for(unsigned int i = 0; i < Length; i++) {
                 Destination[i] = Source[i];
             }
@@ -145,30 +145,30 @@ JAMSTL_NAMESPACE_BEGIN
 
     public:
     
-        InnerString() : value(nullptr), Length(0) {}
+        ObjectString() : value(nullptr), Length(0) {}
 
         
-        InnerString(const char* value) {
+        ObjectString(const char* value) {
             this->Length = stringLength(value);
             this->value = new char[this->Length + 1];
             copy(value);
         }
 
-        InnerString(const InnerString& other) {
+        ObjectString(const ObjectString& other) {
             this->Length = other.Length;
             this->value = new char[this->Length + 1];
             this->copy(other.value);
             this->value[this->Length] = '\0';
         }
 
-        InnerString(const char& value) {
+        ObjectString(const char& value) {
             this->Length = 1;
             this->value = new char[this->Length + 1];
             this->value[0] = value;
             this->value[1] = '\0';
         }
 
-        InnerString(const char* value, usize Length) {
+        ObjectString(const char* value, usize Length) {
             this->Length = Length;
             this->value = new char[this->Length + 1];
             for(usize i = 0; i < this->Length; i++) {
@@ -178,16 +178,16 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
         template<typename T>
-        InnerString(const T& value) {
+        ObjectString(const T& value) {
             this->append(value);
         }
 
-        InnerString(byte* byetValue, byte coder) {
+        ObjectString(byte* byetValue, byte coder) {
             this->byetValue = byetValue;
             this->coder = coder;
         }
 
-        ~InnerString() {
+        ~ObjectString() {
             if(this->value != nullptr) {
                 delete[] this->value;
             }
@@ -216,6 +216,33 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
 
+        bool contains(const char& other) const {
+            for(usize i = 0; i < this->Length; i++) {
+                if(this->value[i] == other) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        bool contains(const ObjectString& other) const {
+            usize otherLength = other.Length;
+            for(usize i = 0; i < this->Length; i++) {
+                if(this->value[i] == other.value[0]) {
+                    bool found = true;
+                    for(usize j = 0; j < otherLength; j++) {
+                        if(this->value[i + j] != other.value[j]) {
+                            found = false;
+                            break;
+                        }
+                    }
+                    if(found) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
 
         int getInteger() const {
             return atoi(this->value);
@@ -261,22 +288,39 @@ JAMSTL_NAMESPACE_BEGIN
             dst[srcEnd - srcBegin] = '\0';
         }
 
-        static const InnerString& Empty() {
-            static InnerString EmptyString;
+        int indexOf(const ObjectString& other) const {
+            if(other.size() > this->Length) return -1;
+            for(usize i = 0; i < this->Length; i++) {
+                if(this->value[i] == other.value[0]) {
+                    bool found = true;
+                    for(usize j = 1; j < other.size(); j++) {
+                        if(this->value[i + j] != other.value[j]) {
+                            found = false;
+                            break;
+                        }
+                    }
+                    if(found) return i;
+                }
+            }
+            return -1;
+        }
+
+        static const ObjectString& Empty() {
+            static ObjectString EmptyString;
             return EmptyString;
         }
 
-        static InnerString valueOf(const char* value) {
-            return InnerString(value);
+        static ObjectString valueOf(const char* value) {
+            return ObjectString(value);
         }
 
-        static InnerString valueOf(const char& value) {
-            return InnerString(value);
+        static ObjectString valueOf(const char& value) {
+            return ObjectString(value);
         }
 
         template<typename Type>
-        static InnerString valueOf(Type value) {
-            InnerString str = "";
+        static ObjectString valueOf(Type value) {
+            ObjectString str = "";
             str = str + value;
             return str;
         }
@@ -311,7 +355,7 @@ JAMSTL_NAMESPACE_BEGIN
         * 
         * @param other 
         */
-        void setValue(const InnerString& other) {
+        void setValue(const ObjectString& other) {
             this->Length = other.Length;
             this->value = new char[this->Length + 1];
             this->copy(other.value);
@@ -323,7 +367,7 @@ JAMSTL_NAMESPACE_BEGIN
         * 
         * @return char* 
         */
-        InnerString get() const {
+        ObjectString get() const {
             return *this;
         }
 
@@ -333,9 +377,9 @@ JAMSTL_NAMESPACE_BEGIN
         * @brief A method that appends a string to the end of the string
         * 
         * @param other 
-        * @return InnerString&
+        * @return ObjectString&
         */
-        InnerString& append(const char* other) {
+        ObjectString& append(const char* other) {
             usize newLength = this->Length + stringLength(other);
             char* newValue = new char[newLength + 1];
             for(usize i = 0; i <= this->Length; i++) {
@@ -355,9 +399,9 @@ JAMSTL_NAMESPACE_BEGIN
         * @brief A method that appends a string to the end of the string
         * 
         * @param other 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& append(const InnerString& other) {
+        ObjectString& append(const ObjectString& other) {
             usize newLength = this->Length + other.Length;
             char* newValue = new char[newLength + 1];
             for(usize i = 0; i <= this->Length; i++) {
@@ -373,8 +417,8 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        InnerString& append(const short& shortNumber) {
-            InnerString str = "";
+        ObjectString& append(const short& shortNumber) {
+            ObjectString str = "";
             short number = shortNumber;
             if(number > 0) {
                 int digits = 0;
@@ -392,7 +436,7 @@ JAMSTL_NAMESPACE_BEGIN
                 return *this;
             }
 
-            InnerString tempString = "";
+            ObjectString tempString = "";
             if(number == 0) {
                 tempString = "0";
                 this->append(tempString);
@@ -418,8 +462,8 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        InnerString& append(const int& intNumber) {
-            InnerString str = "";
+        ObjectString& append(const int& intNumber) {
+            ObjectString str = "";
             int number = intNumber;
             if(number > 0) {
                 int digits = 0;
@@ -437,7 +481,7 @@ JAMSTL_NAMESPACE_BEGIN
                 return *this;
             }
 
-            InnerString tempString = "";
+            ObjectString tempString = "";
             if(number == 0) {
                 tempString = "0";
                 this->append(tempString);
@@ -463,8 +507,8 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        InnerString& append(const long& longNumber) {
-            InnerString str = "";
+        ObjectString& append(const long& longNumber) {
+            ObjectString str = "";
             long number = longNumber;
             if(number > 0) {
                 int digits = 0;
@@ -482,7 +526,7 @@ JAMSTL_NAMESPACE_BEGIN
                 return *this;
             }
 
-            InnerString tempString = "";
+            ObjectString tempString = "";
             if(number == 0) {
                 tempString = "0";
                 this->append(tempString);
@@ -508,8 +552,8 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        InnerString& append(const long long& longLongNumber) {
-            InnerString str = "";
+        ObjectString& append(const long long& longLongNumber) {
+            ObjectString str = "";
             long  long number = longLongNumber;
             if(number > 0) {
                 int digits = 0;
@@ -527,7 +571,7 @@ JAMSTL_NAMESPACE_BEGIN
                 return *this;
             }
 
-            InnerString tempString = "";
+            ObjectString tempString = "";
             if(number == 0) {
                 tempString = "0";
                 this->append(tempString);
@@ -553,8 +597,8 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        InnerString& append(const unsigned short& USInt) {
-            InnerString str = "";
+        ObjectString& append(const unsigned short& USInt) {
+            ObjectString str = "";
             unsigned short number = USInt;
             if(number > 0) {
                 int digits = 0;
@@ -576,8 +620,8 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        InnerString& append(const unsigned int& UInt) {
-            InnerString str = "";
+        ObjectString& append(const unsigned int& UInt) {
+            ObjectString str = "";
             unsigned int number = UInt;
             if(number > 0) {
                 int digits = 0;
@@ -599,8 +643,8 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        InnerString& append(const unsigned long& ULNumber) {
-            InnerString str = "";
+        ObjectString& append(const unsigned long& ULNumber) {
+            ObjectString str = "";
             unsigned long number = ULNumber;
             if(number > 0) {
                 int digits = 0;
@@ -622,8 +666,8 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        InnerString& append(const unsigned long long& ULLNumber) {
-            InnerString str = "";
+        ObjectString& append(const unsigned long long& ULLNumber) {
+            ObjectString str = "";
             unsigned long long number = ULLNumber;
             if(number > 0) {
                 int digits = 0;
@@ -645,7 +689,7 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        InnerString& append(const float& floatNumber) {
+        ObjectString& append(const float& floatNumber) {
             if(floatNumber == 0.0) {
                 this->append("0.0");
                 return *this;
@@ -653,7 +697,7 @@ JAMSTL_NAMESPACE_BEGIN
 
             double FNumber = Math.floor(floatNumber);
             double tempFloat = floatNumber - FNumber;
-            InnerString str = "";
+            ObjectString str = "";
 
             // To turn the integer part to string
             long long mainDigits = Math.log10(FNumber) + 1;
@@ -693,7 +737,7 @@ JAMSTL_NAMESPACE_BEGIN
                 }
                 else digits++;
             }
-            InnerString tempString = "";
+            ObjectString tempString = "";
             char tempCharacter;
             for(int i = 0; i < digits; i++) {
                 tempCharacter = Math.fmod(number, 10) + '0';
@@ -707,7 +751,7 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        InnerString& append(const double& doubleNumber) {
+        ObjectString& append(const double& doubleNumber) {
             if(doubleNumber == 0.0) {
                 this->append("0.0");
                 return *this;
@@ -715,7 +759,7 @@ JAMSTL_NAMESPACE_BEGIN
 
             double DNumber = Math.floor(doubleNumber);
             double tempDouble = doubleNumber - DNumber;
-            InnerString str = "";
+            ObjectString str = "";
 
             // To turn the integer part to string
             long long mainDigits = Math.log10(DNumber) + 1;
@@ -755,7 +799,7 @@ JAMSTL_NAMESPACE_BEGIN
                 }
                 else digits++;
             }
-            InnerString tempString = "";
+            ObjectString tempString = "";
             char tempCharacter;
             for(int i = 0; i < digits; i++) {
                 tempCharacter = Math.fmod(number, 10) + '0';
@@ -769,7 +813,7 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        InnerString& append(const long double& longDoubleNumber) {
+        ObjectString& append(const long double& longDoubleNumber) {
             if(longDoubleNumber == 0.0) {
                 this->append("0.0");
                 return *this;
@@ -777,7 +821,7 @@ JAMSTL_NAMESPACE_BEGIN
 
             double LDNumber = Math.floor(longDoubleNumber);
             double tmepLongDouble = longDoubleNumber - LDNumber;
-            InnerString str = "";
+            ObjectString str = "";
 
             // To turn the integer part to string
             long long mainDigits = Math.log10(LDNumber) + 1;
@@ -817,7 +861,7 @@ JAMSTL_NAMESPACE_BEGIN
                 }
                 else digits++;
             }
-            InnerString tempString = "";
+            ObjectString tempString = "";
             char tempCharacter;
             for(int i = 0; i < digits; i++) {
                 tempCharacter = Math.fmod(number, 10) + '0';
@@ -836,9 +880,9 @@ JAMSTL_NAMESPACE_BEGIN
         /**
         * @brief A method that makes a string empty
         * 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& empty() {
+        ObjectString& empty() {
             delete[] this->value;
             this->value = nullptr;
             this->Length = 0;
@@ -848,9 +892,9 @@ JAMSTL_NAMESPACE_BEGIN
         /**
         * @brief A method that clears a string
         * 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& clear() {
+        ObjectString& clear() {
             this->value[0] = '\0';
             return *this;
         }
@@ -860,9 +904,9 @@ JAMSTL_NAMESPACE_BEGIN
         * 
         * @param start 
         * @param end 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& erase(const usize& start, const usize& end) {
+        ObjectString& erase(const usize& start, const usize& end) {
             if(start > end) {
                 throw;
             }
@@ -891,9 +935,9 @@ JAMSTL_NAMESPACE_BEGIN
         * @brief A method that erases a string starting from 0 to a specified index
         * 
         * @param start 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& erase(const usize& start) {
+        ObjectString& erase(const usize& start) {
             if(start > this->Length) {
                 throw;
             }
@@ -919,9 +963,9 @@ JAMSTL_NAMESPACE_BEGIN
         * @param start 
         * @param end 
         * @param replacement 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& erase(const usize& start, const usize& end, const char& replacement) {
+        ObjectString& erase(const usize& start, const usize& end, const char& replacement) {
             if(start > end) {
                 throw;
             }
@@ -952,9 +996,9 @@ JAMSTL_NAMESPACE_BEGIN
         * @brief A method that appends a string to the end of the string
         * 
         * @param other 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& joins(const InnerString& other) {
+        ObjectString& joins(const ObjectString& other) {
             usize newLength = this->Length + other.Length;
             char* newValue = new char[newLength + 1];
             for(usize i = 0; i <= this->Length; i++) {
@@ -974,9 +1018,9 @@ JAMSTL_NAMESPACE_BEGIN
         * @brief A method that appends a string to the end of the string
         * 
         * @param other 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& joins(const char* other) {
+        ObjectString& joins(const char* other) {
             usize newLength = this->Length + stringLength(other);
             char* newValue = new char[newLength + 1];
             for(usize i = 0; i <= this->Length; i++) {
@@ -996,9 +1040,9 @@ JAMSTL_NAMESPACE_BEGIN
         * @brief A method that appends a character to the end of a string
         * 
         * @param other 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& joins(const char& other) {
+        ObjectString& joins(const char& other) {
             usize newLength = this->Length + 1;
             char* newValue = new char[newLength + 1];
             for(usize i = 0; i <= this->Length; i++) {
@@ -1016,9 +1060,9 @@ JAMSTL_NAMESPACE_BEGIN
         * @brief A method that appends a string to the end of the string
         * 
         * @param other 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& push(const InnerString& other) {
+        ObjectString& push(const ObjectString& other) {
             usize newLength = this->Length + other.Length;
             char* newValue = new char[newLength + 1];
             for(usize i = 0; i <= this->Length; i++) {
@@ -1038,9 +1082,9 @@ JAMSTL_NAMESPACE_BEGIN
         * @brief A method that appends a string to the end of the string
         * 
         * @param other 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& push(const char* other) {
+        ObjectString& push(const char* other) {
             usize newLength = this->Length + stringLength(other);
             char* newValue = new char[newLength + 1];
             for(usize i = 0; i <= this->Length; i++) {
@@ -1060,9 +1104,9 @@ JAMSTL_NAMESPACE_BEGIN
         * @brief A method that appends a character to the end of a string
         * 
         * @param other 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& push(const char& other) {
+        ObjectString& push(const char& other) {
             usize newLength = this->Length + 1;
             char* newValue = new char[newLength + 1];
             for(usize i = 0; i <= this->Length; i++) {
@@ -1079,9 +1123,9 @@ JAMSTL_NAMESPACE_BEGIN
         /**
         * @brief A method that removes the last character of a string
         * 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& pop() {
+        ObjectString& pop() {
             if(this->Length == 0) {
                 throw;
             }
@@ -1101,9 +1145,9 @@ JAMSTL_NAMESPACE_BEGIN
         * @brief A method that removes a character specified in an index
         * 
         * @param count 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& pop(const usize& index) {
+        ObjectString& pop(const usize& index) {
             if(index >= this->Length) {
                 throw;
             }
@@ -1153,7 +1197,7 @@ JAMSTL_NAMESPACE_BEGIN
         * 
         * @return long long 
         */
-        static long long hashCode(const InnerString& str) {
+        static long long hashCode(const ObjectString& str) {
             long long hash = 0;
             for(usize i = 0; i < str.Length; i++) {
                 hash = 31 * hash + str[i];
@@ -1167,7 +1211,7 @@ JAMSTL_NAMESPACE_BEGIN
         * @param other 
         * @return bool
         */
-        bool startsWith(const InnerString& other) const {
+        bool startsWith(const ObjectString& other) const {
             if(other.Length > this->Length) {
                 return false;
             }
@@ -1220,7 +1264,7 @@ JAMSTL_NAMESPACE_BEGIN
         * @param other 
         * @return bool
         */
-        bool endsWith(const InnerString& other) const {
+        bool endsWith(const ObjectString& other) const {
             if(other.Length > this->Length) {
                 throw;
             }
@@ -1270,9 +1314,9 @@ JAMSTL_NAMESPACE_BEGIN
         /**
         * @brief A method that makes a string lowercase
         * 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& toLower() {
+        ObjectString& toLower() {
             for(usize i = 0; i < this->Length; i++) {
                 if(this->value[i] >= 'A' && this->value[i] <= 'Z') {
                     this->value[i] += 32;
@@ -1284,9 +1328,9 @@ JAMSTL_NAMESPACE_BEGIN
         /**
         * @brief A method that makes a string uppercase
         * 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& toUpper() {
+        ObjectString& toUpper() {
             for(usize i = 0; i < this->Length; i++) {
                 if(this->value[i] >= 'a' && this->value[i] <= 'z') {
                     this->value[i] -= 32;
@@ -1299,9 +1343,9 @@ JAMSTL_NAMESPACE_BEGIN
         * @brief Removes the leading and trailing white space
         *  and line terminator characters from a string.
         * 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& trim() {
+        ObjectString& trim() {
             usize start = 0;
             usize end = this->Length;
             for(usize i = 0; i < this->Length; i++) {
@@ -1335,9 +1379,9 @@ JAMSTL_NAMESPACE_BEGIN
         * @brief Returns a string that contains the concatenation of two or more strings.
         * 
         * @param other 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& concat(const InnerString& other) {
+        ObjectString& concat(const ObjectString& other) {
             usize newLength = this->Length + other.Length;
             char* newValue = new char[newLength + 1];
             for(usize i = 0; i <= this->Length; i++) {
@@ -1357,9 +1401,9 @@ JAMSTL_NAMESPACE_BEGIN
         * @brief Returns a string that contains the concatenation of two or more strings.
         * 
         * @param other 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& concat(const char* other) {
+        ObjectString& concat(const char* other) {
             usize otherLength = stringLength(other);
             usize newLength = this->Length + otherLength;
             char* newValue = new char[newLength + 1];
@@ -1380,9 +1424,9 @@ JAMSTL_NAMESPACE_BEGIN
         * @brief Returns a string that contains the concatenation of a string and a char
         * 
         * @param other 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& concat(const char& other) {
+        ObjectString& concat(const char& other) {
             usize newLength = this->Length + 1;
             char* newValue = new char[newLength + 1];
             for(usize i = 0; i <= this->Length; i++) {
@@ -1413,7 +1457,7 @@ JAMSTL_NAMESPACE_BEGIN
 
         /**
         * @brief Returns true if searchString appears as a substring of the result of converting this
-        * object to a InnerString, at one or more positions that are
+        * object to a ObjectString, at one or more positions that are
         * greater than or equal to position; otherwise, returns false.
         * 
         * @param other 
@@ -1430,13 +1474,13 @@ JAMSTL_NAMESPACE_BEGIN
 
         /**
         * @brief Returns true if searchString appears as a substring of the result of converting this
-        * object to a InnerString, at one or more positions that are
+        * object to a ObjectString, at one or more positions that are
         * greater than or equal to position; otherwise, returns false.
         * 
         * @param other 
         * @return bool
         */
-        bool includes(const InnerString& other) const {
+        bool includes(const ObjectString& other) const {
             for(usize i = 0; i < this->Length; i++) {
                 if(this->value[i] == other.value[0]) {
                     bool found = true;
@@ -1456,7 +1500,7 @@ JAMSTL_NAMESPACE_BEGIN
 
         /**
         * @brief Returns true if searchString appears as a substring of the result of converting this
-        * object to a InnerString, at one or more positions that are
+        * object to a ObjectString, at one or more positions that are
         * greater than or equal to position; otherwise, returns false.
         * 
         * @param other 
@@ -1482,13 +1526,13 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
         /**
-        * @brief Returns a InnerString value that is made from count copies appended together.
+        * @brief Returns a ObjectString value that is made from count copies appended together.
         * If count is 0, the empty string is returned.
         * 
         * @param count 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& repeat(usize count) {
+        ObjectString& repeat(usize count) {
             usize newLength = this->Length * count;
             char* newValue = new char[newLength + 1];
             for(usize i = 0; i < newLength; i++) {
@@ -1502,13 +1546,13 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
         /**
-        * @brief Returns the substring at the specified location within a InnerString object.
+        * @brief Returns the substring at the specified location within a ObjectString object.
         * 
         * @param start 
         * @param end 
-        * @return InnerString 
+        * @return ObjectString 
         */
-        InnerString substring(usize start, usize end) const {
+        ObjectString substring(usize start, usize end) const {
             if(start > end) {
                 usize temp = start;
                 start = end;
@@ -1521,7 +1565,7 @@ JAMSTL_NAMESPACE_BEGIN
                 end = this->Length;
             }
             usize newLength = end - start;
-            InnerString newValue = "";
+            ObjectString newValue = "";
             for(usize i = 0; i < newLength; i++) {
                 newValue += this->value[i + start];
             }
@@ -1529,12 +1573,12 @@ JAMSTL_NAMESPACE_BEGIN
         }
 
         /**
-        * @brief Returns the substring at the specified location within a InnerString object.
+        * @brief Returns the substring at the specified location within a ObjectString object.
         * 
         * @param start 
-        * @return InnerString 
+        * @return ObjectString 
         */
-        InnerString substring(usize start) const {
+        ObjectString substring(usize start) const {
             return this->substring(start, this->Length);
         }
 
@@ -1543,9 +1587,9 @@ JAMSTL_NAMESPACE_BEGIN
         * 
         * @param old 
         * @param newChar 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& replace(const char& old, const char& newChar) {
+        ObjectString& replace(const char& old, const char& newChar) {
             for(usize i = 0; i < this->Length; i++) {
                 if(this->value[i] == old) {
                     this->value[i] = newChar;
@@ -1559,9 +1603,9 @@ JAMSTL_NAMESPACE_BEGIN
         * 
         * @param old 
         * @param newString 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& replace(const InnerString& old, const InnerString& newString) {
+        ObjectString& replace(const ObjectString& old, const ObjectString& newString) {
             for(usize i = 0; i < this->Length; i++) {
                 if(this->value[i] == old.value[0]) {
                     bool found = true;
@@ -1588,9 +1632,9 @@ JAMSTL_NAMESPACE_BEGIN
         * 
         * @param old 
         * @param newString 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& replace(const char* old, const char* newString) {
+        ObjectString& replace(const char* old, const char* newString) {
             usize oldLength = stringLength(old);
             usize newLength = stringLength(newString);
             for(usize i = 0; i < this->Length; i++) {
@@ -1614,7 +1658,7 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        InnerString& replace(usize start, usize end) {
+        ObjectString& replace(usize start, usize end) {
             if(start > end) {
                 usize temp = start;
                 start = end;
@@ -1643,9 +1687,9 @@ JAMSTL_NAMESPACE_BEGIN
         * 
         * @param old 
         * @param newChar 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& replaceFirst(const char& old, const char& newChar) {
+        ObjectString& replaceFirst(const char& old, const char& newChar) {
             for(usize i = 0; i < this->Length; i++) {
                 if(this->value[i] == old) {
                     this->value[i] = newChar;
@@ -1660,9 +1704,9 @@ JAMSTL_NAMESPACE_BEGIN
         * 
         * @param old 
         * @param newString 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& replaceFirst(const InnerString& old, const InnerString& newString) {
+        ObjectString& replaceFirst(const ObjectString& old, const ObjectString& newString) {
             for(usize i = 0; i < this->Length; i++) {
                 if(this->value[i] == old.value[0]) {
                     bool found = true;
@@ -1689,9 +1733,9 @@ JAMSTL_NAMESPACE_BEGIN
         * 
         * @param old 
         * @param newString 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& replaceFirst(const char* old, const char* newString) {
+        ObjectString& replaceFirst(const char* old, const char* newString) {
             usize oldLength = stringLength(old);
             usize newLength = stringLength(newString);
             for(usize i = 0; i < this->Length; i++) {
@@ -1734,9 +1778,9 @@ JAMSTL_NAMESPACE_BEGIN
         * @brief A method that swaps a string with another string
         * 
         * @param other 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& swap(InnerString& other) {
+        ObjectString& swap(ObjectString& other) {
             char* temp = this->value;
             this->value = other.value;
             other.value = temp;
@@ -1764,7 +1808,7 @@ JAMSTL_NAMESPACE_BEGIN
         * @param other 
         * @return bool
         */
-        bool compare(const InnerString& other) const {
+        bool compare(const ObjectString& other) const {
             if(this->Length != other.Length) {
                 return false;
             }
@@ -1782,7 +1826,7 @@ JAMSTL_NAMESPACE_BEGIN
          * @param other 
          * @return bool
          */
-        bool equals(const InnerString& other) const {
+        bool equals(const ObjectString& other) const {
             if(this->Length != other.Length) {
                 return false;
             }
@@ -1800,7 +1844,7 @@ JAMSTL_NAMESPACE_BEGIN
         * @param other 
         * @return bool
         */
-        bool equalIgnoreCase(const InnerString& other) const {
+        bool equalIgnoreCase(const ObjectString& other) const {
             if(this->Length != other.Length) {
                 return false;
             }
@@ -1815,9 +1859,9 @@ JAMSTL_NAMESPACE_BEGIN
         /**
         * @brief A method that reverses a string
         * 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& reverse() {
+        ObjectString& reverse() {
             for(usize i = 0; i < this->Length / 2; i++) {
                 char temp = this->value[i];
                 this->value[i] = this->value[this->Length - i - 1];
@@ -1832,16 +1876,16 @@ JAMSTL_NAMESPACE_BEGIN
         * @return const char* 
         */
         const char* type() const {
-            return "InnerString";
+            return "ObjectString";
         }
 
         /**
         * @brief A method Capitalize the first letter of a string and makes the rest 
         * of the letters lowercase
         * 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& capitalize() {
+        ObjectString& capitalize() {
             for(usize i = 0; i < this->Length; i++) {
                 if(i == 0) {
                     this->value[i] = toupper(this->value[i]);
@@ -1875,7 +1919,7 @@ JAMSTL_NAMESPACE_BEGIN
         * @param other 
         * @return int 
         */
-        usize count(const InnerString& other) const {
+        usize count(const ObjectString& other) const {
             usize count = 0;
             for(usize i = 0; i < this->Length; i++) {
                 if(this->value[i] == other.value[0]) {
@@ -1925,10 +1969,10 @@ JAMSTL_NAMESPACE_BEGIN
         /**
         * @brief Returns a version of the string suitable for caseless comparison 
         * 
-        * @return InnerString 
+        * @return ObjectString 
         */
-        InnerString casefold() const {
-            InnerString result = *this;
+        ObjectString casefold() const {
+            ObjectString result = *this;
             for(usize i = 0; i < this->Length; i++) {
                 result.value[i] = tolower(this->value[i]);
             }
@@ -1938,9 +1982,9 @@ JAMSTL_NAMESPACE_BEGIN
         /**
         * @brief Converts uppercase to lowercase and lowercase to uppercase
         * 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& swapCase() {
+        ObjectString& swapCase() {
             for(usize i = 0; i < this->Length; i++) {
                 if(this->value[i] >= 'a' && this->value[i] <= 'z') {
                     this->value[i] = toupper(this->value[i]);
@@ -1973,7 +2017,7 @@ JAMSTL_NAMESPACE_BEGIN
         * @param other 
         * @return bool
         */
-        bool find(const InnerString& other) const {
+        bool find(const ObjectString& other) const {
             for(usize i = 0; i < this->Length; i++) {
                 if(this->value[i] == other.value[0]) {
                     bool found = true;
@@ -2050,9 +2094,9 @@ JAMSTL_NAMESPACE_BEGIN
         * 
         * @param index 
         * @param other 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& insert(usize index, const char* other) {
+        ObjectString& insert(usize index, const char* other) {
             if(index > this->Length) {
                 return *this;
             }
@@ -2081,9 +2125,9 @@ JAMSTL_NAMESPACE_BEGIN
         * 
         * @param index 
         * @param other 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& insert(usize index, const InnerString& other) {
+        ObjectString& insert(usize index, const ObjectString& other) {
             if(index > this->Length) {
                 return *this;
             }
@@ -2111,9 +2155,9 @@ JAMSTL_NAMESPACE_BEGIN
         * 
         * @param index 
         * @param other 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& insert(usize index, const char& other) {
+        ObjectString& insert(usize index, const char& other) {
             if(index > this->Length) {
                 return *this;
             }
@@ -2190,9 +2234,9 @@ JAMSTL_NAMESPACE_BEGIN
         * @brief Returns a string with the given prefix removed if it exists
         * 
         * @param other 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& removePrefix(const char& other) {
+        ObjectString& removePrefix(const char& other) {
             if(this->value[0] == other) {
                 usize newLength = this->Length - 1;
                 char* newValue = new char[newLength + 1];
@@ -2211,9 +2255,9 @@ JAMSTL_NAMESPACE_BEGIN
         * @brief Returns a string with the given prefix removed if it exists
         * 
         * @param other 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& removePrefix(const InnerString& other) {
+        ObjectString& removePrefix(const ObjectString& other) {
             if(this->value[0] == other.value[0]) {
                 usize otherLength = other.Length;
                 usize newLength = this->Length - otherLength;
@@ -2233,9 +2277,9 @@ JAMSTL_NAMESPACE_BEGIN
         * @brief Returns a string with the given prefix removed if it exists
         * 
         * @param other 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& removePrefix(const char* other) {
+        ObjectString& removePrefix(const char* other) {
             usize otherLength = stringLength(other);
             if(this->value[0] == other[0]) {
                 usize newLength = this->Length - otherLength;
@@ -2255,9 +2299,9 @@ JAMSTL_NAMESPACE_BEGIN
         * @brief Returns a string with the given suffix removed if it exists
         * 
         * @param other 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& removeSuffix(const char& other) {
+        ObjectString& removeSuffix(const char& other) {
             if(this->value[this->Length - 1] == other) {
                 usize newLength = this->Length - 1;
                 char* newValue = new char[newLength + 1];
@@ -2276,9 +2320,9 @@ JAMSTL_NAMESPACE_BEGIN
         * @brief Returns a string with the given suffix removed if it exists
         * 
         * @param other 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& removeSuffix(const InnerString& other) {
+        ObjectString& removeSuffix(const ObjectString& other) {
             if(this->value[this->Length - 1] == other.value[other.Length - 1]) {
                 usize otherLength = other.Length;
                 usize newLength = this->Length - otherLength;
@@ -2298,9 +2342,9 @@ JAMSTL_NAMESPACE_BEGIN
         * @brief Returns a string with the given suffix removed if it exists
         * 
         * @param other 
-        * @return InnerString& 
+        * @return ObjectString& 
         */
-        InnerString& removeSuffix(const char* other) {
+        ObjectString& removeSuffix(const char* other) {
             usize otherLength = stringLength(other);
             if(this->value[this->Length - 1] == other[otherLength - 1]) {
                 usize newLength = this->Length - otherLength;
@@ -2346,7 +2390,7 @@ JAMSTL_NAMESPACE_BEGIN
 
 
 
-        InnerString& operator=(const char* value) {
+        ObjectString& operator=(const char* value) {
             this->Length = stringLength(value);
             this->value = new char[this->Length + 1];
             this->copy(value);
@@ -2354,14 +2398,14 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        InnerString& operator=(const InnerString& other) {
+        ObjectString& operator=(const ObjectString& other) {
             this->Length = other.Length;
             this->value = new char[this->Length + 1];
             this->copy(other.value);
             return *this;
         }
 
-        InnerString& operator=(const char& value) {
+        ObjectString& operator=(const char& value) {
             this->Length = 1;
             this->value = new char[this->Length + 1];
             this->value[0] = value;
@@ -2371,7 +2415,7 @@ JAMSTL_NAMESPACE_BEGIN
 
 
 
-        InnerString& operator+=(const char* value) {
+        ObjectString& operator+=(const char* value) {
             usize newLength = this->Length + stringLength(value);
             char* newValue = new char[newLength + 1];
             for(usize i = 0; i < this->Length; i++) {
@@ -2387,7 +2431,7 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        InnerString& operator+=(const InnerString& other) {
+        ObjectString& operator+=(const ObjectString& other) {
             usize newLength = this->Length + other.Length;
             char* newValue = new char[newLength + 1];
             for(usize i = 0; i < this->Length; i++) {
@@ -2403,7 +2447,7 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        InnerString& operator+=(const char& value) {
+        ObjectString& operator+=(const char& value) {
             usize newLength = this->Length + 1;
             char* newValue = new char[newLength + 1];
             for(usize i = 0; i < this->Length; i++) {
@@ -2417,7 +2461,7 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        InnerString& operator<<(const byte& value) {
+        ObjectString& operator<<(const byte& value) {
             usize newLength = this->Length + 1;
             char* newValue = new char[newLength + 1];
             for(usize i = 0; i < this->Length; i++) {
@@ -2431,8 +2475,8 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        InnerString& operator<<(const int& intNumber) {
-            InnerString str = "";
+        ObjectString& operator<<(const int& intNumber) {
+            ObjectString str = "";
             int number = intNumber;
             if(number > 0) {
                 int digits = 0;
@@ -2450,7 +2494,7 @@ JAMSTL_NAMESPACE_BEGIN
                 return *this;
             }
 
-            InnerString tempString = "";
+            ObjectString tempString = "";
             if(number == 0) {
                 tempString = "0";
                 this->append(tempString);
@@ -2476,8 +2520,8 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        InnerString& operator<<(const unsigned& unsignedIntNumber) {
-            InnerString str = "";
+        ObjectString& operator<<(const unsigned& unsignedIntNumber) {
+            ObjectString str = "";
             unsigned number = unsignedIntNumber;
             if(number > 0) {
                 int digits = 0;
@@ -2499,8 +2543,8 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        InnerString& operator<<(const short& shortNumber) {
-            InnerString str = "";
+        ObjectString& operator<<(const short& shortNumber) {
+            ObjectString str = "";
             short number = shortNumber;
             if(number > 0) {
                 int digits = 0;
@@ -2517,7 +2561,7 @@ JAMSTL_NAMESPACE_BEGIN
                 this->append(str);
                 return *this;
             }
-            InnerString tempString = "";
+            ObjectString tempString = "";
             if(number == 0) {
                 tempString = "0";
                 this->append(tempString);
@@ -2544,8 +2588,8 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        InnerString& operator<<(const unsigned short& unsignedShortNumber) {
-            InnerString str = "";
+        ObjectString& operator<<(const unsigned short& unsignedShortNumber) {
+            ObjectString str = "";
             unsigned short number = unsignedShortNumber;
             if(number > 0) {
                 int digits = 0;
@@ -2567,8 +2611,8 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        InnerString& operator<<(const long& longNumber) {
-            InnerString str = "";
+        ObjectString& operator<<(const long& longNumber) {
+            ObjectString str = "";
             long number = longNumber;
             if(number > 0) {
                 int digits = 0;
@@ -2585,7 +2629,7 @@ JAMSTL_NAMESPACE_BEGIN
                 this->append(str);
                 return *this;
             }
-            InnerString tempString = "";
+            ObjectString tempString = "";
             if(number == 0) {
                 tempString = "0";
                 this->append(tempString);
@@ -2611,8 +2655,8 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        InnerString& operator<<(const unsigned long& unsignedLongNumber) {
-            InnerString str = "";
+        ObjectString& operator<<(const unsigned long& unsignedLongNumber) {
+            ObjectString str = "";
             unsigned long number = unsignedLongNumber;
             if(number > 0) {
                 int digits = 0;
@@ -2634,9 +2678,9 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        InnerString& operator<<(const long long& LLNumber) {
-            InnerString str = "";
-            InnerString newString = *this;
+        ObjectString& operator<<(const long long& LLNumber) {
+            ObjectString str = "";
+            ObjectString newString = *this;
             long long number = LLNumber;
             if(number > 0) {
                 int digits = 0;
@@ -2653,7 +2697,7 @@ JAMSTL_NAMESPACE_BEGIN
                 this->append(str);
                 return *this;
             }
-            InnerString tempString = "";
+            ObjectString tempString = "";
             if(number == 0) {
                 tempString = "0";
                 this->append(tempString);
@@ -2679,8 +2723,8 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        InnerString& operator<<(const unsigned long long& ULLNumber) {
-            InnerString str = "";
+        ObjectString& operator<<(const unsigned long long& ULLNumber) {
+            ObjectString str = "";
             unsigned long long number = ULLNumber;
             if(number > 0) {
                 int digits = 0;
@@ -2706,33 +2750,33 @@ JAMSTL_NAMESPACE_BEGIN
 
 
 
-        InnerString operator+(const char* value) {
-            InnerString newString = *this;
+        ObjectString operator+(const char* value) {
+            ObjectString newString = *this;
             newString += value;
             return newString;
         }
 
-        InnerString operator+(const InnerString& other) {
-            InnerString newString = *this;
+        ObjectString operator+(const ObjectString& other) {
+            ObjectString newString = *this;
             newString += other;
             return newString;
         }
 
-        InnerString operator+(const char& value) {
-            InnerString newString = *this;
+        ObjectString operator+(const char& value) {
+            ObjectString newString = *this;
             newString += value;
             return newString;
         }
 
-        InnerString operator+(const byte& value) {
-            InnerString newString = *this;
+        ObjectString operator+(const byte& value) {
+            ObjectString newString = *this;
             newString += value;
             return newString;
         }
 
-        InnerString operator+(const int& intNumber) {
-            InnerString str = "";
-            InnerString newString = *this;
+        ObjectString operator+(const int& intNumber) {
+            ObjectString str = "";
+            ObjectString newString = *this;
             int number = intNumber;
             if(number > 0) {
                 int digits = 0;
@@ -2750,7 +2794,7 @@ JAMSTL_NAMESPACE_BEGIN
                 return newString;
             }
 
-            InnerString tempString = "";
+            ObjectString tempString = "";
             if(number == 0) {
                 tempString = "0";
                 newString.append(tempString);
@@ -2776,9 +2820,9 @@ JAMSTL_NAMESPACE_BEGIN
             return newString;
         }
 
-        InnerString operator+(const unsigned& unsignedIntNumber) {
-            InnerString str = "";
-            InnerString newString = *this; 
+        ObjectString operator+(const unsigned& unsignedIntNumber) {
+            ObjectString str = "";
+            ObjectString newString = *this; 
             unsigned number = unsignedIntNumber;
             if(number > 0) {
                 int digits = 0;
@@ -2800,9 +2844,9 @@ JAMSTL_NAMESPACE_BEGIN
             return newString;
         }
 
-        InnerString operator+(const short& shortNumber) {
-            InnerString str = "";
-            InnerString newString = *this;
+        ObjectString operator+(const short& shortNumber) {
+            ObjectString str = "";
+            ObjectString newString = *this;
             short number = shortNumber;
             if(number > 0) {
                 int digits = 0;
@@ -2819,7 +2863,7 @@ JAMSTL_NAMESPACE_BEGIN
                 newString.append(str);
                 return newString;
             }
-            InnerString tempString = "";
+            ObjectString tempString = "";
             if(number == 0) {
                 tempString = "0";
                 newString.append(tempString);
@@ -2846,9 +2890,9 @@ JAMSTL_NAMESPACE_BEGIN
             return newString;
         }
 
-        InnerString operator+(const unsigned short& unsignedShortNumber) {
-            InnerString str = "";
-            InnerString newString = *this;
+        ObjectString operator+(const unsigned short& unsignedShortNumber) {
+            ObjectString str = "";
+            ObjectString newString = *this;
             unsigned short number = unsignedShortNumber;
             if(number > 0) {
                 int digits = 0;
@@ -2870,9 +2914,9 @@ JAMSTL_NAMESPACE_BEGIN
             return newString;
         }
 
-        InnerString operator+(const long& longNumber) {
-            InnerString str = "";
-            InnerString newString = *this;
+        ObjectString operator+(const long& longNumber) {
+            ObjectString str = "";
+            ObjectString newString = *this;
             long number = longNumber;
             if(number > 0) {
                 int digits = 0;
@@ -2889,7 +2933,7 @@ JAMSTL_NAMESPACE_BEGIN
                 newString.append(str);
                 return newString;
             }
-            InnerString tempString = "";
+            ObjectString tempString = "";
             if(number == 0) {
                 tempString = "0";
                 newString.append(tempString);
@@ -2915,9 +2959,9 @@ JAMSTL_NAMESPACE_BEGIN
             return newString;
         }
 
-        InnerString operator+(const unsigned long& unsignedLongNumber) {
-            InnerString str = "";
-            InnerString newString = *this;
+        ObjectString operator+(const unsigned long& unsignedLongNumber) {
+            ObjectString str = "";
+            ObjectString newString = *this;
             unsigned long number = unsignedLongNumber;
             if(number > 0) {
                 int digits = 0;
@@ -2939,9 +2983,9 @@ JAMSTL_NAMESPACE_BEGIN
             return newString;
         }
 
-        InnerString operator+(const long long& LLNumber) {
-            InnerString str = "";
-            InnerString newString = *this;
+        ObjectString operator+(const long long& LLNumber) {
+            ObjectString str = "";
+            ObjectString newString = *this;
             long long number = LLNumber;
             if(number > 0) {
                 int digits = 0;
@@ -2958,7 +3002,7 @@ JAMSTL_NAMESPACE_BEGIN
                 newString.append(str);
                 return newString;
             }
-            InnerString tempString = "";
+            ObjectString tempString = "";
             if(number == 0) {
                 tempString = "0";
                 newString.append(tempString);
@@ -2984,9 +3028,9 @@ JAMSTL_NAMESPACE_BEGIN
             return newString;
         }
 
-        InnerString operator+(const unsigned long long& ULLNumber) {
-            InnerString str = "";
-            InnerString newString = *this;
+        ObjectString operator+(const unsigned long long& ULLNumber) {
+            ObjectString str = "";
+            ObjectString newString = *this;
             unsigned long long number = ULLNumber;
             if(number > 0) {
                 int digits = 0;
@@ -3008,13 +3052,13 @@ JAMSTL_NAMESPACE_BEGIN
             return newString;
         }
 
-        InnerString operator+(const float& floatNumber) {
+        ObjectString operator+(const float& floatNumber) {
             if(floatNumber == 0) {
                 this->append("0");
                 return *this;
             }
             if(floatNumber == (long long)floatNumber) {
-                InnerString tempStr = "";
+                ObjectString tempStr = "";
                 tempStr = tempStr + (long long)floatNumber;
                 this->append(tempStr);
                 this->append(".0");
@@ -3022,7 +3066,7 @@ JAMSTL_NAMESPACE_BEGIN
             }
             long long LLNumber = floatNumber;
             float tempFloat = floatNumber - LLNumber;
-            InnerString str = "";
+            ObjectString str = "";
             str = str + LLNumber;
             str.append(".");
             long long digits = 0;
@@ -3040,7 +3084,7 @@ JAMSTL_NAMESPACE_BEGIN
                 }
                 else digits++;
             }
-            InnerString tempString = "";
+            ObjectString tempString = "";
             char tempCharacter;
             for(int i = 0; i < digits; i++) {
                 tempCharacter = (number % 10) + '0';
@@ -3053,13 +3097,13 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        InnerString operator+(const double& doubleNumber) {
+        ObjectString operator+(const double& doubleNumber) {
             if(doubleNumber == 0) {
                 this->append("0");
                 return *this;
             }
             if(doubleNumber == (long long)doubleNumber) {
-                InnerString tempStr = "";
+                ObjectString tempStr = "";
                 tempStr = tempStr + (long long)doubleNumber;
                 this->append(tempStr);
                 this->append(".0");
@@ -3067,7 +3111,7 @@ JAMSTL_NAMESPACE_BEGIN
             }
             long long LLNumber = doubleNumber;
             double tempDouble = doubleNumber - LLNumber;
-            InnerString str = "";
+            ObjectString str = "";
             str = str + LLNumber;
             str += ".";
             long long digits = 0;
@@ -3085,7 +3129,7 @@ JAMSTL_NAMESPACE_BEGIN
                 }
                 else digits++;
             }
-            InnerString tempString = "";
+            ObjectString tempString = "";
             for(int i = 0; i < digits; i++) {
                 tempString += (number % 10) + '0';
                 number /= 10;
@@ -3096,13 +3140,13 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        InnerString operator+(const long double& longDoubleNumber) {
+        ObjectString operator+(const long double& longDoubleNumber) {
             if(longDoubleNumber == 0) {
                 this->append("0");
                 return *this;
             }
             if(longDoubleNumber == (long long)longDoubleNumber) {
-                InnerString tempStr = "";
+                ObjectString tempStr = "";
                 tempStr = tempStr + (long long)longDoubleNumber;
                 this->append(tempStr);
                 this->append(".0");
@@ -3110,7 +3154,7 @@ JAMSTL_NAMESPACE_BEGIN
             }
             long long LLNumber = longDoubleNumber;
             long double tempLongDouble = longDoubleNumber - LLNumber;
-            InnerString str = "";
+            ObjectString str = "";
             str = str + LLNumber;
             str += ".";
             long long digits = 0;
@@ -3129,7 +3173,7 @@ JAMSTL_NAMESPACE_BEGIN
                 }
                 else digits++;
             }
-            InnerString tempString = "";
+            ObjectString tempString = "";
             for(int i = 0; i < digits; i++) {
                 tempString += (number % 10) + '0';
                 number /= 10;
@@ -3142,8 +3186,8 @@ JAMSTL_NAMESPACE_BEGIN
 
 
 
-        InnerString operator*(usize times) const {
-            InnerString result = *this;
+        ObjectString operator*(usize times) const {
+            ObjectString result = *this;
             for(usize i = 0; i < times - 1; i++) {
                 result += *this;
             }
@@ -3156,7 +3200,7 @@ JAMSTL_NAMESPACE_BEGIN
             return this->equalityCompare(other);
         }
 
-        bool operator==(const InnerString& other) const {
+        bool operator==(const ObjectString& other) const {
             return this->equalityCompareString(other.value);
         }
 
@@ -3170,7 +3214,7 @@ JAMSTL_NAMESPACE_BEGIN
             return !this->equalityCompare(other);
         }
 
-        bool operator!=(const InnerString& other) const {
+        bool operator!=(const ObjectString& other) const {
             return !this->equalityCompare(other.value);
         }
 
@@ -3184,7 +3228,7 @@ JAMSTL_NAMESPACE_BEGIN
             return this->Length < stringLength(other);
         }
 
-        bool operator<(const InnerString& other) const {
+        bool operator<(const ObjectString& other) const {
             return this->Length < other.Length;
         }
 
@@ -3198,7 +3242,7 @@ JAMSTL_NAMESPACE_BEGIN
             return this->Length > stringLength(other);
         }
 
-        bool operator>(const InnerString& other) const {
+        bool operator>(const ObjectString& other) const {
             return this->Length > other.Length;
         }
 
@@ -3212,7 +3256,7 @@ JAMSTL_NAMESPACE_BEGIN
             return this->Length <= stringLength(other);
         }
 
-        bool operator<=(const InnerString& other) const {
+        bool operator<=(const ObjectString& other) const {
             return this->Length <= other.Length;
         }
 
@@ -3226,7 +3270,7 @@ JAMSTL_NAMESPACE_BEGIN
             return this->Length >= stringLength(other);
         }
 
-        bool operator>=(const InnerString& other) const {
+        bool operator>=(const ObjectString& other) const {
             return this->Length >= other.Length;
         }
 
@@ -3239,11 +3283,11 @@ JAMSTL_NAMESPACE_BEGIN
             return this->Length == 0;
         }
 
-        bool operator&&(const InnerString& other) const {
+        bool operator&&(const ObjectString& other) const {
             return this->Length && other.Length;
         }
 
-        bool operator||(const InnerString& other) const {
+        bool operator||(const ObjectString& other) const {
             return this->Length || other.Length;
         }
 
@@ -3279,7 +3323,7 @@ JAMSTL_NAMESPACE_BEGIN
             return this->Length == other;
         }
 
-        InnerString& operator--() {
+        ObjectString& operator--() {
             this->Length--;
             char* newValue = new char[this->Length + 1];
             for(usize i = 0; i < this->Length; i++) {
@@ -3291,8 +3335,8 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
-        InnerString operator--(int) {
-            InnerString result = *this;
+        ObjectString operator--(int) {
+            ObjectString result = *this;
             this->Length--;
             char* newValue = new char[this->Length + 1];
             for(usize i = 0; i < this->Length; i++) {
@@ -3306,12 +3350,12 @@ JAMSTL_NAMESPACE_BEGIN
 
 
 
-        // friend std::ostream& operator<<(std::ostream& out, const InnerString& string) {
+        // friend std::ostream& operator<<(std::ostream& out, const ObjectString& string) {
         //     out << string.value;
         //     return out;
         // }
 
-        // friend std::istream& operator>>(std::istream& in, InnerString& string) {
+        // friend std::istream& operator>>(std::istream& in, ObjectString& string) {
         //     string.reAllocate(0);
         //     char c;
         //     while (in.get(c)) {
@@ -3323,32 +3367,32 @@ JAMSTL_NAMESPACE_BEGIN
         //     return in;
         // }
 
-        friend InnerString operator+(const char* string, const InnerString& other) {
-            InnerString result = string;
+        friend ObjectString operator+(const char* string, const ObjectString& other) {
+            ObjectString result = string;
             result += other;
             return result;
         }
 
-        friend InnerString operator+(const InnerString& string, const char* other) {
-            InnerString result = string;
+        friend ObjectString operator+(const ObjectString& string, const char* other) {
+            ObjectString result = string;
             result += other;
             return result;
         }
 
-        friend InnerString operator+(const char& string, const InnerString& other) {
-            InnerString result = string;
+        friend ObjectString operator+(const char& string, const ObjectString& other) {
+            ObjectString result = string;
             result += other;
             return result;
         }
 
-        friend InnerString operator+(const InnerString& string, const char& other) {
-            InnerString result = string;
+        friend ObjectString operator+(const ObjectString& string, const char& other) {
+            ObjectString result = string;
             result += other;
             return result;
         }
 
         class _Iterator {
-            friend class InnerString;
+            friend class ObjectString;
             private:
                 char* value;
                 usize Length;

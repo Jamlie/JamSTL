@@ -1,11 +1,9 @@
 #pragma once
 
 #ifndef JAMSTL_DOUBLE_H
-#define JAMSTL_DOUBLE_H 1
-#include "Macros.h"
-#include "String.h"
+#define JAMSTL_DOUBLE_H
+#include "Number.h"
 #include "Math.h"
-#include "Object.h"
 
 JAMSTL_NAMESPACE_BEGIN
 
@@ -13,7 +11,7 @@ JAMSTL_NAMESPACE_BEGIN
     * @brief A double wrapper class.
     * 
     */
-    class Double extends Object {
+    class Double extends Number {
     private:
         double value;
 
@@ -100,6 +98,58 @@ JAMSTL_NAMESPACE_BEGIN
             return *this;
         }
 
+        Number& operator=(const int& number) override {
+            this->value = static_cast<double>(number);
+            return *this;
+        }
+
+        Number& operator=(const long long& number) override {
+            this->value = static_cast<double>(number);
+            return *this;
+        }
+
+        Number& operator=(const float& number) override {
+            this->value = static_cast<double>(number);
+            return *this;
+        }
+
+        Number& operator=(const double& number) override {
+            this->value = static_cast<double>(number);
+            return *this;
+        }
+
+        Number& operator=(const Number& number) override {
+            this->value = static_cast<double>(number.doubleValue());
+            return *this;
+        }
+
+        Number& operator=(const short& number) override {
+            this->value = static_cast<double>(number);
+            return *this;
+        }
+
+        Number& operator=(const long& number) override {
+            this->value = static_cast<double>(number);
+            return *this;
+        }
+        
+
+
+        int intValue() const override { return static_cast<int>(value); }
+
+        long long longValue() const override { return static_cast<long long>(value); }
+
+        float floatValue() const override { return static_cast<float>(value); }
+
+        double doubleValue() const override { return value; }
+
+        bool equals(const Object& other) const override {
+            if (Object::instanceof<Number>(&other)) {
+                return this->value == static_cast<const Number&>(other).doubleValue();
+            }
+            return false;
+        }
+
 
 
         // Max value of a double 1.7976931348623157e+308
@@ -183,15 +233,6 @@ JAMSTL_NAMESPACE_BEGIN
             className.erase(0, 11);
             className.pop();
             return className;
-        }
-
-        /**
-         * @brief A method that returns the const char* of the value
-         * 
-         */
-        const char* toCString() const override {
-            String string = String::valueOf(value);
-            return string.toCString();
         }
 
         /**

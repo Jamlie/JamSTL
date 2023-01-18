@@ -5,7 +5,7 @@
 #ifndef JAMSTL_QUEUE_H
 #define JAMSTL_QUEUE_H 1
 #include <iostream>
-#include "../type_traits.h"
+#include "../TypeTraits.h"
 #include "../Datatypes.h"
 #include "../Macros.h"
 
@@ -28,7 +28,7 @@ JAMSTL_NAMESPACE_BEGIN
             if(newCapacity < Size) Size = newCapacity;
 
             for (size_t i = 0; i < Size; i++) queue[i] 
-                                    = jamstl::type_traits::move(queue[i]);
+                                    = jamstl::TypeTraits::move(queue[i]);
 
             ::operator delete(queue, newCapacity * sizeof(T));
             queue = newBlock;
@@ -78,7 +78,7 @@ JAMSTL_NAMESPACE_BEGIN
         void push(T&& value) {
             if(Size > capacity) reAllocate(capacity + capacity / 2);
 
-            queue[Size] = jamstl::type_traits::move(value);
+            queue[Size] = jamstl::TypeTraits::move(value);
             Size++;       
         }
 

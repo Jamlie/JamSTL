@@ -9,9 +9,8 @@ JAMSTL_NAMESPACE_BEGIN
 class ArrayIndexOutOfBoundsException extends Exception {
 public:
     ArrayIndexOutOfBoundsException() noexcept : Exception("ArrayIndexOutOfBoundsException") {}
-    ArrayIndexOutOfBoundsException(String message) noexcept : Exception(message) {}
-    ArrayIndexOutOfBoundsException(const char* message, int) noexcept : Exception(message, 0) {}
     ArrayIndexOutOfBoundsException(const char* message) noexcept : Exception(message) {}
+    ArrayIndexOutOfBoundsException(const char* message, int) noexcept : Exception(message, 0) {}
     ArrayIndexOutOfBoundsException(const ArrayIndexOutOfBoundsException& e) noexcept : Exception(e) {}
     ArrayIndexOutOfBoundsException(ArrayIndexOutOfBoundsException&& e) noexcept : Exception(e) {}
     ~ArrayIndexOutOfBoundsException() {}
@@ -26,7 +25,6 @@ public:
         return *this;
     }
 
-    // getMessage
     const char* getMessage() const noexcept override {
         return "ArrayIndexOutOfBoundsException";
     }

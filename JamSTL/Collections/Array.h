@@ -1,7 +1,7 @@
 #pragma once
 
 #ifndef JAMSTL_ARRAY_H
-#define JAMSTL_ARRAY_H 1
+#define JAMSTL_ARRAY_H
 
 #include "../Macros.h"
 #include "../Object.h"
@@ -9,7 +9,7 @@
 #include "../Iterator.h"
 #include "../Exception/IndexOutOfBoundsException.h"
 #include "../Exception/ArrayIndexOutOfBoundsException.h"
-#include "../bits/type_traits.h"
+#include "../bits/TypeTraits.h"
 #include <initializer_list>
 
 JAMSTL_NAMESPACE_BEGIN
@@ -43,7 +43,7 @@ JAMSTL_NAMESPACE_BEGIN
     public:
         Array() {
             for (usize i = 0; i < Size; i++) {
-                array[i] = '\0';
+                array[i] = Type();
             }
         }
 

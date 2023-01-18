@@ -205,15 +205,21 @@ JAMSTL_NAMESPACE_BEGIN
                 doubleTempNumber = readFractions(i + 1, lengthOfString, Division);
             }
 
+            double rintNumber;
+            if((ToDouble + doubleTempNumber) < Math.rint(ToDouble + doubleTempNumber)) {
+                rintNumber = Math.rint(ToDouble + doubleTempNumber) - 1;
+            } else {
+                rintNumber = Math.rint(ToDouble + doubleTempNumber);
+            }
+
             if(_str[0] == '-') {
-                if((ToDouble + doubleTempNumber) - 
-                    (long long)(ToDouble + doubleTempNumber) == 0)
+                if((ToDouble + doubleTempNumber) - rintNumber == 0)
                         return -1 * (ToDouble);
                 return -1 * (ToDouble + doubleTempNumber);
             }
 
             ToDouble = ToDouble + Division;
-            if(ToDouble - (long long)ToDouble == 0) return ToDouble - 1;
+            if(ToDouble - Math.rint(ToDouble) == 0) return ToDouble - 1;
             return ToDouble;
         }
 
@@ -374,7 +380,7 @@ JAMSTL_NAMESPACE_BEGIN
         shortNum(0), longNum(0), floatNum(0),
         doubleNum(0), _str("") {}
 
-        explicit StringStream(const StringStream& _strStream) {
+        StringStream(const StringStream& _strStream) {
             _str = _strStream._str;
             Int = _strStream.Int;
             UInt = _strStream.UInt;
@@ -469,22 +475,6 @@ JAMSTL_NAMESPACE_BEGIN
         template<typename Type>
         StringStream& operator<<(const Type& num) {
             _str += toString(num);
-            // Int = num;
-            // UInt = num;
-            // ULLong = num;
-            // integer = num;
-            // floatNumber = num;
-            // doubleNumber = num;
-            // shortNumber = num;
-            // UShort = num;
-            // longNumber = num;
-            // ULong = num;
-            // LongLong = num;
-            // ULongLong = num;
-            // shortNum = num;
-            // longNum = num;
-            // floatNum = num;
-            // doubleNum = num;
             return *this;
         }
 

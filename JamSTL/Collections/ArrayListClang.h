@@ -162,7 +162,7 @@ public:
         if (length == capacity) {
             resize(2 * capacity);
         }
-        array[length] = jamstl::type_traits::move(element);
+        array[length] = jamstl::TypeTraits::move(element);
         length++;
     }
 
@@ -176,7 +176,7 @@ public:
         for (usize i = length; i > index; i--) {
             array[i] = array[i - 1];
         }
-        array[index] = jamstl::type_traits::move(element);
+        array[index] = jamstl::TypeTraits::move(element);
         length++;
     }
 

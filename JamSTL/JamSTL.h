@@ -5,21 +5,17 @@
 
 #include "Macros.h"
 #include "Collections/ArrayList.h"
-#include "Exception/Exception.h"
-#include "Datatypes.h"
-#include "Math.h"
-#include "Printer.h"
-#include "Scanner.h"
+#include "System.h"
 #include "String/StringHelper.h"
-#include "Collections/Array.h"
 #include "Collections/LinkedList.h"
-#include "type_traits.h"
-#include "bits/type_traits.h"
+#include "TypeTraits.h"
+#include "bits/TypeTraits.h"
 #include "String/StringStream.h"
 #include "Collections/Stack.h"
 #include "Collections/Queue.h"
 #include "Collections/HashMap.h"
 #include "Arrays.h"
+#include "Parser.h"
 #include "GarbageCollector/GarbageCollector.h"
 #include "Random.h"
 
@@ -27,7 +23,7 @@ JAMSTL_NAMESPACE_BEGIN
 
     template<typename WrapperClass>
     String type(const WrapperClass& wrapper) {
-        using namespace jamstl::type_traits;
+        using namespace jamstl::TypeTraits;
 
         if(isFunction<WrapperClass>::value) {
             return "Function";
